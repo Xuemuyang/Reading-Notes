@@ -1,5 +1,7 @@
 # I don't know JS
 
+# 作用域和闭包
+
 ## chap1. 作用域
 
 ### 1.1 编译原理
@@ -186,3 +188,151 @@ bar();
 > 主要区别:词法作用域是在写代码或者说定义时确定的，而动态作用域是在运行时确定的。(`this`也是!)词法作用域关注函数在何处声明，而动态作用域关注函数从何处调用。
 
 需要明确的是，事实上`JavaScript`并不具有动态作用域。它只有词法作用域，简单明了。但是`this`机制某种程度上很像动态作用域。
+
+## 附录C `this`词法
+
+# `this`和对象原型
+
+## chap1. 关于`this`
+
+`this`实际上是在函数被调用时发生的绑定，它的指向完全取决于函数在哪里被调用。
+
+## chap2. `this`全面解析
+
+### 2.1 调用位置
+
+> 最重要的就是分析调用栈，我们关心的调用位置就在当前正在执行的函数的前一个调用中。
+
+```javascript
+function baz() {
+    // 当前调用栈是:baz
+    // 因此，当前调用位置是全局作用域
+    console.log( "baz" );
+    bar(); // <-- bar的调用位置 
+}
+function bar() {
+    // 当前调用栈是 baz -> bar
+    // 因此，当前调用位置在 baz 中
+    console.log( "bar" );
+    foo(); // <-- foo的调用位置 
+}
+function foo() {
+    // 当前调用栈是 baz -> bar -> foo 
+    // 因此，当前调用位置在 bar 中
+    console.log( "foo" );
+}
+baz(); // <-- baz的调用位置
+```
+
+### 2.2 绑定规则
+
+1. 默认绑定
+
+独立函数调用 --> 默认绑定
+
+```javascript
+function foo() {
+    console.log(this.a);
+}
+var a = 2;
+foo(); //2
+```
+
+`foo()`是直接使用不带任何修饰的函数引用进行调用的，因此只能使用默认绑定，无法应用其他规则。
+
+2. 隐式绑定
+
+```javascript
+function foo() {
+    console.log(this.a);
+}
+
+var obj = {
+    a: 2,
+    foo: foo
+};
+
+obj.foo(); //2
+```
+
+> 无论是直接在`obj`中定义还是先定义再添加为引用属性，这个函数严格来说都不属于`obj`对象。
+
+对象属性引用链中只有最顶层或者说最后一层会影响调用位置。
+
+```javascript
+function foo() {
+    console.log(this.a);
+}
+
+var obj2 = {
+    a: 42,
+    foo: foo
+};
+
+var obj1 = {
+    a: 2,
+    obj2: obj2
+};
+
+obj1.obj2.foo(); //42
+```
+
+**隐式丢失**
+
+```javascript
+function foo() {
+    console.log(this.a);
+}
+
+var obj = {
+    a: 2,
+    foo: foo
+};
+
+var bar = obj.foo; //函数别名
+
+var a = "oops, global"; //a是全局对象的属性
+
+bar(); //"oops, global"
+```
+
+> 虽然`bar`是`obj.foo`的一个引用，但是实际上，它引用的是`foo`函数本身，因此此时的`bar()`是一个不带任何修饰的函数调用，因此应用了默认绑定。
+
+```javascript
+function foo() {
+    console.log(this.a);
+}
+
+function doFoo(fn) {
+    // fn其实引用的是foo
+
+    fn(); //<--调用位置
+}
+
+var obj = {
+    a: 2,
+    foo: foo
+};
+
+var a = "oops, global"; //a是全局对象的属性
+
+doFoo(obj.foo); //"oops, global"
+```
+
+回调函数会丢失`this`绑定
+
+3. 显式绑定
+
++ `call`
++ `apply`
++ `bind`
+
+4. `new`绑定
+
+使用`new`操作符会执行下面的操作
+1. 创建(或者说构造)一个全新的对象。
+2. 这个新对象会被执行[[原型]]连接。
+3. 这个新对象会绑定到函数调用的`this`。
+4. 如果函数没有返回其他对象，那么`new`表达式中的函数调用会自动返回这个新对象。
+
+
