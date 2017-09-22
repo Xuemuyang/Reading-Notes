@@ -223,7 +223,7 @@ var app6 = new Vue({
 ```html
 <div id="example">
   <p>Original message: "{{ message }}"</p>
-  <p>Computed reversed message: "{{ reversedMessage }}"</p>
+  <p> ted reversed message: "{{ reversedMessage }}"</p>
 </div>
 ```
 
