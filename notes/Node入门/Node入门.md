@@ -333,3 +333,124 @@ exports.upload = upload;
 这里使用querystring模块来拿到postData中的text字段
 
 #### 文件上传
+
+index.js
+```javascript
+var server = require("./server");
+var router = require("./router");
+var requestHandlers = require("./requestHandlers");
+var handle = {}
+handle["/"] = requestHandlers.start;
+handle["/start"] = requestHandlers.start;
+handle["/upload"] = requestHandlers.upload;
+handle["/show"] = requestHandlers.show;
+server.start(router.route, handle);
+```
+
+server.js
+```javascript
+var http = require("http");
+var url = require("url");
+function start(route, handle) {
+  function onRequest(request, response) {
+    var pathname = url.parse(request.url).pathname;
+    console.log("Request for " + pathname + " received.");
+    route(handle, pathname, response, request);
+}
+  http.createServer(onRequest).listen(8888);
+  console.log("Server has started.");
+}
+exports.start = start;
+```
+
+route.js
+```javascript
+function route(handle, pathname, response, request) {
+  console.log("About to route a request for " + pathname);
+  if (typeof handle[pathname] === 'function') {
+    handle[pathname](response, request);
+  } else {
+    console.log("No request handler found for " + pathname);
+    response.writeHead(404, {"Content-Type": "text/html"});
+    response.write("404 Not found");
+    response.end();
+} }
+exports.route = route;
+```
+
+requestHandler.js
+```javascript
+var querystring = require("querystring"),
+    fs = require("fs"),
+    formidable = require("formidable");
+function start(response) {
+  console.log("Request handler 'start' was called.");
+  var body = '<html>'+
+    '<head>'+
+    '<meta http-equiv="Content-Type" content="text/html; '+
+    'charset=UTF-8" />'+
+    '</head>'+
+    '<body>'+
+    '<form action="/upload" enctype="multipart/form-data" '+
+    'method="post">'+
+    '<input type="file" name="upload" multiple="multiple">'+
+    '<input type="submit" value="Upload file" />'+
+    '</form>'+
+    '</body>'+
+    '</html>';
+    response.writeHead(200, {"Content-Type": "text/html"});
+    response.write(body);
+    response.end();
+}
+function upload(response, request) {
+  console.log("Request handler 'upload' was called.");
+  var form = new formidable.IncomingForm();
+  console.log("about to parse");
+  form.parse(request, function(error, fields, files) {
+    console.log("parsing done");
+    fs.renameSync(files.upload.path, "/tmp/test.png");
+    response.writeHead(200, {"Content-Type": "text/html"});
+    response.write("received image:<br/>");
+    response.write("<img src='/show' />");
+    response.end();
+  });
+}
+function show(response) {
+  console.log("Request handler 'show' was called.");
+  fs.readFile("/tmp/test.png", "binary", function(error, file) {
+    if(error) {
+      response.writeHead(500, {"Content-Type": "text/plain"});
+      response.write(error + "\n");
+      response.end();
+    } else {
+      response.writeHead(200, {"Content-Type": "image/png"});
+      response.write(file, "binary");
+      response.end();
+    }
+  });
+}
+exports.start = start;
+exports.upload = upload;
+exports.show = show;
+```
+
+index.js作为程序的入口文件,引入其他js文件，并将请求处理程序用一个对象(这里是handle)来传递
+
+server.js这里创建了一个HTTP服务器，在8888端口监听请求，每当有请求传入，解析url，将路径传给route去处理
+
+route中去判断pathname，调用相应事件处理程序，并传入request，response对象
+
+事件处理程序中对事件进行处理
+
+以上传图片为例，执行下列操作
++ 浏览器访问localhost:8888/
++ 本地上传文件
+
+1. srver.js中监听到端口的请求，解析url，将pathname传递给路由
+2. 路由中调用事件处理程序
+3. 由于handle对象根路径注册start，事件处理程序start中返回html标签，form中指定了上传图片的路径
+4. server监听到上传文件请求，解析url，交给路由
+5. 路由中调用事件处理程序
+6. 事件处理程序中引入外部依赖，解析form表单内容，使用fs重命名图片文件，返回上传的图片，路径/show
+7. server监听到show请求-->route-->requestHandler.show()
+
