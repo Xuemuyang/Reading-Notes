@@ -19,7 +19,7 @@ ES6 的第一个版本，就这样在2015年6月发布了，正式名称就是�
 
 > ES6 新增了let命令，用来声明变量。它的用法类似于var，但是所声明的变量，只在let命令所在的代码块内有效。
 
-```
+```javascript
 var a = [];
 for (var i = 0; i < 10; i++) {
   a[i] = function () {
@@ -32,7 +32,7 @@ a[6](); // 10
 
 如果使用`let`，声明的变量仅在块级作用域内有效，最后输出的是6。
 
-```
+```javascript
 var a = [];
 for (let i = 0; i < 10; i++) {
   a[i] = function () {
@@ -44,7 +44,7 @@ a[6](); // 6
 
 `for`循环还有一个特别之处，就是设置循环变量的那部分是一个父作用域，而循环体内部是一个单独的子作用域。
 
-```
+```javascript
 for (let i = 0; i < 3; i++) {
   let i = 'abc';
   console.log(i);
@@ -60,7 +60,7 @@ for (let i = 0; i < 3; i++) {
 
 `let`所声明的变量一定要在声明后使用，否则报错。
 
-```
+```javascript
 // var 的情况
 console.log(foo); // 输出undefined
 var foo = 2;
@@ -74,7 +74,7 @@ let bar = 2;
 
 只要块级作用域内存在`let`命令，它所声明的变量就“绑定”（binding）这个区域，不再受外部的影响。
 
-```
+```javascript
 var tmp = 123;
 
 if (true) {
@@ -91,7 +91,7 @@ ES6明确规定，如果区块中存在`let`和`const`命令，这个区块对�
 
 “暂时性死区”也意味着`typeof`不再是一个百分之百安全的操作。
 
-```
+```javascript
 typeof x; // ReferenceError
 let x;
 ```
@@ -102,7 +102,7 @@ ES6 规定暂时性死区和`let`、`const`语句不出现变量提升，主要�
 
 **不允许重复声明**
 
-```
+```javascript
 // 报错
 function () {
   let a = 10;
@@ -120,7 +120,7 @@ function () {
 
 块级作用域的出现，实际上使得获得广泛应用的立即执行函数表达式（IIFE）不再必要了。
 
-```
+```javascript
 // IIFE 写法
 (function () {
   var tmp = ...;
@@ -136,7 +136,7 @@ function () {
 
 考虑到环境导致的行为差异太大，应该避免在块级作用域内声明函数。如果确实需要，也应该写成函数表达式，而不是函数声明语句。
 
-```
+```javascript
 // 函数声明语句
 {
   let a = 'secret';
@@ -160,7 +160,7 @@ function () {
 
 现在有一个提案，使得块级作用域可以变为表达式，也就是说可以返回值，办法就是在块级作用域之前加上do，使它变为do表达式。
 
-```
+```javascript
 let x = do {
   let t = f();
   t * t + 1;
@@ -175,7 +175,7 @@ let x = do {
 
 `const`声明的变量不得改变值，这意味着，`const`一旦声明变量，就必须立即初始化，不能留到以后赋值。
 
-```
+```javascript
 const foo;
 // SyntaxError: Missing initializer in const declaration
 ```
@@ -196,12 +196,12 @@ const foo;
 
 顶层对象，在浏览器环境指的是`window`对象，在`Node`指的是`global`对象。ES5之中，顶层对象的属性与全局变量是等价的。
 
-```
+```javascript
 window.a = 1;
 a // 1
 ```
 
-```
+```javascript
 a = 2;
 window.a // 2
 ```
@@ -212,7 +212,7 @@ window.a // 2
 
 ES6为了改变这一点，一方面规定，为了保持兼容性，`var`命令和`function`命令声明的全局变量，依旧是顶层对象的属性；另一方面规定，`let`命令、`const`命令、`class`命令声明的全局变量，不属于顶层对象的属性。也就是说，从ES6开始，全局变量将逐步与顶层对象的属性脱钩。
 
-```
+```javascript
 var a = 1;
 // 如果在Node的REPL环境，可以写成global.a
 // 或者采用通用方法，写成this.a
@@ -242,7 +242,7 @@ window.b // undefined
 + `startsWith()`：返回布尔值，表示参数字符串是否在原字符串的头部。
 + `endsWith()`：返回布尔值，表示参数字符串是否在原字符串的尾部。
 
-```
+```javascript
 var s = 'Hello world!';
 
 s.startsWith('Hello') // true
@@ -251,7 +251,7 @@ s.includes('o') // true
 ```
 这三个方法都支持第二个参数，表示开始搜索的位置。
 
-```
+```javascript
 var s = 'Hello world!';
 
 s.startsWith('world', 6) // true
@@ -265,7 +265,7 @@ s.includes('Hello', 6) // false
 
 `repeat`方法返回一个新字符串，表示将原字符串重复n次。
 
-```
+```javascript
 'x'.repeat(3) // "xxx"
 'hello'.repeat(2) // "hellohello"
 'na'.repeat(0) // ""
@@ -275,7 +275,7 @@ s.includes('Hello', 6) // false
 
 如果某个字符串不够指定长度，会在头部或尾部补全。`padStart()`用于头部补全，`padEnd()`用于尾部补全。
 
-```
+```javascript
 'x'.padStart(5, 'ab') // 'ababx'
 'x'.padStart(4, 'ab') // 'abax'
 
@@ -287,7 +287,7 @@ s.includes('Hello', 6) // false
 
 模板字符串（template string）是增强版的字符串，用反引号（`）标识。它可以当作普通字符串使用，也可以用来定义多行字符串，或者在字符串中嵌入变量。
 
-```
+```javascript
 // 普通字符串
 `In JavaScript '\n' is a line-feed.`
 
@@ -305,7 +305,7 @@ var name = "Bob", time = "today";
 
 如果使用模板字符串表示多行字符串，所有的空格和缩进都会被保留在输出之中。
 
-```
+```javascript
 $('#list').html(`
 <ul>
   <li>first</li>
@@ -316,7 +316,7 @@ $('#list').html(`
 
 上面代码中，所有模板字符串的空格和换行，都是被保留的，比如`<ul>`标签前面会有一个换行。如果你不想要这个换行，可以使用trim方法消除它。
 
-```
+```javascript
 $('#list').html(`
 <ul>
   <li>first</li>
@@ -327,7 +327,7 @@ $('#list').html(`
 
 大括号内部可以放入任意的JavaScript表达式，可以进行运算，以及引用对象属性。
 
-```
+```javascript
 var x = 1;
 var y = 2;
 
@@ -344,7 +344,7 @@ var obj = {x: 1, y: 2};
 
 模板字符串之中还能调用函数。
 
-```
+```javascript
 function fn() {
   return "Hello World";
 }
@@ -359,7 +359,7 @@ function fn() {
 
 ES6 允许为函数的参数设置默认值，即直接写在参数定义的后面。
 
-```
+```javascript
 function log(x, y = 'World') {
   console.log(x, y);
 }
@@ -373,7 +373,7 @@ log('Hello', '') // Hello
 
 参数默认值可以与解构赋值的默认值，结合起来使用。
 
-```
+```javascript
 function foo({x, y = 5}) {
   console.log(x, y);
 }
@@ -386,7 +386,7 @@ foo() // TypeError: Cannot read property 'x' of undefined
 
 上面代码只使用了对象的解构赋值默认值，没有使用函数参数的默认值。只有当函数foo的参数是一个对象时，变量x和y才会通过解构赋值生成。如果函数foo调用时没提供参数，变量x和y就不会生成，从而报错。通过提供函数参数的默认值，就可以避免这种情况。
 
-```
+```javascript
 function foo({x, y = 5} = {}) {
   console.log(x, y);
 }
@@ -400,7 +400,7 @@ foo() // undefined 5
 
 指定了默认值以后，函数的`length`属性，将返回没有指定默认值的参数个数。
 
-```
+```javascript
 (function (a) {}).length // 1
 (function (a = 5) {}).length // 0
 (function (a, b, c = 5) {}).length // 2
@@ -410,7 +410,7 @@ foo() // undefined 5
 
 一旦设置了参数的默认值，函数进行声明初始化时，参数会形成一个单独的作用域（context）。等到初始化结束，这个作用域就会消失。这种语法行为，在不设置参数默认值时，是不会出现的。
 
-```
+```javascript
 var x = 1;
 
 function f(x, y = x) {
@@ -422,7 +422,7 @@ f(2) // 2
 
 上面代码中，参数y的默认值等于变量x。调用函数f时，参数形成一个单独的作用域。在这个作用域里面，默认值变量x指向第一个参数x，而不是全局变量x，所以输出是2。
 
-```
+```javascript
 let x = 1;
 
 function f(y = x) {
@@ -439,7 +439,7 @@ f() // 1
 
 ES6 引入 `rest` 参数（形式为...变量名），用于获取函数的多余参数，这样就不需要使用`arguments`对象了。`rest` 参数搭配的变量是一个数组，该变量将多余的参数放入数组中。
 
-```
+```javascript
 function add(...values) {
   let sum = 0;
 
@@ -453,7 +453,7 @@ function add(...values) {
 add(2, 5, 3) // 10
 ```
 
-```
+```javascript
 function push(array, ...items) {
   items.forEach(function(item) {
     array.push(item);
@@ -467,7 +467,7 @@ push(a, 1, 2, 3)
 
 注意，rest 参数之后不能再有其他参数（即只能是最后一个参数），否则会报错。
 
-```
+```javascript
 // 报错
 function f(a, ...b, c) {
   // ...
@@ -478,13 +478,13 @@ function f(a, ...b, c) {
 
 ES6 允许使用“箭头”（=>）定义函数。
 
-```
+```javascript
 var f = v => v;
 ```
 
 上面的箭头函数等同于：
 
-```
+```javascript
 var f = function(v) {
   return v;
 };
@@ -492,7 +492,7 @@ var f = function(v) {
 
 如果箭头函数不需要参数或需要多个参数，就使用一个圆括号代表参数部分。
 
-```
+```javascript
 var f = () => 5;
 // 等同于
 var f = function () { return 5 };
@@ -508,7 +508,7 @@ var sum = function(num1, num2) {
 
 箭头函数的一个用处是简化回调函数。
 
-```
+```javascript
 // 正常函数写法
 [1,2,3].map(function (x) {
   return x * x;
@@ -518,7 +518,7 @@ var sum = function(num1, num2) {
 [1,2,3].map(x => x * x);
 ```
 
-```
+```javascript
 // 正常函数写法
 var result = values.sort(function (a, b) {
   return a - b;
@@ -540,7 +540,7 @@ var result = values.sort((a, b) => a - b);
 
 第一点尤其值得注意。this对象的指向是可变的，但是在箭头函数中，它是固定的。
 
-```
+```javascript
 function foo() {
   setTimeout(() => {
     console.log('id:', this.id);
@@ -559,7 +559,7 @@ foo.call({ id: 42 });
 
 箭头函数转成 ES5 的代码如下。
 
-```
+```javascript
 // ES6
 function foo() {
   setTimeout(() => {
@@ -577,7 +577,7 @@ function foo() {
 }
 ```
 
-```
+```javascript
 function foo() {
   return () => {
     return () => {
