@@ -223,7 +223,7 @@ var app6 = new Vue({
 ```html
 <div id="example">
   <p>Original message: "{{ message }}"</p>
-  <p> ted reversed message: "{{ reversedMessage }}"</p>
+  <p>ted reversed message: "{{ reversedMessage }}"</p>
 </div>
 ```
 
@@ -274,7 +274,7 @@ methods: {
 </div>
 ```
 
-```
+```html
 <!-- Since there is already a rich ecosystem of ajax libraries    -->
 <!-- and collections of general-purpose utility methods, Vue core -->
 <!-- is able to remain small by not reinventing them. This also   -->
@@ -353,7 +353,7 @@ data: {
 computed: {
   classObject: function () {
     return {
-      active: this.isActive && !this.error,
+      'active': this.isActive && !this.error,
       'text-danger': this.error && this.error.type === 'fatal'
     }
   }
@@ -406,7 +406,7 @@ data: {
 
 Vue包含一组观察数组的变异方法，所以它们也将会触发视图更新。这些方法如下：
 
-```
+```js
 push()
 pop()
 shift()
