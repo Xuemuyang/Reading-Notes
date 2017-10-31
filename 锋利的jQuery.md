@@ -464,7 +464,18 @@ $('#hehe').click(function() {
 ##### 判断元素是否处于动画状态
 
 ```js
-if(!$('#hehe').is(":animated")){
-    
+if(!$('#hehe').is(":animated")){ //判断元素是否处于动画状态
+    //如果当前没有进行动画，则添加新动画
 }
 ```
+
+##### 延迟动画
+
+`delay()`将队列中的函数延时执行
+
+#### 其他动画方法
+
++ `toggle(speed, [callback])`
++ `slideToggle(speed, [easing], [callback])`
++ `fadeTo(speed, opacity, [callback])`
++ `fadeToggle(speed, [easing], [callback])`
