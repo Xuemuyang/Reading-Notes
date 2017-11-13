@@ -8,7 +8,7 @@ console.log(names.sort());
 ```
 `["Ana", "John", "ana", "john"]`
 
-既然a在字母表里排第一位，为何ana却排在了John之后呢?这是因为JavaScript在做字符比较 的时候，是根据字符对应的`ASCII`值来比较的。例如，A、J、a、j对应的`ASCII`值分别是65、75、 7、106。
+既然a在字母表里排第一位，为何ana却排在了John之后呢?这是因为JavaScript在做字符比较 的时候，是根据字符对应的`ASCII`值来比较的。例如，A、J、a、j对应的`ASCII`值分别是65、75、97、106。
 
 ## 栈 STACK
 LIFO 堆成一堆的书
