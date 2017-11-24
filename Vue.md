@@ -1,6 +1,28 @@
 # Vue
 
-将数据放在data中，双向绑定，相互影响
+将数据放在data中，双向绑定，相互影响;
+
+核心思想: 数据驱动，jQuery是结构驱动
+
+目录结构
++ package.json中存放依赖信息
++ config保存一些项目初始化配置
++ build里面保存一些webpack的初始化配置
++ main.js是入口js文件
+
+router
+> 根据页面当前url来判断router-view中渲染什么组件
+
+node端之所以能识别.vue文件，是因为前面说的webpack在编译时将.vue文件中的html，js，css都抽出来合成新的单独的文件。
+
+使用锚点路由可以做到不用刷新页面
+
+router中配置的name属性相当于一个备注
+
+script中加入命名标签，打包程序会加上命名空间，确保样式之类不会冲突
+
+## 问题
+生成demo的app挂载点在哪里
 
 ## 基本指令
 
