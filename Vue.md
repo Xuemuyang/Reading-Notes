@@ -21,8 +21,7 @@ router中配置的name属性相当于一个备注
 
 script中加入命名标签，打包程序会加上命名空间，确保样式之类不会冲突
 
-## 问题
-生成demo的app挂载点在哪里
+props是专门用来暴露组件的属性接口的
 
 ## 基本指令
 
@@ -295,6 +294,29 @@ methods: {
   <p>{{ answer }}</p>
 </div>
 ```
+
+### 计算属性的`setter`
+
+计算属性默认只有`getter`,也可以添加`setter`
+
+```js
+computed: {
+  fullName: {
+    // getter
+    get: function () {
+      return this.firstName + ' ' + this.lastName
+    },
+    // setter
+    set: function (newValue) {
+      var names = newValue.split(' ')
+      this.firstName = names[0]
+      this.lastName = names[names.length - 1]
+    }
+  }
+}
+```
+
+现在再运行`vm.fullName = 'John Doe'`时，`setter`会被调用，`vm.firstName`和`vm.lastName`也会相应地被更新。
 
 ```html
 <!-- Since there is already a rich ecosystem of ajax libraries    -->
