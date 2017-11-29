@@ -23,6 +23,27 @@ script中加入命名标签，打包程序会加上命名空间，确保样式�
 
 props是专门用来暴露组件的属性接口的
 
+那就是页面加载数据时，原始代码会闪现一下。
+
+首先加入一段CSS代码
+
+```html
+<style type="text/css">  
+    [v-cloak] {  
+        display: none;  
+    }  
+</style>  
+```
+
+直接在vue挂载点上加入`v-cloak`指令
+```html
+<div id="app" v-cloak>  
+    <h1>{{message}}</h1>  
+    <h1>{{name}}</h1>  
+</div> 
+```
+
+
 ## 基本指令
 
 声明式渲染
