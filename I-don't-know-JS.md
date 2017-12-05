@@ -334,4 +334,183 @@ doFoo(obj.foo); //"oops, global"
 3. 这个新对象会绑定到函数调用的`this`。
 4. 如果函数没有返回其他对象，那么`new`表达式中的函数调用会自动返回这个新对象。
 
+**间接引用**
+
+有可能创建一个函数的“间接引用”，这种情况下调用这个函数会应用默认绑定规则。
+
+容易在赋值时发生
+
+```js
+function foo() {
+    console.log(this.a);
+}
+
+var a = 2;
+var o = { a: 3, foo: foo };
+var p = { a: 4 };
+
+o.foo(); //3
+(p.foo = o.foo)(); //2
+```
+
+赋值表达式`p.foo = o.foo`返回值是目标函数的引用，因此这里会应用默认绑定。
+
+**ES6箭头函数**
+
+```js
+function foo() {
+    //返回一个箭头函数
+    return (a) => {
+        //this继承自foo()
+        console.log( this.a );
+    };
+}
+
+var obj1 = {
+    a:2
+};
+
+var obj2 = {
+    a:3
+};
+
+var bar = foo.call( obj1 );
+bar.call( obj2 ); //2，不是 3!!!
+```
+
+箭头函数的绑定无法被修改
+
+## chap3. 对象
+
+### 3.1 语法
+
+对象可以通过两种方式定义：声明（字面量）和构造形式。
+
+字面量形式语法是这样：
+
+```js
+var myObj = {
+    key: value
+    // ...
+};
+```
+
+构造形式：
+
+```js
+var myObj = new Object();
+myObj.key = value;
+```
+
+两种方式生成的对象是一样的，区别是字面量可以定义多个键值对，构造形式必须逐个添加。
+
+### 3.2 类型
+
+JS中有六种主要类型
+1. `string`
+2. `number`
+3. `boolean`
+4. `null`
+5. `undefined`
+6. `object`
+
+`null`会被当做对象是语言本身的一个bug,`typeof null`会返回字符串`"object"`。
+
+#### 内置对象
+
+1. `String`
+2. `Number`
+3. `Boolean`
+4. `Object`
+5. `Function`
+6. `Array`
+7. `Date`
+8. `RegExp`
+9. `Error`
+
+```js
+var strPrimitive = "I am a string";
+typeof strPrimitive; // "string"
+strPrimitive instaneof String; // false
+
+var strObject = new String( "I am a string" );
+typeof strObject; // "object"
+strObject instanceof String; // true
+```
+
+> 直接在字符串字面量上访问属性或者方法是因为引擎自动把字面量转换成对象，所以可以访问属性和方法。
+
+`number`和`boolean`字面量也是如此
+
+`null`和`undefined`没有对应的构造形式
+
+相反`Date`只有构造形式没有字面量形式
+
+对于`Object`、`Array`、`Function`、`RegExp`来说，无论使用文字还是构造形式它们都是对象。
+
+### 3.3 内容
+
+```js
+var myObject = {
+    a: 2
+};
+
+myObject.a; // 2
+
+myObject["a"]; // 2
+```
+
+访问`myObject`中`a`位置上的值，使用`.`操作符或者`[]`操作符.
+
+`.`操作符通常被称为“属性访问”
+
+`[]`操作符通常被称为“键访问”
+
+他们访问的是同一个位置
+
+属性名永远都是字符串，如果使用`string`(字面量)以外的其他值作为属性名，那么它首先会被转换为一个字符串。
+
+#### 3.3.1 可计算属性名
+
+ES6增加了可计算属性名，可以在文字形式中使用`[]`包裹一个表达式来当做属性名：
+
+```js
+var prefix = "foo";
+
+var myObject = {
+    [prefix + "bar"]: "hello",
+    [prefix + "baz"]: "world",
+};
+
+myObject["foobar"]; // hello
+myObject["foobaz"]; // world
+```
+
+#### 3.3.2 属性与方法
+
+> 函数永远不会“属于”一个对象
+
+属性访问返回的函数和其他函数没有任何区别（除了可能发生的隐式绑定`this`）
+
+即使子对象字面量中声明了一个函数表达式，这个函数也不会“属于”这个对象---它们只是对于相同函数对象的多个引用。
+
+```js
+var myObject = {
+    foo: function() {
+        console.log( "foo" );
+    }
+};
+
+var someFoo = myObject.foo;
+
+someFoo; // function foo(){..}
+
+myObject.foo; // function foo(){..}
+```
+
+#### 3.3.3 数组
+
+##### 深复制和浅复制
+
+> 浅复制是对对象地址的复制，并没有开辟新的栈，也就是复制的结果是两个对象指向同一个地址，修改其中一个对象的属性，则另一个对象的属性也会改变，而深复制则是开辟新的栈，两个对象对应两个不同的地址，修改一个对象的属性，不会改变另一个对象的属性。
 
