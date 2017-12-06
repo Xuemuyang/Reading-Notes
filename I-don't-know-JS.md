@@ -508,9 +508,112 @@ someFoo; // function foo(){..}
 myObject.foo; // function foo(){..}
 ```
 
-#### 3.3.3 数组
+#### 3.3.4 复制对象
 
 ##### 深复制和浅复制
 
 > 浅复制是对对象地址的复制，并没有开辟新的栈，也就是复制的结果是两个对象指向同一个地址，修改其中一个对象的属性，则另一个对象的属性也会改变，而深复制则是开辟新的栈，两个对象对应两个不同的地址，修改一个对象的属性，不会改变另一个对象的属性。
+
+对于JSON安全的对象来说，有一种巧妙的复制方法：
+
+```js
+var newObj = JSON.parse( JSON.stringify( someObj ) );
+```
+
+#### 3.3.5 属性描述符
+
+ES5开始，所有的属性都具备了属性描述符
+
+```js
+var myObject = {
+    a:2
+};
+
+Object.getOwnPropertyDescriptor( myObject, "a" );
+//{
+//  value: 2,
+//  writable: true,
+//  enumerable: true,
+//  configurable: true    
+//}
+```
+
+创建普通属性时属性描述符会使用默认值，可以使用`Object.defineProperty(..)`来添加新属性或者修改已有属性并对特性进行设置。
+
+```js
+var myObject = {};
+
+Object.defineProperty( myObject, "a", {
+    value: 2,
+    writable: true,
+    configurable: true,
+    enumerable: true
+});
+
+myObject.a; // 2
+```
+
+1. `Writable`
+
+`Writable`决定是否可以修改属性的值。
+
+2. `Configurable`
+
+只要属性是可配置的，就可以使用`defineProperty(..)`方法来修改属性描述符：
+
+把`configurable`修改成`false`是单向操作，无法撤销!
+
+> 要注意有一个小小的例外:即便属性是 `configurable:false`，我们还是可以把`writable`的状态由`true`改为`false`，但是无法由`false`改为`true`。
+
+除了无法修改，`configurable:false`还会禁止删除这个属性。
+
+3. `Enumerable`
+
+`for ..in`循环中，如果把`enumerable`设置成`false`，这个属性就不会出现在枚举中。
+
+#### 3.3.6 不变性
+
+有时候会希望属性或者对象不可改变
+
+所有方法创建的都是浅不变性，他们只会影响目标对象和它的直接属性，如果目标引用了其他对象，其他对象的内容不受影响，仍然可变。
+
+1. 对象常量
+结合`writeble:false`和`configurable:false`就可以创建一个真正的常量属性（不可修改、重定义或者删除）：
+
+```js
+var myObject = {};
+
+Object.defineProperty( myObject, "FAVORITE_NUMBER", {
+    value: 42,
+    writeble: false,
+    configurable: false
+} );
+```
+
+2. 禁止扩展
+
+禁止一个对象添加新属性并且保留已有属性，可以使用`Object.preventExtensions(..)`:
+
+```js
+var myObject = {
+    a:2
+};
+
+Object.preventExtensions( myObject );
+
+myObject.b = 3;
+myObject.b; // undefined
+```
+
+3. 密封
+
+`Object.seal(..)`会创建一个“密封”的对象，这个方法实际上会在一个现有的对象上调用`Object.precentExtensions(..)`并把所有现有属性标记为`configurable:false`。
+
+密封之后不仅不能添加新属性，也不能重新配置或者删除任何现有属性（虽然可以修改属性的值）。
+
+4. 冻结
+
+`Object.freeze(..)`会创建一个冻结对象，这个方法实际上会在一个现有对象上调用`Object.seal(..)`并把所有“数据访问”属性标记为`writable:false`，这样就无法修改它们的值。
+
+#### 3.3.7 [[Get]]
 
