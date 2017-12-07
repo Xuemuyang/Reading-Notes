@@ -617,3 +617,143 @@ myObject.b; // undefined
 
 #### 3.3.7 [[Get]]
 
+```js
+var myObject = {
+    a: 2
+};
+
+myObject.a; // 2
+```
+
+`myObject.a`是一次属性访问，但不仅仅是在`myObject`中查找名字为`a`的属性，在语言规范中，`myObject.a`在`myObject`上实际上实现了`[[GET]]`操作。
+
+对象默认的内置`[[Get]]`操作首先在对象中查找是否有名称相同的属性， 如果找到就会返回这个属性的值。
+
+如果没有找到名称相同的属性，按照`[[GET]]`算法的定义会遍历可能存在的`[[Prototype]]`链，也就是原型链。
+
+如果无论如何都没有找到名称相同的属性，那么`[[GET]]`操作会返回值`undefined`:
+
+```js
+var myObject = {
+    a: 2
+};
+
+myObject.b; // undefined
+```
+
+当访问当前词法作用域中不存在的变量，会抛出`ReferenceError`异常
+
+#### 3.3.8 [[Put]]
+
+与`[[GET]]`操作相对应
+
+如果对象中已经存在这个属性，`[[Put]]`算法大致检查下面这些内容。
+
+1. 属性是否是访问描述符(参见3.3.9节)?如果是并且存在`setter`就调用`setter`。
+2. 属性的数据描述符中`writable`是否是`false`?如果是，在非严格模式下静默失败，在严格模式下抛出`TypeError`异常。
+3. 如果都不是，将该值设置为属性的值。
+
+如果对象中不存在这个属性，[[Put]]操作更加复杂
+
+#### 3.3.8 Getter和Setter
+
+当给一个属性定义`getter`、`setter`或者两者都有时，这个属性会被定义为“访问描述符”（和“数据描述符”相对）。对于访问描述符来说，JS会忽略他们的`value`和`writeble`特性，取而代之的是关心`set`和`get`（还有`configurable`和`enumerable`）特性。
+
+通常来说`getter`和`setter`是成对出现的。
+
+```js
+var myObject = {
+    // 给a定义一个getter
+    get a() {
+        return this._a_;
+    },
+
+    // 给a定义一个setter
+    set a(val) {
+        this._a_ = val * 2;
+    }
+};
+
+myObject.a = 2;
+myObject.a; // 4
+```
+
+#### 3.3.10 存在性
+
+`myObject.a`的属性访问返回值可能是`undefined`，但是这个值有可能是属性中存储的`undefined`，也可能是因为属性不存在所以返回`undefined`。
+
+```js
+var myObject = {
+    a:2
+};
+
+("a" in myObject); // true
+("b" in myObject); // false
+
+myObject.hasOwnProperty( "a" ); // true
+myObject.hasOwnProperty( "b" ); // false
+```
+
+`in`操作符会检查属性是否在对象及其[[Prototype]]原型链中，`hasOwnProperty(..)`只会检查属性是否在`myObject`对象中，不会检查[[Prototype]]链。
+
+> 在数组上应用`for ..in`循环有时会产生出人意料的结果，最好只在对象上应用`for ..in`循环，如果要遍历数组就使用传统的`for`循环来遍历数组索引。
+
+```js
+var myObject = { };
+
+Object.defineProperty(
+    myObject,
+    "a",
+    // 让a像普通属性一样可以枚举
+    { enumerable: true, value: 2 }
+);
+
+Object.defineProperty(
+    myObject,
+    "b",
+    // 让b不可枚举
+    { enumerable: false, value: 3 }
+);
+
+myObject.propertyIsEnumerable( "a" ); // true
+myObject.propertyIsEnumerable( "b" ); // false
+
+Object.keys( myObject ); // ["a"]
+Object.getOwnPropertyNames( myObject ); // ["a", "b"]
+```
+
+`propertyIsEnumerable(..)`会检查给定的属性名是否直接存在于对象中(而不是在原型链上)并且满足`enumerable:true`。
+
+`Object.keys(..)`会返回一个数组，包含所有可枚举属性，`Object.getOwnPropertyNames(..)`会返回一个数组，包含所有属性，无论它们是否可枚举。
+
+`in`和`hasOwnProperty(..)`的区别在于是否查找[[Prototype]]链，然而，`Object.keys(..)`和`Object.getOwnPropertyNames(..)`都只会查找对象直接包含的属性。
+
+### 3.4 遍历
+
+> 遍历对象属性时的顺序是不确定的，不同`JavaScript`引擎可能不一样。
+
+ES6增加的`for ..of`循环语法直接遍历数组的值（如果对象本身定义了迭代器的话也可以遍历对象）：
+
+```js
+var myArray = [1, 2, 3];
+
+for (var v of myArray) {
+    console.log( v );
+}
+// 1
+// 2
+// 3
+```
+
+JavaScript 中的对象有字面形式(比如`var a = { .. }`)和构造形式(比如`var a = new Array(..)`)。字面形式更常用，不过有时候构造形式可以提供更多选项。
+
+对象就是键/值对的集合。可以通过`.propName`或者`["propName"]`语法来获取属性值。访问属性时，引擎实际上会调用内部的默认`[[Get]]`操作(在设置属性值时是`[[Put]])，[[Get]]`操作会检查对象本身是否包含这个属性，如果没找到的话还会查找`[[Prototype]]`链。
+
+属性的特性可以通过属性描述符来控制，比如`writable`和`configurable`。此外，可以使用`Object.preventExtensions(..)`、`Object.seal(..)`和`Object.freeze(..)`来设置对象(及其 属性)的不可变性级别。
+
+属性不一定包含值——它们可能是具备`getter/setter`的“访问描述符”。此外，属性可以是可枚举或者不可枚举的，这决定了它们是否会出现在`for..in`循环中。
+
+你可以使用ES6的`for..of`语法来遍历数据结构(数组、对象，等等)中的值，`for..of`会寻找内置或者自定义的`@@iterator`对象并调用它的`next()`方法来遍历数据值。
+
+## Chap4. 混合对象“类”
+
