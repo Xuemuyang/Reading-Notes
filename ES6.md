@@ -612,7 +612,7 @@ var t3 = f()().call({id: 4}); // id: 1
 
 递归非常耗费内存，因为需要同时保存成千上百个调用帧，很容易发生“栈溢出”错误（stack overflow）。但对于尾递归来说，由于只存在一个调用帧，所以永远不会发生“栈溢出”错误。
 
-```
+```js
 function factorial(n) {
   if (n === 1) return 1;
   return n * factorial(n - 1);
@@ -625,7 +625,7 @@ factorial(5) // 120
 
 如果改写成尾递归，只保留一个调用记录，复杂度 O(1) 。
 
-```
+```js
 function factorial(n, total) {
   if (n === 1) return total;
   return factorial(n - 1, n * total);
@@ -634,11 +634,11 @@ function factorial(n, total) {
 factorial(5, 1) // 120
 ```
 
-还有一个比较著名的例子，就是计算 Fibonacci 数列，也能充分说明尾递归优化的重要性。
+还有一个比较著名的例子，就是计算`Fibonacci`数列，也能充分说明尾递归优化的重要性。
 
-非尾递归的 Fibonacci 数列实现如下。
+非尾递归的`Fibonacci`数列实现如下。
 
-```
+```js
 function Fibonacci (n) {
   if ( n <= 1 ) {return 1};
 
@@ -650,9 +650,9 @@ Fibonacci(100) // 堆栈溢出
 Fibonacci(500) // 堆栈溢出
 ```
 
-尾递归优化过的 Fibonacci 数列实现如下。
+尾递归优化过的`Fibonacci`数列实现如下。
 
-```
+```js
 function Fibonacci2 (n , ac1 = 1 , ac2 = 1) {
   if( n <= 1 ) {return ac2};
 
@@ -670,7 +670,7 @@ Fibonacci2(10000) // Infinity
 
 函数式编程有一个概念，叫做柯里化（currying），意思是将多参数的函数转换成单参数的形式。这里也可以使用柯里化。
 
-```
+```js
 function currying(fn, n) {
   return function (m) {
     return fn.call(this, m, n);
@@ -688,7 +688,7 @@ factorial(5) // 120
 ```
 
 或者采用默认值
-```
+```js
 function factorial(n, total = 1) {
   if (n === 1) return total;
   return factorial(n - 1, n * total);
@@ -717,7 +717,7 @@ factorial(5) // 120
 
 `Promise`也有一些缺点。首先，无法取消`Promise`，一旦新建它就会立即执行，无法中途取消。其次，如果不设置回调函数，`Promise`内部抛出的错误，不会反应到外部。第三，当处于`pending`状态时，无法得知目前进展到哪一个阶段（刚刚开始还是即将完成）。
 
-### 基本用法
+### 2. 基本用法
 
 `Promise`对象是一个构造函数，用来生成`Promise`实例。
 
@@ -763,5 +763,78 @@ const p2 = new Promise(function (resolve, reject) {
 
 上面代码中，`p1`和`p2`都是`Promise`的实例，但是`p2`的`resolve`方法将`p1`作为参数，即一个异步操作的结果是返回另一个异步操作。
 
+注意，这时`p1`的状态就会传递给`p2`，也就是说，`p1`的状态决定了`p2`的状态。如果`p1`的状态是`pending`，那么`p2`的回调函数就会等待`p1`的状态改变；如果`p1`的状态已经是`resolved`或者`rejected`，那么`p2`的回调函数将会立刻执行。
 
+```js
+const p1 = new Promise(function (resolve, reject) {
+  setTimeout(() => reject(new Error('fail')), 3000)
+})
+
+const p2 = new Promise(function (resolve, reject) {
+  setTimeout(() => resolve(p1), 1000)
+})
+
+p2
+  .then(result => console.log(result))
+  .catch(error => console.log(error))
+// Error: fail
+```
+
+上面代码中，`p1`是一个`Promise`，3秒之后变为`rejected`。`p2`的状态在1秒之后改变，`resolve`方法返回的是`p1`。由于`p2`返回的是另一个`Promise`，导致`p2`自己的状态无效了，由`p1`的状态决定`p2`的状态。所以，后面的`then`语句都变成针对后者（`p1`）。又过了2秒，`p1`变为`rejected`，导致触发`catch`方法指定的回调函数。
+
+> 注意，调用`resolve`或`reject`并不会终结 `Promise`的参数函数的执行。
+
+```js
+new Promise((resolve, reject) => {
+  resolve(1);
+  console.log(2);
+}).then(r => {
+  console.log(r);
+});
+// 2
+// 1
+```
+
+> `resolved`的`Promise`是在本轮事件循环的末尾执行，总是晚于本轮循环的同步任务。
+
+一般来说，调用`resolve`或`reject`以后，`Promise`的使命就完成了，后继操作应该放到`then`方法里面，而不应该直接写在`resolve`或`reject`的后面。所以，最好在它们前面加上`return`语句，这样就不会有意外。
+
+```js
+new Promise((resolve, reject) => {
+  return resolve(1);
+  // 后面的语句不会执行
+  console.log(2);
+})
+```
+
+### 3. `Promise.prototype.then()`
+
+`Promise`实例具有`then`方法，它的作用是为`Promise`实例添加状态改变时的回调函数。
+
+`then`方法返回的是一个新`Promise`实例，因此可以采用链式写法，即`then`方法后面再调用另一个`then`方法。
+
+采用链式的`then`，可以指定一组按照次序调用的回调函数。这时，前一个回调函数，有可能返回的还是一个`Promise`对象（即有异步操作），这时后一个回调函数，就会等待该`Promise`对象的状态发生变化，才会被调用。
+
+```js
+getJSON("/post/1.json").then(function(post) {
+  return getJSON(post.commentURL);
+}).then(function funcA(comments) {
+  console.log("resolved: ", comments);
+}, function funcB(err){
+  console.log("rejected: ", err);
+});
+```
+
+采用箭头函数，上面代码更简洁
+
+```js
+getJSON("/post/1.json").then(
+  post => getJSON(post.commentURL)
+).then(
+  comments => console.log("resolved: ", comments),
+  err => console.log("rejected: ", err)
+);
+```
+
+### 4. Promise.prototype.catch()
 
