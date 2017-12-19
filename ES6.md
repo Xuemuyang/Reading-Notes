@@ -1,6 +1,7 @@
 # [ECMAScript6 入门](http://es6.ruanyifeng.com/#README) ---阮一峰
 
 ## 1. ECMAScript 6简介
+
 > ECMAScript 6.0（以下简称 ES6）是 JavaScript 语言的下一代标准，已经在2015年6月正式发布了。它的目标，是使得 JavaScript 语言可以用来编写复杂的大型应用程序，成为企业级开发语言。
 
 2011年，ECMAScript 5.1版发布后，就开始制定6.0版了。因此，ES6 这个词的原意，就是指 JavaScript 语言的下一个版本。
@@ -699,3 +700,68 @@ factorial(5) // 120
 ## `Symbol`
 
 ## `Promise`对象
+
+### 1. `Promise`的含义
+
+> `Promise`是异步编程的一种解决方案，最早有社区提出，ES6原生提供`Promise`对象
+
+两个特点
+
+1. 对象的状态不收外界影响，`Promise`对象代表一个异步操作，有三种状态：`pending`（进行中）、`fulfilled`（已成功）和`rejected`（已失败）。只有异步操作的结果可以决定当前是哪一种状态，这正是"Promise"的由来。
+
+2. 一旦状态改变就不会再变。`Promise`对象的状态改变只有两种可能，`Pending`到`fulfilled`，`Pending`到`rejected`。只要这两种情况发生，状态就凝固了。
+
+`fullfilled`状态也可用`resolved`来指代。
+
+有了`Promise`对象，就可以将异步操作以同步操作的流程表达出来，避免了层层嵌套的回调函数。此外，`Promise`对象提供统一的接口，使得控制异步操作更加容易。
+
+`Promise`也有一些缺点。首先，无法取消`Promise`，一旦新建它就会立即执行，无法中途取消。其次，如果不设置回调函数，`Promise`内部抛出的错误，不会反应到外部。第三，当处于`pending`状态时，无法得知目前进展到哪一个阶段（刚刚开始还是即将完成）。
+
+### 基本用法
+
+`Promise`对象是一个构造函数，用来生成`Promise`实例。
+
+`Promise`构造函数接受一个函数作为参数，该函数的两个参数分别是`resolve`和`reject`。它们是两个函数，由`JavaScript`引擎提供，不用自己部署。
+
+`resolve`函数的作用是，将`Promise`对象的状态从“未完成”变为“成功”（即从`pending`变为`resolved`），在异步操作成功时调用，并将异步操作的结果，作为参数传递出去；`reject`函数的作用是，将`Promise`对象的状态从“未完成”变为“失败”（即从`pending`变为`rejected`），在异步操作失败时调用，并将异步操作报出的错误，作为参数传递出去。
+
+`Promise`实例生成以后，可以用`then`方法分别指定`resolved`状态和`rejected`状态的回调函数。
+
+`then`方法可以接受两个回调函数作为参数。第一个回调函数是`Promise`对象的状态变为`resolved`时调用，第二个回调函数是`Promise`对象的状态变为`rejected`时调用。其中，第二个函数是可选的，不一定要提供。这两个函数都接受`Promise`对象传出的值作为参数。
+
+`Promise`新建后就会立即执行。
+
+```js
+let promise = new Promise(function(resolve, reject) {
+  console.log('Promise');
+  resolve('hehe');
+});
+
+promise.then(function(val) {
+  console.log('resolved.'+val);
+});
+
+console.log('Hi!');
+
+// Promise
+// Hi!
+// resolved.hehe
+```
+
+如果调用`resolve`函数和`reject`函数时带有参数，那么它们的参数会被传递给回调函数。`reject`函数的参数通常是`Error`对象的实例，表示抛出的错误；`resolve`函数的参数除了正常的值以外，还可能是另一个`Promise`实例，比如像下面这样。
+
+```js
+const p1 = new Promise(function (resolve, reject) {
+  // ...
+});
+
+const p2 = new Promise(function (resolve, reject) {
+  // ...
+  resolve(p1);
+})
+```
+
+上面代码中，`p1`和`p2`都是`Promise`的实例，但是`p2`的`resolve`方法将`p1`作为参数，即一个异步操作的结果是返回另一个异步操作。
+
+
+

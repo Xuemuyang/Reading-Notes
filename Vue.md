@@ -103,7 +103,7 @@ var app2 = new Vue({
 
 `v-bind:title="message"`可以简写为`:title="message"`
 
-`<div :class="{ active: isActive }"><div>`
+`<div :f="{ active: isActive }"><div>`
 通过`isActive`的值来绑定`div`的`active`属性
 
 ### 2. 条件与循环
