@@ -5,6 +5,7 @@
 核心思想: 数据驱动，jQuery是结构驱动
 
 目录结构
+
 + package.json中存放依赖信息
 + config保存一些项目初始化配置
 + build里面保存一些webpack的初始化配置
@@ -28,34 +29,37 @@ props是专门用来暴露组件的属性接口的
 首先加入一段CSS代码
 
 ```html
-<style type="text/css">  
-    [v-cloak] {  
-        display: none;  
-    }  
-</style>  
+<style type="text/css">
+    [v-cloak] {
+        display: none;
+    }
+</style>
 ```
 
 直接在vue挂载点上加入`v-cloak`指令
-```html
-<div id="app" v-cloak>  
-    <h1>{{message}}</h1>  
-    <h1>{{name}}</h1>  
-</div> 
-```
 
+```html
+<div id="app" v-cloak>
+    <h1>{{message}}</h1>
+    <h1>{{name}}</h1>
+</div>
+```
 
 ## 基本指令
 
 声明式渲染
+
 + `{{}}`也叫`v-text` 文本渲染
 + `v-bind` 属性绑定 :
 
 条件与循环
+
 + `v-if` DOM不渲染
 + `v-show` 通过display控制隐藏
 + `v-for` 列表渲染
 
 处理用户输入
+
 + `v-on` 事件绑定 @
 + `v-model` 表单控件使用
 
@@ -561,4 +565,3 @@ var example1 = new Vue({
 <!-- 点击事件将只会触发一次 -->
 <a v-on:click.once="doThis"></a>
 ```
-
