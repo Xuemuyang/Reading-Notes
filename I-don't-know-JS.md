@@ -1,7 +1,5 @@
 # I don't know JS
 
-# 作用域和闭包
-
 ## chap1. 作用域
 
 ### 1.1 编译原理
@@ -9,20 +7,28 @@
 > 尽管通常将 JavaScript 归类为“动态”或“解释执行”语言，但事实上它是一门编译语言。
 
 传统编译语言代码执行之前经历三个步骤
-1. 分词/词法分析(Tokenizing/Lexing)
+
+1.分词/词法分析(Tokenizing/Lexing)
 这个过程将字符组成的字符串分解成有意义的代码块(token)，比如`var a = 2;`通常被分解为`var`、`a`、`=`、`2`、`;`
-2. 解析/语法分析(Parsing)
+
+2.解析/语法分析(Parsing)
 将词法单元流转化弄成一个结构树。抽象语法树(Abstract Syntax Tree，AST)
-3. 代码生成
+
+3.代码生成
 将AST转化为一组机器指令
 
 ### 1.2 理解作用域
 
-+ 引擎
+1.引擎
+
 从头到尾负责整个`JavaScript`程序的编译及执行过程。
-+ 编译器 
+
+2.编译器
+
 引擎的好朋友之一，负责语法分析及代码生成等脏活累活。
-+ 作用域 
+
+3.作用域
+
 引擎的另一位好朋友，负责收集并维护由所有声明的标识符(变量)组成的一系列查询，并实施一套非常严格的规则，确定当前执行的代码对这些标识符的访问权限。
 
 以`var a = 2;`为例，说明编译器、引擎和作用域如何协同工作。
@@ -31,7 +37,7 @@
 
 1. 遇到`var a`，编译器会询问作用域是否已经有一个该名称的变量存在于同一个作用域的集合中。如果是，编译器会忽略该声明，继续进行编译;否则它会要求作用域在当前作用域的集合中声明一个新的变量，并命名为`a`。
 
-2. 接下来编译器会为引擎生成运行时所需的代码，这些代码被用来处理`a = 2`这个赋值操作。引擎运行时会首先询问作用域，在当前的作用域集合中是否存在一个叫作`a`的变量。如果是，引擎就会使用这个变量;如果否，引擎会继续查找该变量。
+1. 接下来编译器会为引擎生成运行时所需的代码，这些代码被用来处理`a = 2`这个赋值操作。引擎运行时会首先询问作用域，在当前的作用域集合中是否存在一个叫作`a`的变量。如果是，引擎就会使用这个变量;如果否，引擎会继续查找该变量。
 
 > 总结:变量的赋值操作会执行两个动作，首先编译器会在当前作用域中声明一个变量(如果之前没有声明过)，然后在运行时引擎会在作用域中查找该变量，如果能够找到就会对它赋值。
 
@@ -45,6 +51,7 @@
 `console.log( a );`这里对`a`的引用是`LHS`引用。
 
 下面的程序既有`LHS`引用也有`RHS`引用
+
 ```javascript
 function foo(a) { console.log( a ); // 2
 }
@@ -56,7 +63,7 @@ foo( 2 );
 ```javascript
 function foo(a) {
     var b = a;
-    return a + b; 
+    return a + b;
 }
 
 var c = foo(2);
@@ -76,7 +83,7 @@ var c = foo(2);
 > 当一个块或函数嵌套在另一个块或函数中时，就发生了作用域的嵌套。因此，在当前作用域中无法找到某个变量时，引擎就会在外层嵌套的作用域中继续查找，直到找到该变量，或抵达最外层的作用域(也就是全局作用域)为止。
 
 ```javascript
-function foo(a) { 
+function foo(a) {
     console.log(a + b);
     b = a;
 }
@@ -92,6 +99,7 @@ foo( 2 );
 > `ReferenceError`同作用域判别失败相关，而`TypeError`则代表作用域判别成功了，但是对结果的操作是非法或不合理的。
 
 ### 总结一下
+
 + 变量（标识符）
 + 如果查找的目的是对变量进行赋值，那么就会使用`LHS`查询;如果目的是获取变量的值，就会使用`RHS`查询。
 
@@ -108,8 +116,8 @@ foo( 2 );
 #### `eval`
 
 ```javascript
-function foo(str, a) { 
-    eval( str ); // 欺骗! 
+function foo(str, a) {
+    eval( str ); // 欺骗!
     console.log( a, b );
 }
 var b = 2;
@@ -119,16 +127,16 @@ foo( "var b = 3;", 1 ); // 1, 3
 #### `with`
 
 ```javascript
-var obj = { 
+var obj = {
     a: 1,
     b: 2,
-    c: 3 
+    c: 3
 };
-// 单调乏味的重复 "obj" 
+// 单调乏味的重复 "obj"
 obj.a = 2;
 obj.b = 3;
 obj.c = 4;
-// 简单的快捷方式 
+// 简单的快捷方式
 with (obj) {
     a = 3;
     b = 4;
@@ -147,9 +155,10 @@ with (obj) {
 ## chap4. 提升
 
 VO按照如下顺序填充：
+
 1. 函数参数
-2. 函数声明
-3. 变量声明
+1. 函数声明
+1. 变量声明
 
 > 我们习惯将`var a = 2;`看作一个声明，而实际上`JavaScript`引擎并不这么认为。它将`var a`
 和`a = 2`当作两个单独的声明，第一个是编译阶段的任务，而第二个则是执行阶段的任务。
@@ -159,28 +168,30 @@ VO按照如下顺序填充：
 > 本质上无论何时何地，如果将函数(访问它们各自的词法作用域)当作第一级的值类型并到处传递，你就会看到闭包在这些函数中的应用。在定时器、事件监听器、 Ajax请求、跨窗口通信、Web Workers或者任何其他的异步(或者同步)任务中，只要使用了回调函数，实际上就是在使用闭包!
 
 ```javascript
-for (var i=1; i<=5; i++) { 
-    (function(j) {setTimeout(function timer() { 
+for (var i=1; i<=5; i++) {
+    (function(j) {setTimeout(function timer() {
         console.log( j );
         }, j*1000 );
     })(i);
 }
 ```
+
 在这个经典的闭包例子中，使用IIFE的目的是为了创建一个"块级"作用域，用来保存i，如果不使用IIFE，那么需要一个函数作用域来保存。
 
 ## 附录A 动态作用域
 
 ```javascript
-function foo() { 
+function foo() {
     console.log( a ); // 2
 }
-function bar() { 
+function bar() {
     var a = 3;
-    foo(); 
+    foo();
 }
-var a = 2; 
+var a = 2;
 bar();
 ```
+
 词法作用域让`foo()`中的`a`通过`RHS`引用到了全局作用域中的`a`，因此会输出2。
 
 动态作用域并不关心函数和作用域是如何声明以及在何处声明的，只关心它们从何处调用。换句话说，作用域链是基于调用栈的，而不是代码中的作用域嵌套。
@@ -191,7 +202,7 @@ bar();
 
 ## 附录C `this`词法
 
-# `this`和对象原型
+## `this`和对象原型
 
 ## chap1. 关于`this`
 
@@ -208,16 +219,16 @@ function baz() {
     // 当前调用栈是:baz
     // 因此，当前调用位置是全局作用域
     console.log( "baz" );
-    bar(); // <-- bar的调用位置 
+    bar(); // <-- bar的调用位置
 }
 function bar() {
     // 当前调用栈是 baz -> bar
     // 因此，当前调用位置在 baz 中
     console.log( "bar" );
-    foo(); // <-- foo的调用位置 
+    foo(); // <-- foo的调用位置
 }
 function foo() {
-    // 当前调用栈是 baz -> bar -> foo 
+    // 当前调用栈是 baz -> bar -> foo
     // 因此，当前调用位置在 bar 中
     console.log( "foo" );
 }
@@ -226,7 +237,7 @@ baz(); // <-- baz的调用位置
 
 ### 2.2 绑定规则
 
-1. 默认绑定
+1.默认绑定
 
 独立函数调用 --> 默认绑定
 
@@ -240,7 +251,7 @@ foo(); //2
 
 `foo()`是直接使用不带任何修饰的函数引用进行调用的，因此只能使用默认绑定，无法应用其他规则。
 
-2. 隐式绑定
+2.隐式绑定
 
 ```javascript
 function foo() {
@@ -277,7 +288,7 @@ var obj1 = {
 obj1.obj2.foo(); //42
 ```
 
-**隐式丢失**
+#### 隐式丢失
 
 ```javascript
 function foo() {
@@ -320,21 +331,22 @@ doFoo(obj.foo); //"oops, global"
 
 回调函数会丢失`this`绑定
 
-3. 显式绑定
+3.显式绑定
 
 + `call`
 + `apply`
 + `bind`
 
-4. `new`绑定
+4.`new`绑定
 
 使用`new`操作符会执行下面的操作
-1. 创建(或者说构造)一个全新的对象。
-2. 这个新对象会被执行[[原型]]连接。
-3. 这个新对象会绑定到函数调用的`this`。
-4. 如果函数没有返回其他对象，那么`new`表达式中的函数调用会自动返回这个新对象。
 
-**间接引用**
+1. 创建(或者说构造)一个全新的对象。
+1. 这个新对象会被执行[[原型]]连接。
+1. 这个新对象会绑定到函数调用的`this`。
+1. 如果函数没有返回其他对象，那么`new`表达式中的函数调用会自动返回这个新对象。
+
+#### 间接引用
 
 有可能创建一个函数的“间接引用”，这种情况下调用这个函数会应用默认绑定规则。
 
@@ -355,7 +367,7 @@ o.foo(); //3
 
 赋值表达式`p.foo = o.foo`返回值是目标函数的引用，因此这里会应用默认绑定。
 
-**ES6箭头函数**
+#### ES6箭头函数
 
 ```js
 function foo() {
@@ -407,26 +419,27 @@ myObj.key = value;
 ### 3.2 类型
 
 JS中有六种主要类型
+
 1. `string`
-2. `number`
-3. `boolean`
-4. `null`
-5. `undefined`
-6. `object`
+1. `number`
+1. `boolean`
+1. `null`
+1. `undefined`
+1. `object`
 
 `null`会被当做对象是语言本身的一个bug,`typeof null`会返回字符串`"object"`。
 
 #### 内置对象
 
 1. `String`
-2. `Number`
-3. `Boolean`
-4. `Object`
-5. `Function`
-6. `Array`
-7. `Date`
-8. `RegExp`
-9. `Error`
+1. `Number`
+1. `Boolean`
+1. `Object`
+1. `Function`
+1. `Array`
+1. `Date`
+1. `RegExp`
+1. `Error`
 
 ```js
 var strPrimitive = "I am a string";
@@ -534,7 +547,7 @@ Object.getOwnPropertyDescriptor( myObject, "a" );
 //  value: 2,
 //  writable: true,
 //  enumerable: true,
-//  configurable: true    
+//  configurable: true
 //}
 ```
 
@@ -553,11 +566,11 @@ Object.defineProperty( myObject, "a", {
 myObject.a; // 2
 ```
 
-1. `Writable`
+1.`Writable`
 
 `Writable`决定是否可以修改属性的值。
 
-2. `Configurable`
+2.`Configurable`
 
 只要属性是可配置的，就可以使用`defineProperty(..)`方法来修改属性描述符：
 
@@ -567,7 +580,7 @@ myObject.a; // 2
 
 除了无法修改，`configurable:false`还会禁止删除这个属性。
 
-3. `Enumerable`
+3.`Enumerable`
 
 `for ..in`循环中，如果把`enumerable`设置成`false`，这个属性就不会出现在枚举中。
 
@@ -577,7 +590,7 @@ myObject.a; // 2
 
 所有方法创建的都是浅不变性，他们只会影响目标对象和它的直接属性，如果目标引用了其他对象，其他对象的内容不受影响，仍然可变。
 
-1. 对象常量
+1.对象常量
 结合`writeble:false`和`configurable:false`就可以创建一个真正的常量属性（不可修改、重定义或者删除）：
 
 ```js
@@ -590,7 +603,7 @@ Object.defineProperty( myObject, "FAVORITE_NUMBER", {
 } );
 ```
 
-2. 禁止扩展
+2.禁止扩展
 
 禁止一个对象添加新属性并且保留已有属性，可以使用`Object.preventExtensions(..)`:
 
@@ -605,13 +618,13 @@ myObject.b = 3;
 myObject.b; // undefined
 ```
 
-3. 密封
+3.密封
 
 `Object.seal(..)`会创建一个“密封”的对象，这个方法实际上会在一个现有的对象上调用`Object.precentExtensions(..)`并把所有现有属性标记为`configurable:false`。
 
 密封之后不仅不能添加新属性，也不能重新配置或者删除任何现有属性（虽然可以修改属性的值）。
 
-4. 冻结
+4.冻结
 
 `Object.freeze(..)`会创建一个冻结对象，这个方法实际上会在一个现有对象上调用`Object.seal(..)`并把所有“数据访问”属性标记为`writable:false`，这样就无法修改它们的值。
 
@@ -650,8 +663,8 @@ myObject.b; // undefined
 如果对象中已经存在这个属性，`[[Put]]`算法大致检查下面这些内容。
 
 1. 属性是否是访问描述符(参见3.3.9节)?如果是并且存在`setter`就调用`setter`。
-2. 属性的数据描述符中`writable`是否是`false`?如果是，在非严格模式下静默失败，在严格模式下抛出`TypeError`异常。
-3. 如果都不是，将该值设置为属性的值。
+1. 属性的数据描述符中`writable`是否是`false`?如果是，在非严格模式下静默失败，在严格模式下抛出`TypeError`异常。
+1. 如果都不是，将该值设置为属性的值。
 
 如果对象中不存在这个属性，[[Put]]操作更加复杂
 
@@ -756,4 +769,40 @@ JavaScript 中的对象有字面形式(比如`var a = { .. }`)和构造形式(�
 你可以使用ES6的`for..of`语法来遍历数据结构(数组、对象，等等)中的值，`for..of`会寻找内置或者自定义的`@@iterator`对象并调用它的`next()`方法来遍历数据值。
 
 ## Chap4. 混合对象“类”
+
+面向类的设计模式：
+
+1. 实例化(instantitaion)
+1. 继承(inheritance)
+1. 多态(polymorphism)
+
+### 4.1 类理论
+
+> 面向对象编程强调的是数据和操作数据的行为本质上是相互关联的，好的设计就是把数据以及和它相关的行为封装起来。
+
+举一个例子，“汽车”可以被看做“交通工具”的一种特例。
+
+在软件中定义一个`Vehicle`类和一个`Car`类来对这种关系进行建模。
+
+`Vehicle`的定义可能包含推进器（比如引擎）、载人能力等等。
+
+定义`Car`时，只要声明它继承（或者扩展）了`Vehicle`的基础定义即可。`Car`的定义就是对通用`Vehicle`定义的特殊化。
+
+虽然`Vehicle`和`Car`会定义相同的方法，但是实例中的数据可能是不同的，比如每辆车独一无二的VIN(Vehicle Identification Number)。
+
+这便是类、继承和实例化。
+
+类的另一个核心概念是多态，父类的通用行为可以被子类用更特殊的行为重写。
+
+#### 4.1.1 “类”设计模式
+
+面向对象设计模式包括：迭代器模式、观察者模式、工厂模式、单例模式，等等。
+
+还有过程化编程和函数式编程。
+
+#### 4.1.2 JavaScript中的类
+
+简单来说`JavaScript`中没有真正意义上的“类”。
+
+### 4.2 类的机制
 
