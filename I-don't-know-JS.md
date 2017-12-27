@@ -802,7 +802,175 @@ JavaScript 中的对象有字面形式(比如`var a = { .. }`)和构造形式(�
 
 #### 4.1.2 JavaScript中的类
 
-简单来说`JavaScript`中没有真正意义上的“类”。
+简单来说`JavaScript`中没有真正意义上的“类”。`JavaScript`提供了一些近似类的语法满足对于类设计模式的最普通需求。
 
 ### 4.2 类的机制
 
+#### 4.2.1 建造
+
+“类” 和“实例”的概念源于房屋建造。
+
+建筑是蓝图的物理实例，本质上是对蓝图的复制。
+
+#### 4.2.2 构造函数
+
+类构造函数通常和类同名，需要使用`new`来调用，这样语言引擎才知道你想要构造一个新的类实例。
+
+### 4.3 类的继承
+
+定义好一个子类之后，相对于父类来说它就是一个独立并且完全不同的类。子类会包含父类行为的原始副本，也可以重写所有继承的行为甚至定义新行为。
+
+关于类继承的伪代码
+
+```js
+class Vehicle {
+    engines = 1;
+
+    ignition() {
+        output( "Turning on my engine." );
+    }
+
+    drive() {
+        ignition();
+        output( "Steering and moving forward!" );
+    }
+}
+
+class Car inherits Vehicle {
+    wheels = 4;
+
+    drive() {
+        inherited:drive()
+        output( "Rolling on all ", wheels, " wheels!" );
+    }
+}
+
+class SpeedBoat inherits Vehicle {
+    engines = 2;
+
+    ignition() {
+        output( "Turning on my ", engines, " engines." );
+    }
+
+    pilot() {
+        inherited:drive()
+        output( "Speeding through the water with ease!" );
+    }
+}
+```
+
+#### 4.3.1 多态
+
+`Car`重写了继承自父类的`drive()`方法，但是之后`Car`调用了`inherited:drive()`方法，这表明`Car`可以引用继承来的原始`drive()`方法。快艇的`pilot()`方法同样引用了原始`drive()`方法。
+
+这种技术被称为多态或者虚拟多态。
+
+我们不会定义想要访问的绝对继承层次（或者说类），而是使用相对引用“查找上一层”。
+
+多态的另一个方面是，在继承链的不同层次中的一个方法名可以被多次定义，当调用方法时会自动选择合适的定义。
+
+`SpeedBoat`中的`pilot()`通过相对多态引用了`Vehicle`中的`drive()`。但是那个`drive()`方法直接通过名字引用了`ignotion()`方法。
+
+本例中语言引擎会使用`SpeedBoat`的`ignition()`，如果直接实例化`Vehicle类`然后调用它的`drive()`，那么语言引擎就会使用`Vehicle`中的`ignition()`方法。
+
+> 从概念上说，子类可以通过相对多态引用(或者说super)来访问父类中的行为。子类得到的仅仅是继承自父类行为的一份副本。子类对继承到的一个方法进行“重写”，不会影响父类中的方法，这两个方法互不影响，因此才能使用相对多态引用访问父类中的方法(如果重写会影响父类的方法，那重写之后父类中的原始方法就不存在了，自然也无法引用)。
+
+多态并不表示子类和父类有关联，子类的到的是父类的一份副本。类的继承其实就是复制。
+
+#### 4.3.2 多重继承
+
+多重继承意味着所有父类的定义都会被复制到子类中。
+
+如果两个父类都定义了`drive()`方法，子类引用谁？
+
+还有一种被称为`钻石问题`。在钻石问题中，子类`D`继承自两个父类(`B`和`C`)，这两个父类都继承自`A`。如果`A`中有`drive()`方法并且`B`和`C`都重写了这个方法(多态)，那当`D`引用`drive()`时应当选择哪个版本呢(`B:drive()`还是`C:drive()`)？
+
+### 4.4 混入
+
+> 在继承或者实例化时，JavaScript 的对象机制并不会自动执行复制行为。简单来说， JavaScript 中只有对象，并不存在可以被实例化的“类”。
+
+于是有了混入来模拟类的复制行为。
+
+有两种类型的混入:显式和隐式。
+
+#### 4.4.1 显式混入
+
+1.显式混入
+
+```js
+// 非常简单的 mixin(..) 例子 :
+function mixin( sourceObj, targetObj ) {
+    for (var key in sourceObj) {
+    // 只会在不存在的情况下复制
+        if (!(key in targetObj)) {
+            targetObj[key] = sourceObj[key];
+        }
+    }
+    return targetObj;
+}
+var Vehicle = {
+    engines: 1,
+    ignition: function() {
+        console.log( "Turning on my engine." );
+    },
+    drive: function() {
+        this.ignition();
+        console.log( "Steering and moving forward!" );
+    }
+};
+var Car = mixin(Vehicle, {
+    wheels: 4,
+    drive: function() {
+        Vehicle.drive.call( this );
+        console.log("Rolling on all " + this.wheels + " wheels!");
+    }
+});
+```
+
+> 我们处理的已经不再是类了，因为在`JavaScript`中不存在类，`Vehicle`和`Car`都是对象，供我们分别进行复制和粘贴。
+
+`Vehicle.drive.call(this)`这就是显式多态，之前的伪代码`inherited:drive()`称之为相对多态。
+
+2.混合复制
+
+```js
+// 另一种混入函数，可能有重写风险
+function mixin( sourceObj, targetObj ) {
+    for (var key in sourceObj) {
+        targetObj[key] = sourceObj[key];
+    }
+    return targetObj;
+}
+
+var Vehicle = { // ...
+};
+
+// 首先创建一个空对象并把 Vehicle 的内容复制进去
+var Car = mixin( Vehicle, { } );
+
+// 然后把新内容复制到 Car 中
+mixin( {
+    wheels: 4,
+    drive: function() {
+        // ...
+    }
+}, Car );
+```
+
+复制完成之后`Car`和`Vehicle`就分离了，但是两者要是引用同一个对象还是会相互影响对方。
+
+还有寄生继承和隐式混入，详见p138
+
+### 4.5 小结
+
+`JavaScript`中的类与其他语言中的类完全不同。
+
+类意味着复制。
+
+传统的类被实例化时，它的行为会被复制到实例中。类被继承时，行为也会被复制到子类中。
+
+多态(在继承链的不同层次名称相同但是功能不同的函数)看起来似乎是从子类引用父类，但是本质上引用的其实是复制的结果。
+
+总的来说，在`JavaScript`中模拟类是得不偿失的，虽然能解决当前的问题，但是可能会埋下更多的隐患。
+
+## 5. 原型
