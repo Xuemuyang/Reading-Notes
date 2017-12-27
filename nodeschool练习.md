@@ -9,7 +9,7 @@
 要编写一个 Node.js 程序，你只需要创建一个后缀名为 .js 的文件，然后用
 JavaScript 去编写即可。完成后，你可以通过命令行 node 命令来运行它，例如：
 
-```
+```js
 $ node program.js
 ```
 
