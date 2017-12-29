@@ -455,7 +455,7 @@ strObject instanceof String; // true
 
 `number`和`boolean`字面量也是如此
 
-`null`和`undefined`没有对应的构造形式
+`null`和`undefed`没有对应的构造形式
 
 相反`Date`只有构造形式没有字面量形式
 
@@ -668,7 +668,7 @@ myObject.b; // undefined
 
 如果对象中不存在这个属性，[[Put]]操作更加复杂
 
-#### 3.3.8 Getter和Setter
+#### 3.3.9 Getter和Setter
 
 当给一个属性定义`getter`、`setter`或者两者都有时，这个属性会被定义为“访问描述符”（和“数据描述符”相对）。对于访问描述符来说，JS会忽略他们的`value`和`writeble`特性，取而代之的是关心`set`和`get`（还有`configurable`和`enumerable`）特性。
 
@@ -974,3 +974,40 @@ mixin( {
 总的来说，在`JavaScript`中模拟类是得不偿失的，虽然能解决当前的问题，但是可能会埋下更多的隐患。
 
 ## 5. 原型
+
+### 5.1 [[Prototype]]
+
+```js
+var anotherObject = {
+    a:2
+};
+
+//创建一个关联到anotherObject的对象
+var myObject = Object.create( anotherObject );
+
+myObject.a; // 2
+```
+
+使用`for..in`遍历对象时原理和查找`[[prototype]]`链类似，任何可以通过原型链访问到(并且是`enumerable`)的属性都会被枚举。使用`in`操作符来检查属性在对象中是否存在时同样会查找对象的整条原型链(无论属性是否可枚举)。
+
+#### 5.1.1 Object.prototype
+
+所有普通的`[[Prototype]]`链最终都会指向内置的`Object.prototype`。
+
+比如`.toString()`和`.valueOf()`方法，还有`.hasOwnProperty(..)`、`.isPrototypeOf(..)`方法，都是`Object.prototype`中包含的功能。
+
+#### 5.1.2 属性设置和屏蔽
+
+```js
+myObject.foo = "bar";
+```
+
+如果`myObject`对象中包含名为`foo`的普通数据访问属性，这条赋值语句只会修改已有的属性值。
+
+如果`foo`不是直接存在于`myObject`中，[[Prototype]]链就会被遍历，类似[[Get]]操作。如果原型链上找不到`foo`，`foo`就会被直接添加到`myObject`上。
+
+如果属性名`foo`既出现在`myObject`中也出现在`myObject`的[[Prototype]]链上层，那么就会发生屏蔽。`myObject`中包含的`foo`属性会屏蔽原型链上层的所有`foo`属性，因为`myObject.foo`总是会选择原型链中最底层的`foo`属性。
+
+当`foo`不直接存在于`myObject`中而是存在于原型链上层时`myObject.foo = "bar"`会出现三种情况。
+
+1.

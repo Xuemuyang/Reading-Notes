@@ -204,3 +204,7 @@ body:hover {
     --bg: #ff0;
 }
 ```
+
+## 行级格式化上下文
+
+[img排版出错的问题](https://segmentfault.com/q/1010000004809008)
