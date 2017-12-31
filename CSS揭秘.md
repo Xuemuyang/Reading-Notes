@@ -391,3 +391,21 @@ background-image: radial-gradient(tan 30%, transparent 0);
 background-size: 30px 30px;
 ```
 
+通过对定位控制，得到真正的波点图案。
+
+```css
+background: #655;
+background-image: radial-gradient(tan 30%, transparent 0),
+radial-gradient(tan 30%, transparent 0);
+background-size: 30px 30px;
+background-position: 0 0, 15px 15px;
+```
+
+第二层背景的偏移定位值须是贴片宽高的一半。
+
+![](./images/CSS-secret/9.png)
+
+#### 棋盘
+
+各种应用程序中，灰色的棋盘图案已经是用于表示透明色的事实标准。
+
