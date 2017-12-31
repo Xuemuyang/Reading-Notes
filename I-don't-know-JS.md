@@ -1010,4 +1010,97 @@ myObject.foo = "bar";
 
 当`foo`不直接存在于`myObject`中而是存在于原型链上层时`myObject.foo = "bar"`会出现三种情况。
 
-1.
+1.如果在`[[Prototype]]`链上层存在名为`foo`的普通数据访问属性并且没有标记为只读(`writable:false`)，那就会直接在`myObject`中添加一个名为`foo`的新属性，它是屏蔽属性。
+
+2.如果在`[[Prototype]]`链上层存在`foo`，但是它被标记为只读(`writable:false`)，那么无法修改已有属性或者在`myObject`上创建屏蔽属性。如果在严格模式下，代码会抛出一个错误。否则这条赋值语句会被忽略。总之，不会发生屏蔽。
+
+3.如果在`[[Prototype]]`链上层存在`foo`并且它是一个`setter`，那就一定会调用这个`setter`。`foo`不会被添加到(或者说屏蔽于)`myObject`，也不会重新定义`foo`这个`setter`。
+
+大多数开发者都认为如果向`[[Prototype]]`链上层已经存在的属性(`[[Put]]`)赋值，就一定会触发屏蔽，实际情况是三种属性只有第一种是这样的。
+
+如果希望在第二种和第三种情况下屏蔽`foo`，那就不能使用`=`操作符来赋值，而是使用`Object.defineProperty(..)`来向`myObject`添加`foo`。
+
+> 第二种情况可能是最令人意外的，只读属性会阻止`[[Prototype]]`链下层隐式创建(屏蔽)同名属性。这样做主要是为了模拟类属性的继承。你可以把原型链上层的`foo`看作是父类中的属性，它会被`myObject`继承(复制)，这样一来`myObject`中的`foo`属性也是只读，所以无法创建。但是一定要注意，实际上并不会发生类似的继承复制(参见第4章和第5章)。这看起来有点奇怪，`myObject`对象竟然会因为其他对象中有一个只读`foo`就不能包含`foo`属性。更奇怪的是，这个限制只存在于`=`赋值中，使用`Object.defineProperty(..)`并不会受到影响。第二种情况可能是最令人意外的，只读属性会阻止`[[Prototype]]`链下层隐式创建(屏蔽)同名属性。这样做主要是为了模拟类属性的继承。你可以把原型链上层的`foo`看作是父类中的属性，它会被`myObject`继承(复制)，这样一来`myObject`中的`foo`属性也是只读，所以无法创建。但是一定要注意，实际上并不会发生类似的继承复制(参见第4章和第5章)。这看起来有点奇怪，`myObject`对象竟然会因为其他对象中有一个只读`foo`就不能包含`foo`属性。更奇怪的是，这个限制只存在于`=`赋值中，使用`Object.defineProperty(..)`并不会受到影响。
+
+下面代码会发生隐式屏蔽
+
+```js
+var anotherObject = {
+    a:2
+};
+
+var myObject = Object.create( anotherObject );
+
+another.a; // 2
+myObject.a; // 2
+
+anotherObject.hasOwnProperty( "a" ); // true
+myObject.hasOwnProperty( "a" ); // false
+
+myObject.a++; // 隐式屏蔽！
+
+anotherObject.a; // 2
+myObject.a; // 3
+
+myObject.hasOwnProperty( "a" ); // true
+```
+
+`++`操作符相当于`myObject.a = myObject.a + 1`。`++`操作符首先会通过`[[Protitype]]`查找属性`a`并从`anotherObject.a`获取当前属性值2，然后给这个值加1，接着用`[[Put]]`将值3赋给`myObject`中新建的屏蔽属性`a`。
+
+### 5.2 “类”
+
+`JavaScript`和面向类的语言不通，它并没有类来作为对象的抽象模式。`JavaScript`中只有对象。
+
+实际上`JavaScript`才是真正应该被称为“面向对象”的语言，因为它是少有的可以不通过类，直接创建对象的语言。
+
+#### 5.2.1 “类”函数
+
+所有的函数默认都会拥有一个名为`prototype`的公有并且不可枚举的属性，它会指向另一个对象：
+
+```js
+function Foo() {
+    // ...
+}
+
+Foo.prototype; // { }
+```
+
+这个对象通常被称为`Foo`的原型，因为我们通过名为`Foo.prototype`的属性引用来访问它。
+
+这个对象是在调用`new Foo()`时创建的，最后会被关联到`Foo.prototype`对象上。
+
+```js
+function Foo() {
+    // ...
+}
+
+var a = new Foo();
+
+Object.getPrototypeOf( a ) === Foo.prototype; // true
+```
+
+回顾一下`new`操作：
+
+1. 创建(或者说构造)一个全新的对象。
+1. 这个新对象会被执行[[原型]]连接。
+1. 这个新对象会绑定到函数调用的`this`。
+1. 如果函数没有返回其他对象，那么`new`表达式中的函数调用会自动返回这个新对象。
+
+调用`new Foo()`时会创建a，其中的一步就是给a一个内部的`[[Prototype]]`链接，关联到`Foo.prototype`指向的那个对象。
+
+面向类的语言中，实例化（或者继承）一个类就意味着“把类的行为复制到物理对象中”，对于每一个新实例来说都会重复这个过程。
+
+在`JavaScript`中我们没有初始化一个类，只是让两个对象相互关联，`JavaScript`中只能创建多个对象，它们的`[[Prototype]]`关联的是同一个对象。
+
+##### 关于名称
+
+从视觉角度来说，`[[Prototype]]`机制如下图所示。
+
+![prototype机制](http://ovyn493ey.bkt.clouddn.com/prototype.png)
+
+这个机制通常被称为原型继承，它常常被视为动态语言版本的类继承。
+
+继承意味着复制操作，`JavaScript`(默认)并不会复制对象属性。相反，`JavaScript`会在两个对象之间创建一个关联，这样一个对象就可以通过委托访问另一个对象的属性和函数。委托(参见第6章)这个术语可以更加准确地描述`JavaScript`中对象的关联机制。
+
+#### “构造函数”
+

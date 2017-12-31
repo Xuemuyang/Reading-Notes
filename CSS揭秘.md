@@ -120,3 +120,274 @@ li { background: var(--accent-color); }
 ```
 
 `Myth`是一款实验性质的预处理器，模拟原生CSS新特性，本质上扮演了`CSSpolyfill`角色。
+
+## 第二章 背景和边框
+
+### 1.半透明边框
+
+默认状态下，背景会延伸到边框的区域下层。
+
+```CSS
+border: 10px dashed hsla(0,0%,100%,.5); background: #cccccc;
+```
+
+![](./images/CSS-secret/1.png)
+
+可以通过`background-clip`属性来调整背景的默认属性。
+
+这个属性的初始值是`border-box`，意味着背景会被元素的`border box`裁减掉，如果不希望背景入侵边框所在的范围，则将其设置为`padding-box`。
+
+### 2.多重边框
+
+#### `box-shadow`
+
+回顾`box-shadow`
+
+`box-shadow`的五个值：
+
+1. inset(默认outset)
+1. X offset
+1. Y offset
+1. blur
+1. spread
+1. color
+
+`box-shadow`中一个正值的扩张半径(spread)加上两个为零的偏移量以及为零的模糊值(blur)，得到的“投影”就像一道实线边框。
+
+`box-shadow`支持逗号分隔语法，可以创建任意数量的投影。
+
+需要注意的是，`box-shadow`层层叠加，第一层投影位于最顶层。
+
+有两点需要注意:
+
++ 投影的行为不会影响布局
++ 上述方法创建的假“边框”出现在元素外圈，不会影响鼠标事件。在`box-shadow`属性加上`inset`关键字来使投影绘制在元素的内圈。
+
+#### `outline` 方案
+
+`box-shadow`只能模拟实线边框效果
+
+`outline`可以产生虚线效果
+
+```css
+background: yellowgreen;
+border: 10px solid #655;
+outline: 5px solid deeppink;
+```
+
+描边可以通过`outline-offset`来控制它跟元素边缘之间的间距。可以为负值。
+
+### 3.灵活的背景定位
+
+#### `background-position`的扩展语法方案
+
+允许我们制定图片距离任意角的偏移量
+
+```css
+background: url(code-pirate.svg) no-repeat #58a;
+background-position: right 20px bottom 10px;
+```
+
+不支持`background-position`扩展语法的浏览器中提供一个合适的回退方案。
+
+```css
+background: url(code-pirate.svg) no-repeat bottom right #58a;
+background-position: right 20px bottom 10px;
+```
+
+#### `background-origin`方案
+
+默认情况下，`background-position`是以`padding box`为准，即`background-position: top left;`这个`top left`会贴住`padding box`的左上角定位。
+
+可以指定其为`padding-box`，`content-box`。
+
+必要时将两种技巧组合起来，让偏移量与盒子边距做出细微调整。
+
+#### `calc()`方案
+
+```css
+background: url("code-pirate.svg") no-repeat;
+background-position: calc(100% - 20px) calc(100% - 10px);
+```
+
+### 4.边框内圆角
+
+难题：
+
+容器外有一道边框，但只在内侧有圆角，如何使用一个元素来解决。
+
+![](./images/CSS-secret/2.png)
+
+描边(`outline`)不会跟着圆角走，但`box-shadow`会。
+
+```css
+background: tan;
+border-radius: .8em;
+padding: 1em;
+box-shadow: 0 0 0 .6em #655;
+outline: .6em solid #655;
+```
+
+思路使用`box-shadow`来填补圆角与`outline`之间的空隙。
+
+![](./images/CSS-secret/3.png)
+
+为了让效果达成，`box-shadow`的扩张半径(`spread`)需要比描边的宽度值小，但同时又要比`(Math.SQRT2 - 1)r`大。
+
+### 5.条纹背景
+
+难题：渐变出现在总高60%的区域，剩下的部分显示为实色。
+
+```css
+background: linear-gradient(#fb3, #58a);
+```
+
+这是垂直线性渐变。
+
+```css
+background: linear-gradient(#fb3 20%, #58a 80%);
+```
+
+> 如果多个色标具有相同的位置，他们会产生一个无限小的过渡区域，过渡的起止色分别是第一个和最后一个指定值。从效果上看，颜色会在那个位置突然变化，而不是一个平滑的渐变过程。
+
+![](./images/CSS-secret/4.png)
+
+渐变是一种由代码生成的图像，我们能像对待其他任何背景图像那样对待它，而且可以通过`background-size`来调整其尺寸:
+
+```css
+background: linear-gradient(#fb3 50%, #58a 50%);
+background-size: 100% 30px;
+```
+
+通过调整色标的位置来创建不等宽的条纹。
+
+```css
+background: linear-gradient(#fb3 30%, #58a 30%);
+background-size: 100% 30px;
+```
+
+从规范中找到捷径
+
+> 如果某个色标的位置值比整个列表中在它之前的色标的位置值都要小，则该色标的位置值会被设置为它前面所有色标位置值的最大值。
+
+```css
+background: linear-gradient(#fb3 30%, #58a 0);
+background-size: 100% 30px;
+```
+
+下面的代码创建三种颜色的水平条纹。
+
+```css
+background: linear-gradient(#fb3 33.3%,
+#58a 0, #58a 66.6%, yellowgreen 0);
+background-size: 100% 45px;
+```
+
+#### 垂直条纹
+
+区别在于在开头加上一个参数来指定渐变的方向。
+
+```css
+background: linear-gradient(to right, /* 或 90deg */ #fb3 50%, #58a 0);
+background-size: 30px 100%;
+```
+
+#### 斜向条纹
+
+只有无缝拼接的图像才能生成斜向条纹。
+
+```css
+background: linear-gradient(45deg, #fb3 25%, #58a 0, #58a 50%, #fb3 0, #fb3 75%, #58a 0);
+background-size: 30px 30px;
+```
+
+![](./images/CSS-secret/5.png)
+
+上图解释了为什么斜向条纹看起来会细一些。
+
+#### 更好的斜向条纹
+
+渐变有一个循环的加强版
+
+`linear-gradient()`和`radial-gradient()`的加强版:`repeating-linear-gradient()`和`repeating-radial-gradient()`。
+
+```css
+background: repeating-linear-gradient(45deg,
+#fb3, #fb3 15px, #58a 0, #58a 30px);
+```
+
+这里同样实现了45度条纹，与之前不同的是，渐变的色标中需要指定的是长度，而不是原来的`background-size`。
+
+最大的好处是可以随心所欲的改变渐变的角度。
+
+```css
+background: repeating-linear-gradient(60deg,
+#fb3, #fb3 15px, #58a 0, #58a 30px);
+```
+
+采用`linear-gradient()`来实现水平或者竖直的条纹，用`repeating-linear-gradient()`来实现斜向条纹。
+
+#### 灵活的同色系条纹
+
+大多数情况下，我们想要的条纹图案不是由差异极大的几种颜色组成的，这些颜色往往属于同意色系，只是在明度方面有着轻微差异。
+
+实现方法为：把最深的颜色指定为背景色，同时把半透明白色的条纹叠加在背景色上得到浅色条纹。
+
+```css
+background: #58a;
+background-image: repeating-linear-gradient(30deg, hsla(0,0%,100%,.1), hsla(0,0%,100%,.1) 15px, transparent 0, transparent 30px);
+```
+
+### 6.复杂的背景图案
+
+用CSS渐变来创建任何种类的几何图案几乎都是可能的。
+
+#### 网格
+
+把多个渐变图案组合起来神奇的事情就发生了。
+
+```css
+background: white;
+background-image: linear-gradient(90deg, rgba(200,0,0,.5) 50%, transparent 0), linear-gradient(rgba(200,0,0,.5) 50%, transparent 0);
+background-size: 30px 30px;
+```
+
+这个代码创建桌布(方格纹)图案。
+
+![](./images/CSS-secret/6.png)
+
+实现类似图纸辅助线的网格：
+
+```css
+background: #58a;
+background-image:linear-gradient(white 1px, transparent 0), linear-gradient(90deg, white 1px, transparent 0);
+background-size: 30px 30px;
+```
+
+![](./images/CSS-secret/7.png)
+
+更逼真的蓝图网格：
+
+```css
+background: #58a;
+background-image:
+    linear-gradient(white 2px, transparent 0),
+    linear-gradient(90deg, white 2px, transparent 0),
+    linear-gradient(hsla(0,0%,100%,.3) 1px, transparent 0),
+    linear-gradient(90deg, hsla(0,0%,100%,.3) 1px, transparent 0);
+background-size: 75px 75px, 75px 75px,
+                 15px 15px, 15px 15px;
+```
+
+![](./images/CSS-secret/8.png)
+
+#### 波点
+
+径向渐变允许我们创建圆心椭圆。
+
+```css
+background: #655;
+background-image: radial-gradient(tan 30%, transparent 0);
+background-size: 30px 30px;
+```
+
