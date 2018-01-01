@@ -409,3 +409,64 @@ background-position: 0 0, 15px 15px;
 
 各种应用程序中，灰色的棋盘图案已经是用于表示透明色的事实标准。
 
+需要用两个指教三角形来拼合出我们想要的方块。
+
+首先将三角形的直角边缩短到原来的一半，从而占据贴片面积的`1/8`将色标的位置改为25%。
+
+```css
+background: #eee;
+background-image: linear-gradient(45deg, transparent 75%, #bbb 0);
+background-size: 30px 30px;
+```
+
+![](./images/CSS-secret/10.png)
+
+再将色标翻转，创建相反方向的三角形。
+
+```css
+background: #eee;
+background-image:
+    linear-gradient(45deg, #bbb 25%, transparent 0),
+    linear-gradient(45deg, transparent 75%, #bbb 0); background-size: 30px 30px;
+```
+
+![](./images/CSS-secret/11.png)
+
+把第二层渐变在水平和垂直方向均移动贴片长度的一半，拼合成一个完整的方块：
+
+```css
+background: #eee;
+background-image:
+    linear-gradient(45deg, #bbb 25%, transparent 0),
+    linear-gradient(45deg, transparent 75%, #bbb 0);
+background-position: 0 0, 15px 15px;
+background-size: 30px 30px;
+```
+
+![](./images/CSS-secret/12.png)
+
+上述代码只完成了棋盘的一半，棋盘的全部实现代码如下
+
+```css
+background: #eee;
+background-image:
+    linear-gradient(45deg, #bbb 25%, transparent 0),
+    linear-gradient(45deg, transparent 75%, #bbb 0),
+    linear-gradient(45deg, #bbb 25%, transparent 0),
+    linear-gradient(45deg, transparent 75%, #bbb 0);
+background-position: 0 0, 15px 15px, 15px 15px, 30px 30px;
+background-size: 30px 30px;
+```
+
+进一步优化将四次渐变变为两次渐变。
+
+```css
+background: #eee;
+background-image:
+    linear-gradient(45deg, rgba(0,0,0,.25) 25%, transparent 0, transparent 75%, rgba(0,0,0,.25) 0),
+    linear-gradient(45deg, rgba(0,0,0,.25) 25%, transparent 0, transparent 75%, rgba(0,0,0,.25) 0);
+background-position: 0 0, 15px 15px; background-size: 30px 30px;
+```
+
+任何情况下这样的代码量都不能算少，所以转到`SVG`方案可能是更好的选择。
+
