@@ -115,7 +115,7 @@ border-image:url(/i/border.png) 30 30 stretch;
 ## @font-face
 
 ```css
-<style> 
+<style>
     @font-face {
         font-family: myFirstFont;
         src: url('Sansation_Light.ttf'),
@@ -136,7 +136,7 @@ border-image:url(/i/border.png) 30 30 stretch;
 + rotate()
 + scale()
 + skew()
-+ matrix() 
++ matrix()
 
 ## 3D转换
 

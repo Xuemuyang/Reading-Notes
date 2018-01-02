@@ -470,3 +470,116 @@ background-position: 0 0, 15px 15px; background-size: 30px 30px;
 
 任何情况下这样的代码量都不能算少，所以转到`SVG`方案可能是更好的选择。
 
+### 7.伪随机背景
+
+重复平铺图案看起来呆板，自然界中的事物都不是以无限平铺的方式存在的。
+
+> 当你注意到一个有辨识度的特征（比如，木纹）再以固定的规律循环重复时，那它试图营造的自然随机性就会立即崩塌。
+
+创建一个具有四种颜色的条纹图案：
+
+```css
+background: linear-gradient(90deg,
+#fb3 15%, #655 0, #655 40%,
+#ab4 0, #ab4 65%, hsl(20, 40%, 90%) 0);
+background-size: 80px 100%;
+```
+
+这个重复规律是非常明显的，渐变图案每隔80px就会重复一次。
+
+![](./images/CSS-secret/13.png)
+
+把这组条纹从一个平面拆散为多个图层：一种颜色作为底色，另三种颜色作为条纹，然后再让条纹以不同的间隔进行重复平铺。
+
+在色标中定好条纹宽度，再用`background-size`来控制条纹的间距。
+
+```css
+background: hsl(20, 40%, 90%);
+background-image:
+    linear-gradient(90deg, #fb3 10px, transparent 0),
+    linear-gradient(90deg, #ab4 20px, transparent 0),
+    linear-gradient(90deg, #655 20px, transparent 0);
+background-size: 80px 100%, 60px 100%, 40px 100%;
+```
+
+![](./images/CSS-secret/14.png)
+
+仔细观察可发现还是有重复，重复贴片的尺寸是`background-size`的最小公倍数240px。
+
+我们需要让最小公倍数最大化。尽量选择质数。
+
+```css
+background: hsl(20, 40%, 90%);
+background-image:
+    linear-gradient(90deg, #fb3 11px, transparent 0),
+    linear-gradient(90deg, #ab4 23px, transparent 0),
+    linear-gradient(90deg, #655 41px, transparent 0);
+background-size: 41px 100%, 61px 100%, 83px 100%;
+```
+
+![](./images/CSS-secret/15.png)
+
+这样平铺贴片的尺寸是`41x61x83=207 583`像素。
+
+这个技巧被`Alex Walker`称为“蝉原则”，通过质数来增加随机性真实性，这个方法还适用于其他有规律重复的情况：
+
++ 照片图库中，为每幅图片应用细微的伪随机旋转效果时，可以使用多个`:nth-child(a)`选择符，且让`a`是质数。
++ 生成一个动画，应用多个时长为质数的动画，可让其看起来不是有明确的规律性。
+
+### 8.连续的图像边框
+
+难题：把一幅图案或图片应用为边框，而不是背景。图片可以自动延伸并覆盖完整的边框区域。
+
+`border-image`的原理是九宫格伸缩法
+
+```css
+border-image:url(/i/border.png) 30 30 stretch;
+```
+
++ url
++ 水平/竖直 剪裁图片位置 可以用百分比
++ stretch或者round，重复方式
+
+最简单的方法是需要两个`HTML`元素
+
+```html
+<div class="something-meaningful">
+    <div> I have a nice stone art border, don't I look pretty?</div>
+</div>
+```
+
+```css
+.something-meaningful {
+    background: url(stone-art.jpg); background-size: cover;
+    padding: 1em;
+}
+.something-meaningful > div {
+    background: white;
+    padding: 1em;
+}
+```
+
+如果只用一个`HTML`元素，我们的主要思路是在背景图上再叠加一层纯白的实色背景。我们只能在多重背景的最底层设置背景色，需要一道从白色过渡到白色的`CSS`渐变来模拟纯白背景效果。
+
+```css
+padding: 1em;
+border: 1em solid transparent; background: linear-gradient(white, white),
+url(stone-art.jpg); background-size: cover;
+background-clip: padding-box, border-box;
+background-origin: border-box;
+```
+
++ `background-clip`是背景从图片的哪个盒模型裁。
++ `background-origin`是`background-position`所参照的定位点。
+
+这个技巧还可以用在渐变图案上，生成老式信封样式的边框：
+
+```css
+padding: 1em;
+border: 1em solid transparent;
+background:
+    linear-gradient(white, white) padding-box,
+    repeating-linear-gradient(-45deg, red 0, red 12.5%, transparent 0, transparent 25%, #58a 0, #58a 37.5%, transparent 0, transparent 50%) 0 / 5em 5em;
+```
+
+![](./images/CSS-secret/16.png)
