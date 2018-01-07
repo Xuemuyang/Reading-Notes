@@ -2,13 +2,13 @@
 
 ## npm 命令含义
 
+```bash
+npm init [-f|--force|-y|--yes]
 ```
-npm init [-f|--force|-y|--yes] 
-```
+
 添加参数会生成package.json文件
 
-
-```
+```bash
 npm install
 ```
 
