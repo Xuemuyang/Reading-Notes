@@ -12,6 +12,7 @@
 + main.js是入口js文件
 
 router
+
 > 根据页面当前url来判断router-view中渲染什么组件
 
 node端之所以能识别.vue文件，是因为前面说的webpack在编译时将.vue文件中的html，js，css都抽出来合成新的单独的文件。
