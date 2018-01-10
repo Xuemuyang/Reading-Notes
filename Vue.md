@@ -568,3 +568,49 @@ var example1 = new Vue({
 <!-- 点击事件将只会触发一次 -->
 <a v-on:click.once="doThis"></a>
 ```
+
+## 按键修饰符
+
+```html
+<!-- 只有在 `keyCode` 是 13 时调用 `vm.submit()` -->
+<input v-on:keyup.13="submit">
+
+<!-- Vue为常用的按键提供了别名-->
+
+<!-- 同上 -->
+<input v-on:keyup.enter="submit">
+
+<!-- 缩写语法 -->
+<input @keyup.enter="submit">
+```
+
+全部的按键别名：
+
++ .enter
++ .tab
++ .delete (捕获“删除”和“退格”键)
++ .esc
++ .space
++ .up
++ .down
++ .left
++ .right
+
+可以通过全局`config.keyCodes`对象自定义按键修饰符别名：
+
+```js
+// 可以使用 `v-on:keyup.f1`
+Vue.config.keyCodes.f1 = 112
+```
+
+## 表单输入绑定
+
+`v-model`本质上是语法糖。负责监听用户输入事件以更新数据。
+
+`v-model`会忽略所有表单元素的`value`、`checked`、`selected`特性的初始值而总是将`Vue`实例的数据作为数据来源。你应该通过`JavaScript`在组件的`data`选项中声明初始值。
+
+### 修饰符
+
+1.`.lazy`
+
+当`enter`或者跳出时才更新数据。
