@@ -44,7 +44,7 @@ letter-spacing: -3px;
 }
 
 .button::before {
-    content: ''; 
+    content: '';
     position: absolute;
     top: 0; right: 0; bottom: 0; left: 0;
     z-index: -1;
@@ -67,7 +67,7 @@ letter-spacing: -3px;
 
 默认为automatic，设置为`fixed`之后可以使表格每一列固定宽度，不受内容影响
 
-6.pointer-events是元素不可被点击 
+6.pointer-events是元素不可被点击
 
 ```css
 .disabled {
