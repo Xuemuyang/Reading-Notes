@@ -583,3 +583,25 @@ background:
 ```
 
 ![](./images/CSS-secret/16.png)
+
+## 第三章 形状
+
+### 9.自适应的椭圆
+
+`border-radius`可以单独制定水平和垂直半径，只要用一个斜杠(/)分隔即可。
+
+可以接受百分比值。
+
+```css
+border-radius: 50% / 50%;
+```
+
+简写为
+
+```css
+border-radius: 50%;
+```
+
+为什么叫`border-radius`？
+
+`border-radius`是对元素的`border box`进行切圆角处理的。
