@@ -1106,10 +1106,102 @@ Object.getPrototypeOf( a ) === Foo.prototype; // true
 
 ## chap4. 异步和性能
 
-### 异步：现在与将来
+### 4.1 异步：现在与将来
 
 程序在现在运行的部分和将来运行的部分之间的关系就是异步编程的核心。
 
 #### 异步控制台
 
 `console.*`方法是由宿主环境添加到`JavaScript`中的。是`I/O`异步操作，并不是同步执行。
+
+```js
+var a = {
+    index: 1
+};
+
+console.log( a );
+
+a.index++;
+```
+
+> 最好的选择是在`JavaScript`调试器中使用断点，不要依赖控制台输出，次优化的方案是吧对象序列化到一个字符串中，强制执行一次“快照”，比如通过`JSON.stringify(..)`。
+
+#### 事件循环
+
+循环的每一轮称为一个`tick`。
+
+`setTimeout(..)`只能确保回调函数不会在指定的时间间隔之前运行。
+
+#### 任务队列(job queue)
+
+任务队列是挂在事件循环队列的每个`tick`之后的一个队列。在事件循环的每个`tick`中，可能出现的异步动作不会导致一个完整的新事件添加到事件循环队列中，而会在当前`tick`的任务队列尾添加一个项目(一个任务)。
+
+#### 小结
+
+一旦有事件需要运行，事件循环就会运行，知道队列清空。事件循环的每一轮称为一个`tick`。用户交互、IO和定时器会向事件队列中加入事件。
+
+### 4.2 回调
+
+#### continuation
+
+```js
+// A
+ajax( "..", function(..) {
+    // C
+});
+// B
+```
+
+回调函数包裹或者说封装了程序的延续(continuation)。
+
+#### 嵌套回调与链式回调
+
+```js
+listen('click', function handler(evt) {
+    setTimeOut(function request() {
+        ajax('http://some.url.1', function response(text) {
+            if (text == 'hello') {
+                handler();
+            } else if (text == 'world') {
+                request();
+            }
+        });
+    }, 500);
+});
+```
+
+这种代码常常被称作回调地狱(callback hell)，有时也被称为毁灭金字塔(pyramid of doom，得名于嵌套缩进产生的横向三角形状)。
+
+```js
+listen('click', handle);
+
+function handler() {
+    setTimeOut( request, 500);
+}
+
+function request() {
+    ajax('..', response);
+}
+
+function response(text) {
+    if (text == 'hello') {
+        handler();
+    } else if (text == 'world') {
+        request();
+    }
+}
+```
+
+链式代码组织形式在线性(顺序)追踪代码过程中，在整个代码中跳来跳去以查看流程。
+
+手工硬编码回调的真正问题在于一旦指定(也就是预先计划)了所有可能事件和路径，代码就会变的非常复杂，以至于无法维护和更新。嵌套和缩进基本上只是转移注意力的枝节。
+
+"error-first风格"，有时候也叫"Node风格"，其中回调的第一个参数保留用作错误对象。如果成功的话，这个参数就会被清空/置假。
+
+#### 小结
+
+1. 我们需要一种跟同步、更顺序、更阻塞的方式来表达异步，就像大脑一样。
+1. 更重要的一点，回调会收到控制反转的影响，因为回调暗中把控制权交给第三方来调用代码中的`continuation`，这种控制转移带来一系列麻烦的信任问题，比如回调被调用的次数是否会超出预期。
+
+### Promise
+
