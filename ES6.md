@@ -194,7 +194,7 @@ const foo;
 
 > ES5 只有两种声明变量的方法：`var`命令和`function`命令。ES6除了添加`let`和`const`命令，后面章节还会提到，另外两种声明变量的方法：`import`命令和`class`命令。所以，ES6 一共有6种声明变量的方法。
 
-3.顶层对象的属性
+3.顶层对象的属性
 
 顶层对象，在浏览器环境指的是`window`对象，在`Node`指的是`global`对象。ES5之中，顶层对象的属性与全局变量是等价的。
 
@@ -689,7 +689,7 @@ const factorial = currying(tailFactorial, 1);
 factorial(5) // 120
 ```
 
-或者采用默认值
+或者采用默认值
 
 ```js
 function factorial(n, total = 1) {
