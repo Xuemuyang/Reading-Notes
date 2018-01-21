@@ -1205,3 +1205,390 @@ function response(text) {
 
 ### Promise
 
+回调的两个主要缺陷：
+
+1. 缺乏顺序性
+1. 缺乏可信任性
+
+把控制反转回来，不把程序`continuation`传给第三方，而是希望第三方给我们提供了解其任务何时结束的能力，然后由我们自己的代码来决定下一步做什么。
+
+#### 什么是`Promise`
+
+##### 未来值
+
+设想一个场景：麦当劳买汉堡，付款(发出对某个value(这里是汉堡)的请求)，拿取号单(这代表未来的汉堡)，订单号就是一个promise，等待期间可以做其他事情，比如玩手机，当通知取餐的时候，凭value-promise换取这个value(汉堡)。
+
+有两种结果，拿到汉堡和汉堡售罄。
+
+当编写代码要得到某个值的时候，比如通过数学计算，不管你有没有意识到，你都已经对 这个值做出了一些非常基本的假设，那就是，它已经是一个具体的现在值:
+
+```js
+var x, y = 2;
+
+console.log( x + y ); // NaN 因为x还没有定
+```
+
+设想一种方式表达:"把x和y加起来，
+但如果它们中的任何一个还没有准备好，就等待两者都准备好。一旦可以就马上执行加运算。"
+
+用回调函数处理：
+
+```js
+function add(getX,getY,cb) {
+    var x, y;
+    getX( function(xVal){
+        x = xVal;
+        // 两个都准备好了?
+        if (y != undefined) {
+            cb( x + y ); // 发送和
+        }
+    });
+    getY( function(yVal){
+        y = yVal;
+        // 两个都准备好了?
+        if (x != undefined) {
+            cb( x + y ); // 发送和
+        }
+    });
+}
+// fetchX()和fetchY()是同步或者异步函数
+add( fetchX, fetchY, function(sum){
+    console.log( sum ); // 是不是很容易?
+});
+```
+
+为了统一处理现在和将来，我们把它们都变成了将来，即所有操作都成了异步的。
+
+##### `Promise`值
+
+先大致看一下如何通过`Promise`函数表达这个`x + y`的例子：
+
+```js
+function add(xPromise,yPromise) {
+    // Promise.all([..])接受一个promise数组并返回一个新的promise
+    // 这个新的promise等待数组中的所有promise完成
+    return Promise.all([xPromise, yPromise])
+
+    // 这个promise决议之后，我们取得收到的X和Y值并加在一起
+    .then(function(values) {
+        // values是来自于之前决议的promise的消息数组
+        return values[0] + values[1];
+    });
+}
+
+// fetchX()和fetchY()返回相应值得promise，可能已经就绪
+// 也可能以后就绪
+add(fetchX(), fetchY())
+
+// 我们得到一个这两个数组的和的promise
+// 现在链式调用then(..)来等待返回promise的决议
+.then(function(sum) {
+    console.log(sum); // 这更简单！
+});
+```
+
+使用事件侦听对象对`Promise`进行模拟。
+
+```js
+function foo(x) {
+    // 开始做点可能耗时的工作
+    // 构造一个listener事件通知处理对象来返回
+
+    return listener;
+}
+
+var evt = foo( 42 );
+
+evt.on("conpletion", function() {
+    // 可以进行下一步！
+});
+
+evt.on("faliure", function() {
+    // 啊，foo(..)中出错了
+})
+```
+
+回调本身表达了一种控制反转，对回调模式的反转实际上是对反转的反转。
+
+#### 具有`then`方法的鸭子类型
+
+如何去判断一个值是否是真正的`Promise`
+
+鸭子类型(duck typing)--“如果它看起来像只鸭子，叫起来像只鸭子，那它就一定是个鸭子”。
+
+对一个有`then(..)`函数的对象完成一个`Promise`，它们会自动被识别为`thenable`，并按特定的规则处理。
+
+#### `Promise`信任问题
+
+1.调用过早
+
+对一个`Promise`调用`then(..)`的时候，即使这个`Promise`已经决议，提供给`then(..)`的回调也总是会被异步调用。
+
+2.调用过晚
+
+当`Promise`创建对象调用`resolve(..)`或`reject(..)`时，这个`Promise`的`then(..)`注册的观察回调就会被自动调度。
+
+3.回调未调用
+
+没有任何东西能够阻止`Promise`向你通知它的决议(如果它没有决议的话)。如果你对一个`Promise`注册了一个完成回调和一个拒绝回调，那么`Promise`在决议时总会调用其中的一个。
+
+如果`Promise`本身永远不被决议，`Promise`也提供了解决方案，使用了竞态的高级抽象机制：
+
+```js
+// 用于超时一个Promise的工具
+function timeoutPromise(delay) {
+    return new Promise(function(resolve,reject) {
+        setTimeout(function() {
+            reject("Timeout!");
+        }, delay);
+    });
+}
+
+// 设置foo()超时
+Promise.race([
+    foo(),                  //试着开始foo()
+    timeoutPromise(3000)    //给它3秒钟
+])
+.then(
+    function() {
+        // foo(..)及时完成！
+    },
+    function(err) {
+        // 或者foo()被拒绝，或者只是没能按时完成
+        // 查看err来了解是那种情况
+    }
+);
+```
+
+##### 调用次数过少或过多
+
+`Promise`的定义方式使得他只能够被决议一次。由于`Promise`只能被决议一次，所以任何通过`then(..)`注册的(每个)回调就只会被调用一次。
+
+##### 吞掉错误或异常
+
+如果拒绝一个`Promise`并给出一个理由(也就是
+一个出错消息)，这个值就会被传给拒绝回调。
+
+如果在`Promise`的创建过程中或在查看其决议结果过程中的任何时间点上出现了一个`JavaScript`异常错误，比如一个`TypeError`或`ReferenceError`，那这个异常就会被捕捉，并且会使这个`Promise`被拒绝。
+
+```js
+var p = new Promise( function(resolve,reject){
+    foo.bar(); // foo未定义，所以会出错!
+    resolve( 42 ); // 永远不会到达这里 :(
+});
+
+p.then(
+    function fulfilled(){
+        // 永远不会到达这里 :(
+    },
+    function rejected(err){
+        // err将会是一个TypeError异常对象来自foo.bar()这一行
+    }
+);
+```
+
+#### `Promise.resolve(..)`
+
+`Promise`没有完全摆脱回调，只是改变传递回调的位置，我们并不是把回调函数传给`foo(..)`，而是从`foo(..)`得到某个东西，然后把回调传给这个东西。
+
+如果向`Promise.resolve(..)`传递一个非`Promise`、非`thenable`的立即值，就会得到一个用这个值填充的`Promise`。
+
+```js
+var p1 = new Promise(function(resolve, reject) {
+    resolve(42);
+});
+
+var p2 = Promise.resolve(42);
+```
+
+如果向`Promise.resolve(..)`中传入一个真正的`Promise`，那么得到的就是它本身。
+
+```js
+var p1 = Promise.resolve(42);
+var p2 = Promise.resolve(p1);
+p1 === p1; // true
+```
+
+对于用`Promise.resolve(..)`为所有的函数返回值都封装一层，这样做很容易把函数调用规范定义为良好的异步任务，它能够保证总返回一个`Promise`结果。
+
+#### 链式流
+
+`Promise`两个固有特性
+
++ 每次你对`Promise`调用`then(..)`，它都会创建并返回一个新的`Promise`，我们可以将其链接起来;
++ 不管从`then(..)`调用的完成回调(第一个参数)返回的值是什么，它都会被自动设置为被链接`Promise`(第一点中的)的完成。
+
+调用`then(..)`时的完成处理函数或拒绝处理函数如果抛出异常，都会导致(链中的)下一个`promise`因这个异常而立即被拒绝。
+
++ 调用`Promise的then(..)`会自动创建一个新的`Promise`从调用返回。
++ 在完成或拒绝处理函数内部，如果返回一个值或抛出一个异常，新返回的(可链接的)`Promise`就相应地决议。
++ 如果完成或拒绝处理函数返回一个`Promise`，它将会被展开，这样一来，不管它的决议值是什么，都会成为当前`then(..)`返回的链接`Promise`的决议值。
+
+#### 术语: 决议、完成以及拒绝
+
++ 决议(resolve)
++ 完成(fulfill)
++ 拒绝(reject)
+
+第二个参数名很容易定，几乎所有文献都将其命名为`reject(..)`。
+
+`Promise.resolve(..)`会将传入的真正`Promise`直接返回，对传入的`thenable`则会展开。如果这个`thenable`展开得到一个拒绝状态，那么从`Promise. resolve(..)`返回的`Promise`实际上就是这同一个拒绝状态。
+
+`Promise(..)`构造器的第一个参数回调会展开`thenable`(和`Promise.resolve(..)`一样)或真正的`Promise`:
+
+```js
+var rejectedPr = new Promise( function(resolve,reject){
+    // 用一个被拒绝的promise完成这个promise
+    resolve(Promise.reject("Oops"));
+});
+rejectedPr.then(
+    function fulfilled() {
+        // 永远不会到达这里
+    },
+    function rejected(err) {
+        console.log( err ); // "Oops"
+    }
+);
+```
+
+`then(..)`的回调，ES6规范将这两个回调命名为`onFulfilled(..)`和`onRjected(..)`，所以这两个术语很准确。
+
+#### 错误处理
+
+错误处理最自然的方式就是同步`try..catch`结构，它只能同步，无法用于异步代码模式:
+
+`Promise`中的错误处理，其中拒绝处理函数被传递给`then(..)`。`Promise`没有采用流行的`error-first`回调设计风格，而是使用了分离回调(`split-callback`)风格。一个回调用于完成情况，一个回调用于拒绝情况:
+
+```js
+var p = Promise.reject( "Oops" );
+p.then(
+    function fulfilled() {
+        // 永远不会到达这里
+    },
+    function rejected(err) {
+        console.log( err ); // "Oops"
+    }
+);
+```
+
+表面来看，这种出错模式很合理。
+
+```js
+var p = Promise.resolve( 42 );
+p.then(
+    function fulfilled(msg){
+        // 数字没有string函数，所以会抛出错误
+        console.log( msg.toLowerCase() );
+    },
+    function rejected(err){
+        // 永远不会到达这里
+    }
+);
+```
+
+如果`msg.toLowerCase()`合法地抛出一个错误(事实确实如此!)，为什么我们的错误处理函数没有得到通知呢?正如前面解释过的，这是因为那个错误处理函数是为`promise p`准备的，而这个`promise`已经用值`42`填充了。`promise p`是不可变的，所以唯一可以被通知这个错误的`promise`是从`p.then(..)`返回的那一个，但我们在此例中没有捕捉。
+
+```js
+var p = Promise.resolve( 42 );
+p.then(
+    function fulfilled(msg){
+        // 数字没有string函数，所以会抛出错误
+        console.log( msg.toLowerCase() );
+    },
+)
+.catch(handleErrors);
+```
+
+问题似乎解决了，但是如果`handlErrors`内部也有错误就很头疼，后面问题太高深，先不展开讨论。
+
+#### Promise 模式
+
+1.`Promise.all([..])`
+
+从`Promise.all([ .. ])`返回的主`promise`在且仅在所有的成员`promise`都完成后才会完成。如果这些`promise`中有任何一个被拒绝的话，主`Promise.all([..])promise`就会立即被拒绝，并丢弃来自其他所有`promise`的全部结果。
+
+2.`Promise.race([..])`
+
+与`Promise.all([..])`类似，一旦有任何一个`Promise`决议为完成，`Promise.race([..])`就会完成;一旦有任何一个`Promise`决议为拒绝，它就会拒绝。
+
+3.语义的变体
+
+3.1 `none([ .. ])`
+
+这个模式类似于`all([ .. ])`，不过完成和拒绝的情况互换了。所有的`Promise`都要被拒绝，即拒绝转化为完成值，反之亦然。
+
+3.2 `any([ .. ])`
+
+这个模式与`all([ .. ])`类似，但是会忽略拒绝，所以只需要完成一个而不是全部。
+
+3.3 `first([ .. ])`
+
+这个模式类似于与`any([ .. ])`的竞争，即只要第一个`Promise`完成，它就会忽略后续的任何拒绝和完成。
+
+3.4 `last([ .. ])`
+
+这个模式类似于`first([ .. ])`，但却是只有最后一个完成胜出。
+
+`polyfill`一个`first([ .. ])`
+
+```js
+// polyfill安全的guard检查
+if (!Promise.first) {
+    Promise.first = function(prs) {
+        return new Promise( function(resolve,reject){
+            // 在所有promise上循环
+            prs.forEach( function(pr){
+                // 把值规整化
+                Promise.resolve( pr )
+                // 不管哪个最先完成，就决议主promise
+                .then( resolve );
+            });
+        });
+    };
+}
+```
+
+#### Promise API概述
+
+1.`new Promise(..)`构造器
+
+`Promise(..)`必须和`new`一起使用，并且必须提供一个函数回调。这个回调是同步的(立即调用)。beget函数接受两个函数回调，用以支持`promise`决议。通常把这两个函数称为`resolve(..)`和`reject(..)`：
+
+```js
+var p = new Promise(function(resolve, reject) {
+    // resolve(..)用以决议/完成这个promise
+    // reject(..)用于拒绝这个promise
+});
+```
+
+如果传给`resolve(..)`的是一个真正的`Promise`或`thenable`值，这个值就会被递归展开，并且(要构造的)`promise`将取用其最终决议值或状态。
+
+2.`Promise.resolve(..)`和`Promise.reject(..)`
+
+创建一个已被拒绝的`Promise`的快捷方式是使用`Promise.reject(..)`，所以以下两个
+`Promise`是等价的:
+
+```js
+var p1 = new Promise(function(resolve, reject) {
+    reject('Oops');
+});
+
+var p2 = Promise.reject('Oops');
+```
+
+3.`then(..)`和`catch(..)`
+
+每个`Promise`实例都有`then(..)`和`catch(..)`方法，通过这两个方法为这个`Promise`注册完成和拒绝回调函数。`Promise`决议后，立即会调用这两个处理函数之一，而且是异步调用。
+
+`then(..)`接受一个或两个参数:第一个用于完成回调，第二个用于拒绝回调。如果两者中的任何一个被省略或者作为非函数值传入的话，就会替换为相应的默认回调。默认完成回调只是把消息传递下去，而默认拒绝回调则只是重新抛出(传播)其接收到的出错原因。
+
+`catch(..)`只接受一个拒绝回调，等价于`then(null,..)`。
+
+`then(..)`和`catch(..)`会创建并返回一个新的`Promise`，这个`Promise`可以用于实现`Promise`链式流程控制。
+
+4.`Promise.all([ .. ])`和`Promise.race([ .. ])`
+
+对`Promise.all([ .. ])`来说，只有传入的所有`Promise`都完成，返回`Promise`才能完成。如果有任何`Promise`被拒绝，返回的主`Promise`就立即会被拒绝(抛弃任何其他`Promise`的结果)。如果完成的话，你会得到一个数组，其中包含传入的所有`Promise`的完成值。对于拒绝的情况，你只会得到第一个拒绝`Promise`的拒绝理由值。这种模式传统上被称为门: 所有人都到齐了才开门。
+
+对`Promise.race([ .. ])`来说，只有第一个决议的`Promise`(完成或拒绝)取胜，并且其决议结果成为返回`Promise`的决议。这种模式传统上称为门闩:第一个到达者打开门闩通过。
+
