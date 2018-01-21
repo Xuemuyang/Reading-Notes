@@ -700,7 +700,223 @@ function factorial(n, total = 1) {
 factorial(5) // 120
 ```
 
-## `Symbol`
+## 8. 数组的扩展
+
+### 扩展运算符(spread)
+
+扩展运算符好比`rest`参数的逆运算，将一个数组转为用逗号分隔的参数序列。
+
+```js
+console.log(...[1, 2, 3])
+// 1 2 3
+
+console.log(1, ...[2, 3, 4], 5)
+// 1 2 3 4 5
+
+[...document.querySelectorAll('div')]
+// [<div>, <div>, <div>]
+```
+
+扩展运算符与正常的函数参数可以结合使用，非常灵活。
+
+```js
+function f(v, w, x, y, z) { }
+const args = [0, 1];
+f(-1, ...args, 2, ...[3]);
+```
+
+扩展运算符后面还可以放置表达式。
+
+```js
+const arr = [
+  ...(x > 0 ? ['a'] : []),
+  'b',
+];
+```
+
+如果扩展运算符后面是一个空数组，则不产生任何效果。
+
+```js
+[...[], 1]
+// [1]
+```
+
+### 替代函数的 apply 方法
+
+```js
+// ES5 的写法
+function f(x, y, z) {
+  // ...
+}
+var args = [0, 1, 2];
+f.apply(null, args);
+
+// ES6的写法
+function f(x, y, z) {
+  // ...
+}
+let args = [0, 1, 2];
+f(...args);
+```
+
+复制数组
+
+```js
+//ES5
+const a1 = [1, 2];
+const a2 = a1.concat();
+
+a2[0] = 2;
+a1 // [1, 2]
+
+//ES6
+const a1 = [1, 2];
+// 写法一
+const a2 = [...a1];
+// 写法二
+const [...a2] = a1; //解构
+```
+
+合并数组
+
+```js
+// ES5
+[1, 2].concat(more)
+// ES6
+[1, 2, ...more]
+
+var arr1 = ['a', 'b'];
+var arr2 = ['c'];
+var arr3 = ['d', 'e'];
+
+// ES5的合并数组
+arr1.concat(arr2, arr3);
+// [ 'a', 'b', 'c', 'd', 'e' ]
+
+// ES6的合并数组
+[...arr1, ...arr2, ...arr3]
+// [ 'a', 'b', 'c', 'd', 'e' ]
+```
+
+字符串操作
+
+扩展运算符还可以将字符串转为真正的数组。
+
+```js
+[...'hello']
+// [ "h", "e", "l", "l", "o" ]
+```
+
+上面的写法，有一个重要的好处，那就是能够正确识别四个字节的`Unicode`字符。
+
+```js
+'x\uD83D\uDE80y'.length // 4
+[...'x\uD83D\uDE80y'].length // 3
+```
+
+上面代码的第一种写法，`JavaScript`会将四个字节的`Unicode`字符，识别为2个字符，采用扩展运算符就没有这个问题。因此，正确返回字符串长度的函数，可以像下面这样写。
+
+```js
+let str = 'x\uD83D\uDE80y';
+
+str.split('').reverse().join('')
+// 'y\uDE80\uD83Dx'
+
+[...str].reverse().join('')
+// 'y\uD83D\uDE80x'
+```
+
+### `Array.from()`
+
+`Array.from()`方法将两类对象转为真正的数组：类似数组的对象(array-like Object)和可遍历的对象。
+
+```js
+// NodeList对象
+let ps = document.querySelectorAll('p');
+Array.from(ps).filter(p => {
+  return p.textContent.length > 100;
+});
+
+// arguments对象
+function foo() {
+  var args = Array.from(arguments);
+  // ...
+}
+```
+
+### `Array.of()`
+
+Array.of方法用于将一组值，转换为数组。
+
+```js
+Array.of(3, 11, 8) // [3,11,8]
+Array.of(3) // [3]
+Array.of(3).length // 1
+```
+
+### `copyWithin()`
+
+数组实例的copyWithin方法，在当前数组内部，将指定位置的成员复制到其他位置（会覆盖原有成员），然后返回当前数组。也就是说，使用这个方法，会修改当前数组。
+
+```js
+Array.prototype.copyWithin(target, start = 0, end = this.length)
+```
+
+它接受三个参数。
+
++ target（必需）：从该位置开始替换数据。如果为负值，表示倒数。
++ start（可选）：从该位置开始读取数据，默认为0。如果为负值，表示倒数。
++ end（可选）：到该位置前停止读取数据，默认等于数组长度。如果为负值，表示倒数。
+
+```js
+// 将3号位复制到0号位
+[1, 2, 3, 4, 5].copyWithin(0, 3, 4)
+// [4, 2, 3, 4, 5]
+
+// -2相当于3号位，-1相当于4号位
+[1, 2, 3, 4, 5].copyWithin(0, -2, -1)
+// [4, 2, 3, 4, 5]
+
+// 将3号位复制到0号位
+[].copyWithin.call({length: 5, 3: 1}, 0, 3)
+// {0: 1, 3: 1, length: 5}
+
+// 将2号位到数组结束，复制到0号位
+let i32a = new Int32Array([1, 2, 3, 4, 5]);
+i32a.copyWithin(0, 2);
+// Int32Array [3, 4, 5, 4, 5]
+
+// 对于没有部署 TypedArray 的 copyWithin 方法的平台
+// 需要采用下面的写法
+[].copyWithin.call(new Int32Array([1, 2, 3, 4, 5]), 0, 3, 4);
+// Int32Array [4, 2, 3, 4, 5]
+```
+
+为什么这段代码的执行结果如下
+
+```js
+// 将3号位复制到0号位
+[].copyWithin.call({length: 5, 3: 1}, 0, 3)
+// {0: 1, 3: 1, length: 5}
+```
+
+> copytWithin方法并不要求this对象值是一个Array对象,类数组对象也是可以的，它会修改自己，然后返回，而不是返回一个copy值
+
+`[].copyWithin`获取`copyWithin`函数对象
+`call`为任何一个函数对象都有的方法
+`call`方法的第1个参数为`call`方法运行的上下文，也就是我们经常遇到的函数调用时候的`this`。
+
+`{length: 5, 3: 1}`这个对象具有一个`length`属性，那么其就是一个类数组对象（鸭子模式），并且这个对象具有一个属性`key`为3的值。这个对象等价于一个"数组对象",那么`copyWithin`方法在执行的时候读取类数组对象下标3到末尾的元素,赋值到指定位置。
+
+```js
+({0:undefined,1:undefined,2:undefined,3: 1,4:undefined,5:undefined,length: 5}).copyWithin(0,3,5);
+//结果为：
+{0:1,1:undefined,2:undefined,3: 1,4:undefined,5:undefined,length: 5};
+//也就是
+{0:1,3:1,length:5}
+```
+
+## 10. `Symbol`
 
 ES5中的对象属性名都是字符串，容易造成属性名的冲突，`Symbol`机制保证每个属性的名字都是独一无二，从根本上防止属性名的冲突。
 
@@ -806,7 +1022,11 @@ objectSymbols
 // [Symbol(a), Symbol(b)]
 ```
 
-## `Promise`对象
+## 11. `Set`和`Map`数据结构
+
+
+
+## 14. `Promise`对象
 
 ### 1. `Promise`的含义
 
@@ -944,3 +1164,6 @@ getJSON("/post/1.json").then(
 ```
 
 ### 4. Promise.prototype.catch()
+
+## 15. Iterator 和 for...of 循环
+
