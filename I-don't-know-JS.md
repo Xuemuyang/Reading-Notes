@@ -1241,6 +1241,271 @@ c;              // "f-o-o"
 d;              // "F.O.O."
 ```
 
+#### 数字
+
+大部分现代编程语言中的数字类型都是基于`IEEE 754`标准来实现的，该标准通常被称为"浮点数"。`JavaScript`使用的是"双精度"格式(即64位二进制)。
+
+`JavaScript`中的数字常量一般用十进制表示。例如:
+
+```js
+var a = 42;
+var b = 42.3;
+```
+
+数字前面的`0`可以省略:
+
+```js
+var a = 0.42;
+var b = .42;
+```
+
+小数点后小数部分最后面的`0`也可以省略:
+
+```js
+var a = 42.0;
+var b = 42.;
+```
+
+> `42.`这种写法没问题，只是不常见，但从代码的可读性考虑，不建议这样写。
+
+特别大和特别小的数字默认用指数格式显示，与`toExponential()`函数的输出结果相同。
+
+```js
+var a = 5E10;
+a;                  // 50000000000
+a.toExponential();  // "5e+10"
+var b = a * a;
+b;                  // 2.5e+21
+var c = 1 / a;
+c;                  // 2e-11
+```
+
+`tofixed(..)`方法可指定小数部分的显示位数,`toPrecision(..)`方法用来指定有效数字的位数，他们返回的都是字符串。
+
+```js
+var a = 42.59;
+a.toFixed( 0 ); // "43"
+a.toFixed( 1 ); // "42.6"
+a.toFixed( 2 ); // "42.59"
+a.toFixed( 3 ); // "42.590"
+a.toFixed( 4 ); // "42.5900"
+
+a.toPrecision( 1 ); // "4e+1"
+a.toPrecision( 2 ); // "43"
+a.toPrecision( 3 ); // "42.6"
+a.toPrecision( 4 ); // "42.59"
+a.toPrecision( 5 ); // "42.590"
+a.toPrecision( 6 ); // "42.5900"
+```
+
+> `.`运算符需要特别注意，因为它是一个有效的数字字符，会被优先识别为数字常量的一部分，然后才是对象属性访问运算符。
+
+```js
+// 无效语法:
+42.toFixed( 3 ); // SyntaxError
+
+// 下面的语法都有效:
+(42).toFixed( 3 ); // "42.000"
+0.42.toFixed( 3 ); // "0.420"
+42..toFixed( 3 ); // "42.000"
+```
+
+机器精度(`machine epsilon`)，对于`JavaScript`来说，这个值通常是`2^-52(2.220446049250313e-16)`。
+
+`ES6`开始，该值定义在`Number.EPSILON`中，`ES6`之前版本的`polyfill`:
+
+```js
+if (!Number.EPSILON) {
+    Number.EPSILON = MATH.pow(2,-52);
+}
+```
+
+可以用`Number.EPSILON`来比较两个数字是否相等(在指定的误差范围内):
+
+```js
+function numberCloseEnoughToEqual(n1, n2) {
+    return Math.abs(n1 - n2) < Number.EPSION;
+}
+
+var a = 0.1 + 0.2;
+var b = 0.3;
+numbersCloseEnoughToEqual( a, b );  // true
+numbersCloseEnoughToEqual( 0.0000001, 0.0000002 );  // false
+```
+
+能够被"安全"呈现的最大整数是`2^53 - 1`，即`9007199254740991`，在`ES6`中被定义为`Number.MAX_SAFE_INTEGER`，最小整数是`-9007199254740991`，在`ES6`中被定义为`Number.MIN_SAFE_INTEGER`。
+
+`ES6`中的`Number.isInteger(..)`方法检测一个值是否是整数，`Number.isSafeInteger(..)`方法检测一个值是否是安全的整数。
+
+### 特殊数值
+
+`undefined`和`null`常被用来表示“空的”值或“不是值”的值。二者之间有一些细微的差别。例如:
+
++ null指空值(empty value)
++ undefined指没有值(missing value)
+
+或者:
+
++ undefined指从未赋值
++ null指曾赋过值，但是目前没有值
+
+`null`是一个特殊关键字，不是标识符，我们不能将其当作变量来使用和赋值。然而`undefined`却是一个标识符，可以被当作变量来使用和赋值。
+
+#### void 运算符
+
+`void`运算符不改变表达式的结果，只是让表达式不返回值。
+
+```js
+var a = 42;
+console.log( void a, a ); // undefined 42
+```
+
+#### NaN
+
+`isNaN(..)`是内建工具函数，来判断一个值是否是`NaN`。`isNaN(..)`有一个严重的缺陷，它的检查方式过于死板，就是“检查参数是否不是`NaN`，也不是数字”。
+
+```js
+var a = 2 / "foo";
+var b = "foo";
+a; // NaN
+b; "foo"
+window.isNaN( a ); // true
+window.isNaN( b ); // true——晕!
+```
+
+很明显`"foo"`不是一个数字，但是它也不是`NaN`。这个`bug`自`JavaScript`问世以来就一直存在，至今已超过`19`年。
+
+`ES6`提供了工具函数`Number.isNaN(..)`。之前的`polyfill`如下:
+
+```js
+if (!Number.isNaN) {
+    Number.isNaN = function(n) {
+        return (
+            typeof n === "number" && window.isNaN(n)
+        );
+    };
+}
+
+var a = 2 / "foo";
+var b = "foo";
+Number.isNaN( a ); // true
+Number.isNaN( b ); // false——好!
+```
+
+还有一个更简单的方法，利用`NaN`不等于自身这个特点。`NaN`是`JavaScript`中唯一一个不等于自身的值。
+
+```js
+if (!Number.isNaN) {
+    Number.isNaN = function(n) {
+        return n !== n;
+    };
+}
+```
+
+#### 无穷数
+
+```js
+var a = 1 / 0;  // Infinity即(Number.POSITIVE_INFINITY)
+var b = -1 / 0; // -Infinity即(Number.NEGATIVE_INFINITY)
+```
+
+计算结果一旦溢出为无穷数(infinity)就无法再得到有穷数。
+
+#### 零值
+
+有些应用程序中的数据需要以级数形式来表示(比如动画帧的移动速度)，数字的符号位(sign)用来代表其他信息(比如移动的方向)。此时如果一个值为`0`的变量失去了它的符号位，它的方向信息就会丢失。所以保留`0`值的符号位可以防止这类情况发生。
+
+#### `Object.is(..)`
+
+`ES6`引入一个工具方法`Object.is(..)`来判断楞个值是否绝对相等，可以用来处理上述所有特殊情况。
+
+```js
+var a = 2 / "foo";
+var b = -3 * 0;
+
+Object.is( a, NaN );    // true
+Object.is( b, -0 );     // true
+
+Object.is( b, 0 );      // false
+```
+
+### 值和引用
+
+`JavaScript`中没有指针，引用的工作机制也不尽相同。在`JavaScript`中变量不可能成为指向另一个变量的引用。
+
+`JavaScript`引用指向的是值。如果一个值有`10`个引用，这些引用指向的都是同一个值，它们相互之间没有引用/指向关系。
+
+`JavaScript`对值和引用的赋值/传递在语法上没有区别，完全根据值的类型来决定。
+
+```js
+var a = 2;
+var b = a; // b是a的值的一个副本 b++;
+a; // 2
+b; // 3
+
+var c = [1,2,3];
+var d = c; // d是[1,2,3]的一个引用 d.push( 4 );
+c; // [1,2,3,4]
+d; // [1,2,3,4]
+```
+
+简单值(即标量基本类型值，`scalar primitive`)总是通过值复制的方式来赋值/传递，包括`null`、`undefined`、字符串、数字、布尔和`ES6`中的`symbol`。
+
+复合值(compound value)——对象(包括数组和封装对象)和函数，则总是通过引用复制的方式来赋值/传递。
+
+上例中`2`是一个标量基本类型值，所以变量`a`持有该值的一个副本，`b`持有它的另一个副本。`b`更改时，`a`的值保持不变。
+
+> ECMAScript中所有函数的参数都是按值传递的。
+
+```js
+function foo(x) {
+    x.push( 4 );
+    x; // [1,2,3,4]
+
+    // 然后
+    x = [4,5,6];
+    x.push( 7 );
+    x; // [4,5,6,7]
+}
+
+var a = [1,2,3];
+
+foo( a );
+
+a; // 是[1,2,3,4]，不是[4,5,6,7]
+```
+
+我们向函数传递`a`的时候，实际是将引用`a`的一个副本赋值给`x`，而`a`仍然指向[1,2,3]。
+
+> 我们无法自行决定使用值复制还是引用复制，一切由值的类型来决定。
+
+如果通过值复制的方式来传递复合值(如数组)，就需要为其创建一个复本，这样传递的就不再是原始值。例如:
+
+```js
+foo( a.slice() );
+```
+
+`slice(..)`不带参数会返回当前数组的一个浅复本`(shallow copy)`。由于传递给函数的是指
+向该复本的引用，所以`foo(..)`中的操作不会影响`a`指向的数组。相反，如果要将标量基本类型值传递到函数内并进行更改，就需要将该值封装到一个复合
+值(对象、数组等)中，然后通过引用复制的方式传递。
+
+```js
+function foo(wrapper) {
+    wrapper.a = 42;
+}
+var obj = {
+    a: 2
+};
+
+foo( obj );
+
+obj.a; // 42
+```
+
+### 小结
+
+简单标量基本类型值(字符串和数字等)通过值复制来赋值/传递，而复合值(对象等)通过引用复制来赋值/传递。`JavaScript`中的引用和其他语言中的引用/指针不同，它们不能指向别的变量/引用，只能指向值。
+
 ## chap4. 异步和性能
 
 ### 4.1 异步：现在与将来
