@@ -1104,6 +1104,143 @@ Object.getPrototypeOf( a ) === Foo.prototype; // true
 
 #### “构造函数”
 
+## chap3. 类型和语法
+
+### 类型
+
+ES5.1规范中的运算法则所操纵的值均有相应的类型。
+
+我们这样来定义“类型”(与规范类似):对语言引擎和开发人员来说，类型是值的内部特征，它定义了值的行为，以使其区别于其他值。
+
+#### 内置类型
+
++ 空值(null)
++ 未定义(undefined)
++ 布尔值(boolean)
++ 数字(number)
++ 字符串(string)
++ 对象(object)
++ 符号(symbol，ES6中新增)
+
+```js
+typeof null === "object"; // true
+```
+
+正确的返回结果应该是`"null"`，但这个`bug`由来已久，在`JavaScript`中已经存在了将近二十年，也许永远也不会修复，因为这牵涉到太多的`Web`系统，“修复”它会产生更多的`bug`，令许多系统无法正常工作。
+
+我们需要使用复合条件来检测`null`值的类型: 
+
+```js
+var a = null;
+(!a && typeof a === "object"); // true
+```
+
+```js
+typeof function a(){ /* .. */ } === "function"; // true
+```
+
+函数实际上是`object`的一个"子类型"，具体来说，函数是可调用的对象，有一个内部属性`[[Call]]`，该属性使其可以被调用。
+
+函数可以拥有属性，
+
+```js
+function a(b, c) {
+    /* .. */
+}
+
+a.length; // 2
+```
+
+函数对象的 length 属性是其声明的参数的个数。
+
+#### 值和类型
+
+`JavaScript`中的变量是没有类型的，只有值才有。变量可以随时持有任何类型的值。
+
+在对变量执行`typeof`操作时，得到的结果并不是该变量的类型，而是该变量持有的值的类型，因为`JavaScript`中的变量没有类型。
+
+##### `undefined`和`undeclared`
+
+已在作用域中声明但还没有赋值的变量，是`undefined`的。相反，还没有在作用域中声明过的变量，是`undeclared`的。
+
+```js
+var a;
+a; // undefined
+b; // ReferenceError: b is not defined
+```
+
+```js
+var a;
+typeof a; // "undefined"
+typeof b; // "undefined"
+```
+
+与`undeclared`变量不同，访问不存在的对象属性(甚至是在全局对象`window`上)不会产生`ReferenceError`错误。
+
+##### 小结
+
+`JavaScript`有七种内置类型:`null`、`undefined`、`boolean`、`number`、`string`、`object`和`symbol`，可以使用`typeof`运算符来查看。变量没有类型，但它们持有的值有类型。类型定义了值的行为特征。
+
+很多开发人员将`undefined`和`undeclared`混为一谈，但在`JavaScript`中它们是两码事。`undefined`是值的一种。`undeclared`则表示变量还没有被声明过。
+
+遗憾的是，`JavaScript`却将它们混为一谈，在我们试图访问`"undeclared"`变量时这样报错:`ReferenceError: a is not defined`，并且`typeof`对`undefined`和`undeclared`变量都返回`"undefined"`。
+
+然而，通过`typeof`的安全防范机制(阻止报错)来检查`undeclared`变量，有时是个不错的办法。
+
+### 值
+
+#### 数组
+
+数组通过数字进行索引，但有趣的是它们也是对象，所以也可以包含字符串键值和属性 (但这些并不计算在数组长度内):
+
+```js
+var a = [ ];
+
+a[0] = 1;
+a["foobar"] = 2;
+
+a.length;       // 1
+a["foobar"];    // 2
+a.foobar;       // 2
+```
+
+这里有个问题需要特别注意，如果字符串键值能够被强制类型转换为十进制数字的话，它就会被当作数字索引来处理。
+
+```js
+var a = [ ];
+a["13"] = 42;
+a.length; // 14
+```
+
+#### 字符串
+
+`JavaScript`中字符串是不可变的，而数组是可变的。
+
+字符串不可变是指字符串的成员函数不会改变其原始值，而是创建并返回一个新的字符串。而数组的成员函数都是在其原始值上进行操作。
+
+```js
+c = a.toUpperCase();
+a === c; // false
+a;       // "foo"
+c;       // "FOO"
+
+b.push( "!" );
+b;       // ["f","O","o","!"]
+```
+
+许多数组函数用来处理字符串很方便。虽然字符串没有这些函数，但可以通过“借用”数 组的非变更方法来处理字符串:
+
+```js
+a.join;         // undefined
+a.map;          // undefined
+var c = Array.prototype.join.call( a, "-" );
+var d = Array.prototype.map.call( a, function(v){
+return v.toUpperCase() + ".";
+} ).join( "" );
+c;              // "f-o-o"
+d;              // "F.O.O."
+```
+
 ## chap4. 异步和性能
 
 ### 4.1 异步：现在与将来
