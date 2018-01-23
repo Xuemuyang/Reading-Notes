@@ -1506,6 +1506,322 @@ obj.a; // 42
 
 简单标量基本类型值(字符串和数字等)通过值复制来赋值/传递，而复合值(对象等)通过引用复制来赋值/传递。`JavaScript`中的引用和其他语言中的引用/指针不同，它们不能指向别的变量/引用，只能指向值。
 
+### 原生函数
+
+`JavaScript`内建函数(`built-in function`)，也叫原生函数(`native function`)，如`String`和`Number`。
+
+常用的原生函数有:
+
++ `String()`
++ `Number()`
++ `Boolean()`
++ `Array()`
++ `Object()`
++ `Function()`
++ `RegExp()`
++ `Date()`
++ `Error()`
++ `Symbol()`---ES6中新加入!
+
+原生函数可以被当做构造函数来使用，但其构造出来的对象可能会和我们设想的有所出入:
+
+```js
+var a = new String('abc');
+
+typeof a;               // 是"object",不是"String"
+
+a instanceof String;    // true
+
+Object.prototype.toString.call(a);  //"[object String]"
+```
+
+#### 内部属性`[[Class]]`
+
+
+所有`typeof`返回值为`"object"`的对象(如数组)都包含一个内部属性`[[Class]]`(我们可以把它看作一个内部的分类，而非传统的面向对象意义上的类)。这个属性无法直接访问，一般通过`Object.prototype.toString(..)`来查看。
+
+```js
+Object.prototype.toString.call( [1,2,3] );
+// "[object Array]"
+
+Object.prototype.toString.call( /regex-literal/i );
+// "[object RegExp]"
+
+Object.prototype.toString.call( null );
+// "[object Null]"
+
+Object.prototype.toString.call( undefined );
+// "[object Undefined]"
+
+Object.prototype.toString.call( "abc" );
+// "[object String]"
+
+Object.prototype.toString.call( 42 );
+// "[object Number]"
+
+Object.prototype.toString.call( true );
+// "[object Boolean]"
+```
+
+### 封装对象包装
+
+封装对象(object wrapper)扮演着十分重要的角色。由于基本类型值没有`.length`和`.toString()`这样的属性和方法，需要通过封装对象才能访问，此时`JavaScript`会自动为基本类型值包装(box或者wrap)一个封装对象:
+
+```js
+var a = "abc";
+
+a.length; // 3
+a.toUpperCase(); // "ABC"
+```
+
+### 将原生函数作为构造函数
+
+应该尽量避免使用构造函数。
+
+> 将包含至少一个"空单元"的数组称为"稀疏数组"。
+
+```js
+var a = Array.apply( null, { length: 3 } );
+a; // [ undefined, undefined, undefined ]
+```
+
+`apply`第二个参数则必须是一个数组(或者类似数组的值，也叫作类数组对象，array-like object)，其中的值被用作函数的参数。
+
+我们执行的实际上是`Array(undefined, undefined, undefined)`。
+
+`ES5`引入一个简单的获取当前时间的方法`Date.now()`。对`ES5`之前的版本可以使用`polyfill`:
+
+```js
+if (!Date.now) {
+    Date.now = function() {
+        return (new Date()).getTime();
+    };
+}
+```
+
+`Symbol`比较特殊，不能带`new`关键字，否则会报错。
+
+> 符号并非对象，而是一种简单标量基本类型。
+
+### 强制类型转换
+
+将值从一种类型转换为另一种类型通常称为类型转换(`type casting`)，这是显式的情况；隐式的情况称为强制类型转换(`coercion`)。
+
+`JS`中的强制类型转换总是返回标量基本类型值，如字符串、数字和布尔值。
+
+类型转换发生在静态类型语言的编译阶段，而强制类型转换则发生在动态类型语言的运行时(runtime)。
+
+或者用"隐式强制类型转换"(`implicit coercion`)和"显式强制类型转换"(`explicit coercion`)来区分。
+
+```js
+var a = 42;
+var b = a + ""; // 隐式强制类型转换
+var c = String( a ); // 显式强制类型转换
+```
+
+#### 抽象值操作
+
+##### toString
+
+基本类型值的转换规则:
+
+`null` --> `"null"`
+`undefined` --> `"undefined"`
+`true` --> `"true"`
+
+对于普通对象来说，除非自行定义，否则`toString()`或者`Object.prototype.toString()`返回内部属性`[[Class]]`的值，如`"[object Object]"`。
+
+##### JSON字符串转化
+
+大多数简单值，`JSON`字符串化和`toString()`效果基本相同。
+
+```js
+JSON.stringify( 42 ); // "42"
+JSON.stringify( "42" ); // ""42""(含有双引号的字符串)
+JSON.stringify( null ); // "null"
+JSON.stringify( true ); // "true"
+```
+
+所有安全的`JSON`值(`JSON-safe`)都可以使用`JSON.stringify(..)`字符串化。安全的`JSON`值是指能够呈现为有效`JSON`格式的值。
+
+为了简单起见，我们来看看什么是不安全的`JSON`值。`undefined`、`function`、`symbol`(ES6+)和包含循环引用(对象之间相互引用，形成一个无限循环)的对象都不符合`JSON`结构标准，支持`JSON`的语言无法处理它们。
+
+`JSON.stringify(..)`在对象中遇到`undefined`、`function`和`symbol`时会自动将其忽略，在数组中则会返回`null`(以保证单元位置不变)。
+
+```js
+JSON.stringify( undefined );    // undefined
+JSON.stringify( function(){} ); // undefined
+JSON.stringify(
+    [1,undefined,function(){},4]
+);                              // "[1,null,null,4]"
+JSON.stringify(
+    { a:2, b:function(){} }
+);                              // "{"a":2}"
+```
+
+如果对象中定义了`toJSON()`方法，`JSON`字符串化时会首先调用该方法，然后用它的返回值来进行序列化。
+
+```js
+var o = { };
+
+var a = {
+    b: 42,
+    c: o,
+    d: function(){}
+};
+
+// 在a中创建一个循环引用
+o.e = a;
+
+// 循环引用在这里会产生错误
+// JSON.stringify( a );
+
+// 自定义的JSON序列化
+a.toJSON = function() {
+    // 序列化仅包含b
+    return { b: this.b };
+};
+
+JSON.stringify( a ); // "{"b":42}"
+```
+
+`toJSON()`应该"返回一个能够被字符串化的安全的 `JSON`值"，而不是"返回一个`JSON`字符串"。
+
+还可以向`JSON.stringify`传递一个可选参数`replacer`，可以是数组或者函数，用来指定对象序列化过程中哪些属性应该被处理，哪些应该被排除。
+
+如果`replacer是一个数组，那么它必须是一个字符串数组，其中包含序列化要处理的对象的属性名称，除此之外其他的属性则被忽略。
+
+如果`replacer`是一个函数，它会对对象本身调用一次，然后对对象中的每个属性各调用一次，每次传递两个参数，键和值。如果要忽略某个键就返回`undefined`，否则返回指定的值。
+
+```js
+var a = { b: 42,
+c: "42",
+d: [1,2,3] };
+JSON.stringify( a, ["b","c"] ); // "{"b":42,"c":"42"}"
+JSON.stringify( a, function(k,v){
+    if (k !== "c") return v;
+} );
+// "{"b":42,"d":[1,2,3]}"
+```
+
+`JSON.string`还有一个可选参数`space`，用来指定输出的缩进格式。`space`为正整数时是指定每一级缩进的字符数，它还可以是字符串，此时最前面的十个字符被用于每一级的缩进。
+
+```js
+JSON.stringify(a, null, 3);
+JSON.stringify(a, null, '-----');
+```
+
+#### toNumber
+
+`true` --> `1`
+`false` --> `0`
+`undefined` --> `NaN`
+`null` --> `0`
+
+对象(包括数组)会首先被转换为相应的基本类型值，如果返回的是非数字的基本类型值，则在遵循以上规则将其转换为数字。
+
+为了将值转换为相应的基本类型值，抽象操作`ToPrimitive`会首先(通过内部操作`DefaultValue`，)检查该值是否有`valueOf()`方法。如果有并且返回基本类型值，就使用该值进行强制类型转换。如果没有就使用`toString()`的返回值(如果存在)来进行强制类型转换。
+
+如果`valueOf()`和`toString()`均不返回基本类型值，会产生`TypeError`错误。
+
+```js
+var a = {
+    valueOf: function(){
+        return "42";
+    }
+};
+
+var b = {
+    toString: function(){
+        return "42";
+    }
+};
+
+var c = [4,2];
+c.toString = function(){
+    return this.join( "" ); // "42"
+};
+
+Number( a );                // 42
+Number( b );                // 42
+Number( c );                // 42
+Number( "" );               // 0
+Number( [] );               // 0
+Number( [ "abc" ] );        // NaN
+```
+
+#### toBoolean
+
+##### falsy value
+
++ `undefined`
++ `null`
++ `false`
++ +0、-0和NaN
++ ""
+
+除了`falsy value`其余都是`truthy value`
+
+```js
+var a = new Boolean( false );
+var b = new Number( 0 );
+var a = new String( "" );
+
+var d = Boolean( a && b && c );
+d; // true
+```
+
+#### 显式强制类型转换
+
+```js
+var c = "3.14";
+var d = +c;
+d; // 3.14
+```
+
+一元`+`运算符显式将`c`转换为数字。
+
+`JavaScript`中字符串的`indexOf(..)`方法也遵循这一惯例，该方法在字符串中搜索指定的子字符串，如果找到就返回子字符串所在的位置(从`0`开始)，否则返回`-1`。
+
+```js
+var a = "Hello World";
+if (a.indexOf( "lo" ) >= 0) { // true
+    // 找到匹配!
+}
+if (a.indexOf( "lo" ) != -1) { // true
+    // 找到匹配!
+}
+if (a.indexOf( "ol" ) < 0) { // true
+    // 没有找到匹配!
+}
+if (a.indexOf( "ol" ) == -1) { // true
+    // 没有找到匹配!
+}
+```
+
+`>= 0`和`== -1`这样的写法不是很好，称为“抽象渗漏”，意思是在代码中暴露了底层的实现细节，这里是指用`-1`作为失败时的返回值，这些细节应该被屏蔽掉。
+
+如果`indexOf(..)`返回`-1`，`~`将其转换为假值`0`，其他情况一律转换为真值。
+
+```js
+var a = "Hello World";
+
+~a.indexOf( "lo" );     // -4 <-- 真值!
+
+if (~a.indexOf( "lo" )) { // true
+    // 找到匹配!
+}
+
+~a.indexOf( "ol" ); // 0 <-- 假值!
+!~a.indexOf( "ol" ); // true
+
+if (!~a.indexOf( "ol" )) { // true
+    // 没有找到匹配!
+}
+```
+
+> 建议使用`Boolean(a)`和`!!a`来显式转换以便让代码更加清晰易读。
+
 ## chap4. 异步和性能
 
 ### 4.1 异步：现在与将来

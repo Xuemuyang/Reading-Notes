@@ -916,6 +916,183 @@ i32a.copyWithin(0, 2);
 {0:1,3:1,length:5}
 ```
 
+### 数组实例的`find()`和`findIndex()`
+
+数组实例的`find`方法，用于找出第一个符合条件的数组成员。它的参数是一个回调函数，所有数组成员依次执行该回调函数，直到找出第一个返回值为`true`的成员，然后返回该成员。如果没有符合条件的成员，则返回`undefined`。
+
+```js
+[1, 4, -5, 10].find((n) => n < 0)
+// -5
+```
+
+```js
+[1, 5, 10, 15].find(function(value, index, arr) {
+  return value > 9;
+}) // 10
+```
+
+数组实例的`findIndex`方法的用法与`find`方法非常类似，返回第一个符合条件的数组成员的位置，如果所有成员都不符合条件，则返回`-1`。
+
+```js
+[1, 5, 10, 15].findIndex(function(value, index, arr) {
+  return value > 9;
+}) // 2
+```
+
+这两个方法都可以接受第二个参数，用来绑定回调函数的`this`对象。
+
+```js
+function f(v){
+  return v > this.age;
+}
+let person = {name: 'John', age: 20};
+[10, 12, 26, 15].find(f, person);    // 26
+```
+
+上面的代码中，`find`函数接收了第二个参数`person`对象，回调函数中的`this`对象指向`person`对象。
+
+另外，这两个方法都可以发现`NaN`，弥补了数组的`indexOf`方法的不足。
+
+```js
+[NaN].indexOf(NaN)
+// -1
+
+[NaN].findIndex(y => Object.is(NaN, y))
+// 0
+```
+
+上面代码中，`indexOf`方法无法识别数组的`NaN`成员，但是`findIndex`方法可以借助`Object.is`方法做到。
+
+### 数组实例的`fill()`
+
+`fill`方法使用给定值，填充一个数组。
+
+```js
+['a', 'b', 'c'].fill(7)
+// [7, 7, 7]
+
+new Array(3).fill(7)
+// [7, 7, 7]
+```
+
+`fill`方法用于空数组的初始化非常方便。
+
+`fill`方法还可以接受第二个和第三个参数，用于指定填充的起始位置和结束位置。
+
+```js
+['a', 'b', 'c'].fill(7, 1, 2)
+// ['a', 7, 'c']
+```
+
+### 数组实例的`includes()`
+
+`Array.prototype.includes`方法返回一个布尔值，表示某个数组是否包含给定的值，与字符串的`includes`方法类似。
+
+```js
+[1, 2, 3].includes(2)     // true
+[1, 2, 3].includes(4)     // false
+[1, 2, NaN].includes(NaN) // true
+```
+
+该方法的第二个参数表示搜索的起始位置，默认为`0`。如果第二个参数为负数，则表示倒数的位置，如果这时它大于数组长度（比如第二个参数为`-4`，但数组长度为`3`），则会重置为从`0`开始。
+
+```js
+[1, 2, 3].includes(3, 3);  // false
+[1, 2, 3].includes(3, -1); // true
+```
+
+没有改方法之前我们使用数组的`indexOf`方法，检查是否包含某个值。
+
+`indexOf`方法有两个缺点，一是不够语义化，它的含义是找到参数值的第一个出现位置，所以要去比较是否不等于`-1`，表达起来不够直观。二是，它内部使用严格相等运算符（`===`）进行判断，这会导致对`NaN`的误判。
+
+## 对象的扩展
+
+### 属性的简洁表示法
+
+`ES6`允许在对象之中，直接写变量。这时，属性名为变量名, 属性值为变量的值。
+
+```js
+function f(x, y) {
+  return {x, y};
+}
+
+// 等同于
+
+function f(x, y) {
+  return {x: x, y: y};
+}
+
+f(1, 2) // Object {x: 1, y: 2}
+```
+
+方法也可以简写
+
+```js
+const o = {
+  method() {
+    return "Hello!";
+  }
+};
+
+// 等同于
+
+const o = {
+  method: function() {
+    return "Hello!";
+  }
+};
+```
+
+### 属性名表达式
+
+`ES6`允许字面量定义对象时，用表达式作为对象的属性名，即把表达式放在方括号内。
+
+```js
+let lastWord = 'last word';
+
+const a = {
+  'first word': 'hello',
+  [lastWord]: 'world'
+};
+
+a['first word'] // "hello"
+a[lastWord] // "world"
+a['last word'] // "world"
+```
+
+注意，属性名表达式如果是一个对象，默认情况下会自动将对象转为字符串`[object Object]`，这一点要特别小心。
+
+```js
+const keyA = {a: 1};
+const keyB = {b: 2};
+
+const myObject = {
+  [keyA]: 'valueA',
+  [keyB]: 'valueB'
+};
+
+myObject // Object {[object Object]: "valueB"}
+```
+
+### `Object.is()`
+
+比较两个值是否相等
+
+不同之处只有两个:一是`+0`不等于`-0`，二是`NaN`等于自身。
+
+```js
++0 === -0 //true
+NaN === NaN // false
+
+Object.is(+0, -0) // false
+Object.is(NaN, NaN) // true
+```
+
+### `Object.assign()`
+
+`Object.assign`方法用于对象的合并，将源对象（source）的所有可枚举属性，复制到目标对象（target）。
+
+
 ## 10. `Symbol`
 
 ES5中的对象属性名都是字符串，容易造成属性名的冲突，`Symbol`机制保证每个属性的名字都是独一无二，从根本上防止属性名的冲突。
