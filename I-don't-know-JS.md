@@ -1574,6 +1574,20 @@ a.length; // 3
 a.toUpperCase(); // "ABC"
 ```
 
+### 拆封
+
+想要得到拆封对象中的基本类型值，可以使用`valueOf()`函数:
+
+```js
+var a = new String('abc');
+var b = new Number(42);
+var c = new Boolean(true);
+
+a.valueOf();    // "abc"
+b.valueOf();    // 42
+c.valueOf();    // true
+```
+
 ### 将原生函数作为构造函数
 
 应该尽量避免使用构造函数。
@@ -1625,9 +1639,9 @@ var c = String( a ); // 显式强制类型转换
 
 基本类型值的转换规则:
 
-`null` --> `"null"`
-`undefined` --> `"undefined"`
-`true` --> `"true"`
++ `null` --> `"null"`
++ `undefined` --> `"undefined"`
++ `true` --> `"true"`
 
 对于普通对象来说，除非自行定义，否则`toString()`或者`Object.prototype.toString()`返回内部属性`[[Class]]`的值，如`"[object Object]"`。
 
@@ -1685,11 +1699,11 @@ a.toJSON = function() {
 JSON.stringify( a ); // "{"b":42}"
 ```
 
-`toJSON()`应该"返回一个能够被字符串化的安全的 `JSON`值"，而不是"返回一个`JSON`字符串"。
+`toJSON()`应该"返回一个能够被字符串化的安全的`JSON`值"，而不是"返回一个`JSON`字符串"。
 
 还可以向`JSON.stringify`传递一个可选参数`replacer`，可以是数组或者函数，用来指定对象序列化过程中哪些属性应该被处理，哪些应该被排除。
 
-如果`replacer是一个数组，那么它必须是一个字符串数组，其中包含序列化要处理的对象的属性名称，除此之外其他的属性则被忽略。
+如果`replacer`是一个数组，那么它必须是一个字符串数组，其中包含序列化要处理的对象的属性名称，除此之外其他的属性则被忽略。
 
 如果`replacer`是一个函数，它会对对象本身调用一次，然后对对象中的每个属性各调用一次，每次传递两个参数，键和值。如果要忽略某个键就返回`undefined`，否则返回指定的值。
 
@@ -1700,7 +1714,7 @@ d: [1,2,3] };
 JSON.stringify( a, ["b","c"] ); // "{"b":42,"c":"42"}"
 JSON.stringify( a, function(k,v){
     if (k !== "c") return v;
-} );
+});
 // "{"b":42,"d":[1,2,3]}"
 ```
 
@@ -1713,14 +1727,14 @@ JSON.stringify(a, null, '-----');
 
 #### toNumber
 
-`true` --> `1`
-`false` --> `0`
-`undefined` --> `NaN`
-`null` --> `0`
++ `true` --> `1`
++ `false` --> `0`
++ `undefined` --> `NaN`
++ `null` --> `0`
 
 对象(包括数组)会首先被转换为相应的基本类型值，如果返回的是非数字的基本类型值，则在遵循以上规则将其转换为数字。
 
-为了将值转换为相应的基本类型值，抽象操作`ToPrimitive`会首先(通过内部操作`DefaultValue`，)检查该值是否有`valueOf()`方法。如果有并且返回基本类型值，就使用该值进行强制类型转换。如果没有就使用`toString()`的返回值(如果存在)来进行强制类型转换。
+为了将值转换为相应的基本类型值，抽象操作`ToPrimitive`会首先(通过内部操作`DefaultValue`)检查该值是否有`valueOf()`方法。如果有并且返回基本类型值，就使用该值进行强制类型转换。如果没有就使用`toString()`的返回值(如果存在)来进行强制类型转换。
 
 如果`valueOf()`和`toString()`均不返回基本类型值，会产生`TypeError`错误。
 
@@ -1821,6 +1835,241 @@ if (!~a.indexOf( "ol" )) { // true
 ```
 
 > 建议使用`Boolean(a)`和`!!a`来显式转换以便让代码更加清晰易读。
+
+### 隐式强制类型转换
+
+```js
+var a = [1,2];
+var b = [3,4];
+a + b; // "1,23,4"
+```
+
+如果某个操作数是字符串或者能够通过以下步骤转换为字符串的话，`+`将进行拼接操作。如果其中一个操作数是对象(包括数组)，则首先对其调用`ToPrimitive`抽象操作(规范9.1节)，该抽象操作再调用`[[DefaultValue]]`(规范8.12.8节)，以数字作为上下文。
+
+简单来说就是，如果`+`的其中一个操作数是字符串(或者通过以上步骤可以得到字符串)，则执行字符串拼接;否则执行数字加法。
+
+```js
+var a = {
+    valueOf: function() { return 42; },
+    toString: function() { return 4; }
+};
+a + "";         // "42"
+String( a );    // "4"
+```
+
+下面的情况会发生 布尔值隐式强制类型转换。
+
+1. if (..) 语句中的条件判断表达式。
+1. for ( .. ; .. ; .. ) 语句中的条件判断表达式(第二个)。
+1. while (..) 和 do..while(..) 循环中的条件判断表达式。
+1. ? : 中的条件判断表达式。
+1. 逻辑运算符 ||(逻辑或)和 &&(逻辑与)左边的操作数(作为条件判断表达式)。
+
+```js
+a || b;
+// 大致相当于(roughly equivalent to):
+a ? a : b;
+
+a && b;
+// 大致相当于(roughly equivalent to):
+a ? b : a;
+```
+
+#### 宽松相等和严格相等
+
+宽松相等`==`(`loose equals`)，严格相等`===`(`strict equals`)
+
+几个非常规的情况:
+
++ `NaN`不等于`NaN`
++ `+0`等于`-0`
+
+对象(包括数组和函数)的宽松相等`==`，两个对象指向同一个值即视为相等，不发生强制类型转换。比较对象的时候，`==`和`===`的工作原理相同。
+
+##### 字符串和数字之间比较
+
+```js
+var a = 42;
+var b = '42';
+
+a === b;    // false
+a == b;     // true
+```
+
+规范规定:
+
+1. 如果`Type(x)`是数字，`Type(y)`是字符串，则返回`x == ToNumber(y)`的结果;
+1. 如果`Type(x)`是字符串，`Type(y)`是数字，则返回`ToNumber(x) == y`的结果。
+
+字符串和数字比较将字符串转化为数字再进行比较。
+
+##### 其他类型和布尔类型之间的相等比较
+
+```js
+var a = '42';
+var b = true;
+
+a == b; // false
+```
+
+规范规定:
+
+1. 如果`Type(x)`是布尔类型，则返回`ToNumber(x) == y`的结果;
+1. 如果`Type(y)`是布尔类型，则返回`x == ToNumber(y)`的结果。
+
+即先把`b`转化为`1`,得到`'42' == 1`。
+
+##### `null`和`undefined`之间的相等比较
+
+在`==`中`null`和`undefined`相等。
+
+条件判断`a == null`仅在`a`值为`null`或`undefined`时成立。
+
+##### 对象和非对象之间的相等比较
+
+规范规定:
+
+1. 如果`Type(x)`是字符串或数字，`Type(y)`是对象，则返回`x == ToPrimitive(y)`的结果;
+1. 如果`Type(x)`是对象，`Type(y)`是字符串或数字，则返回`ToPromitive(x) == y`的结果。
+
+```js
+var a = 42;
+var b = [42];
+
+a == b; // true
+```
+
+`[42]`首先调用`ToPromitive`抽象操作，返回`"42"`，变成`"42" == 42`，然后又变成`42 == 42`，最后两者相等。
+
+"打开"封装对象(如`new String("abc")`)，返回其中的基本数据类型值(`"abc"`)。`==`中的`ToPromitive`强制类型转换也会发生这样的情况:
+
+```js
+var a = "abc";
+var b = Object(a);      // 和new String(a)一样
+
+a === b;                // false
+a == b;                 // true
+```
+
+`Object`构造函数为给定值创建一个对象包装器。如果给定值是`null`或`undefined`，将会创建并返回一个空对象，否则，将返回一个与给定值对应类型的对象。
+
+```js
+var a = null;
+var b = Object(a);
+a == b;     // false
+
+var a = undefined;
+var b = Object(a);
+a == b;     // false
+```
+
+#### 比较少见的情况
+
+```js
+Number.prototype.valueOf = function() {
+    return 3;
+};
+
+new Number(2) == 3; // true
+```
+
+##### 假值的相等比较
+
+```js
+"0" == null;        // false
+"0" == undefined;   // false
+"0" == false;       // true
+"0" == NaN;         // false
+"0" == 0;           // true
+"0" == "";          // false
+
+false == null;      // false
+false == undefined; // false
+false == NaN;       // false
+false == 0;         // true
+false == "";        // true
+false == [];        // true
+false == {};        // false
+
+"" == null;         // false
+"" == undefined;    // false
+"" == NaN;          // false
+"" == 0;            // true
+"" == [];           // true
+"" == {};           // false
+
+0 == null;          // false
+0 == undefined;     // false
+0 == NaN;           // false
+0 == [];            // true
+0 == {};            // false
+```
+
+```js
+[] == ![]       // true
+2 == [2];       // true
+"" == [null];   // true
+0 == "\n";      // true
+
+```
+
+根据`ToBoolean`规则，会对`[]`进行显式强制类型转换(同时反转奇偶位校验位)，变成`[] == false`。
+
+#### 抽象关系比较
+
+前提双方非字符串。
+
+比较双方首先调用`ToPrimitive`，如果结果出现非字符串，就根据`ToNumber`规则将双方强制类型转换为数字来进行比较。
+
+```js
+var a = [ 42 ];
+var b = [ "43" ];
+
+a < b;  // true
+b < a;  // false
+```
+
+如果双方都是字符串，则按字母顺序来进行比较:
+
+```js
+var a = ["42"];
+var b = ["043"];
+
+a < b;  // false
+```
+
+```js
+var a = { b: 42 };
+var b = { b: 43 };
+a < b;  // false
+a == b; // false
+a > b;  // false
+a <= b; // true
+a >= b; // true
+```
+
+`JavaScript`中对`<=`的处理是"不大于的意思",即`!(a > b)`。
+
+### 语法
+
+#### 语句和表达式
+
+`JavaScript`如同自然语言一样。语句相当于句子，表达式相当于短语，运算符则相当于标点 符号和连接词。
+
+```js
+var a = 3 * 6;
+var b = a;
+b;
+```
+
+第三行代码中只有一个表达式`b`，同时它也是一个语句,这样的情况通常叫做"表达式语句"(expression statement)。
+
+##### 语句的结果值
+
+语句都有一个结果值(statement completion value, undefined也算)。
+
+
+
 
 ## chap4. 异步和性能
 
