@@ -48,6 +48,14 @@ props是专门用来暴露组件的属性接口的
 
 某些时候异步请求会导致`undefined`，两种解决方案，一种是data中事先就按数据格式写好，另一种是模板中加入`v-if`判断。
 
+移动端使用`@touchmove.prevent`禁用遮罩底层滑动，PC端使用`@scroll.prevent`禁用滚动。
+
+```html
+<div class="fixed" @touchmove.prevent>
+  <p>大扎好，我系渣渣辉!</p>
+</div>
+```
+
 ## 基本指令
 
 声明式渲染
