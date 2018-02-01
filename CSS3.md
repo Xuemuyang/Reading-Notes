@@ -84,6 +84,72 @@ letter-spacing: -3px;
 }
 ```
 
+## background
+
+可以有如下属性:
+
++ `background-color`
++ `background-position`
++ `background-size`
++ `background-repeat`
++ `background-origin`
++ `background-clip`
++ `background-attachment`
++ `background-image`
+
+`background-color`可能为`tansparent`。
+
+### `background-position`
+
+`background-position`属性设置背景图像的起始位置(左上角那一点)。
+
+第一个值是`top`,`center`,`bottom`
+
+第二个值是`left`,`center`,`right`
+
+如果仅规定一个关键词，另一个为`center`
+
+或者是百分比`x% y%`，第一个值是水平位置，第二个值是垂直位置。只规定一个值，另一个将是`50%`。
+
+或者规定数值，单位，只规定一个值，另一个将是`50%`。
+
+### `background-size`
+
+`background-size`属性规定背景图像的尺寸
+
+`background-size: length|percentage|cover|contain;`
+
+> 背景图片要铺满一个容器，不论容器尺寸如何变化，`background-size:cover`这个属性都可以做到。
+
+`contain`使其宽度或者高度适应内容区域。
+
+### `background-repeat`
+
+值|描述
+---|---
+`repeat`|默认。背景图像将在垂直方向和水平方向重复
+`repeat-x`|背景图像将在水平方向重复
+`repeat-y`|背景图像将在竖直方向重复
+`no-repeat`|背景图像将仅显示一次
+
+### `bacground-origin`
+
+`background-origin`属性规定`background-position`属性相对于什么位置来定位。
+
+`background-origin: padding-box|border-box|content-box;`
+
+### `background-clip`
+
+`background-clip`属性规定背景的绘制区域。
+
+`background-clip: border-box|padding-box|content-box;`
+
+### `background-attachment`
+
+`background-attachment`属性设置背景图像是否固定或者随着页面的其余部分滚动。
+
+`scroll`,`fixed`和`inherit`。
+
 ## box-shadow
 
 ```css
