@@ -84,6 +84,21 @@ letter-spacing: -3px;
 }
 ```
 
+8.光标颜色
+
+```css
+input {
+    color: #333;
+    caret-color: red;
+}
+```
+
+html的`contenteditable`允许编辑段落。
+
+```html
+<p contenteditable="true">这是一段可编辑的段落。请试着编辑该文本。</p>
+```
+
 ## background
 
 可以有如下属性:
