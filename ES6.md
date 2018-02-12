@@ -1092,7 +1092,6 @@ Object.is(NaN, NaN) // true
 
 `Object.assign`方法用于对象的合并，将源对象（source）的所有可枚举属性，复制到目标对象（target）。
 
-
 ## 10. `Symbol`
 
 ES5中的对象属性名都是字符串，容易造成属性名的冲突，`Symbol`机制保证每个属性的名字都是独一无二，从根本上防止属性名的冲突。
