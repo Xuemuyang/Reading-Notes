@@ -686,3 +686,37 @@ transform: skewX(-45deg);
 在视觉设计中，把图片裁切为菱形是一种常见的设计手法，但是网页设计师通常不希望在图像处理软件中预先把图片裁好。显然不用说你也知道，这个方法的可维护性并不好。如果未来有人想修改图片风格，将很难增加其他效果，而且最终往往会搞得一团糟。
 
 #### 基于变形的方案
+
+![](./images/CSS-secret/18.png)
+
+与平行四边形的方案一致，把图片用一个`<div>`包裹起来，然后对其应用相反的`rotate()`变形样式。
+
+问题在于图片反向转回来宽度没有填满容器。使用`scale`属性将其变形为根号2。
+
+```html
+<div class="picture">
+    <img src="adam-catlace.jpg" alt="..." />
+</div>
+```
+
+```css
+.picture {
+    width: 400px;
+    transform: rotate(45deg);
+    overflow: hidden;
+}
+.picture > img {
+    max-width: 100%;
+    transform: rotate(-45deg) scale(1.42);
+}
+```
+
+> 通过`scale()`变形样式来缩放图片时，是以它的中心点来进行缩放的(除非我们额外指定了`transform-origin`样式)。
+
+#### 剪裁路径方案
+
+`clip-path`属性
+
+```css
+clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+```
