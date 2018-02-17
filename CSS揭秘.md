@@ -409,7 +409,7 @@ background-position: 0 0, 15px 15px;
 
 各种应用程序中，灰色的棋盘图案已经是用于表示透明色的事实标准。
 
-需要用两个指教三角形来拼合出我们想要的方块。
+需要用两个直角三角形来拼合出我们想要的方块。
 
 首先将三角形的直角边缩短到原来的一半，从而占据贴片面积的`1/8`将色标的位置改为25%。
 
@@ -550,7 +550,8 @@ border-image:url(/i/border.png) 30 30 stretch;
 
 ```css
 .something-meaningful {
-    background: url(stone-art.jpg); background-size: cover;
+    background: url(stone-art.jpg);
+    background-size: cover;
     padding: 1em;
 }
 .something-meaningful > div {
@@ -564,7 +565,8 @@ border-image:url(/i/border.png) 30 30 stretch;
 ```css
 padding: 1em;
 border: 1em solid transparent; background: linear-gradient(white, white),
-url(stone-art.jpg); background-size: cover;
+url(stone-art.jpg);
+background-size: cover;
 background-clip: padding-box, border-box;
 background-origin: border-box;
 ```
@@ -720,3 +722,105 @@ transform: skewX(-45deg);
 ```css
 clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
 ```
+
+### 12.切角效果
+
+把角切掉是一种流行的设计风格。
+
+第一种方案是CSS渐变，色标的位置信息可以是一个绝对的长度值。
+
+```css
+background: #58a;
+background: linear-gradient(-45deg, transparent 15px, #58a 0);
+```
+
+![](./images/CSS-secret/19.png)
+
+现在我们想要两个角被切掉的效果。
+
+两层渐变会相互覆盖，需要让渐变分别只占整个元素一半的面积。还需要把`background-repeat`设置为`no-repeat`。
+
+最终代码在这里
+
+```css
+background: #58a;
+background:
+    linear-gradient(-45deg, transparent 15px, #58a 0) right,
+    linear-gradient(45deg, transparent 15px, #655 0) left;
+background-size: 50% 100%;
+background-repeat: no-repeat;
+```
+
+还可以做出四个角的切角效果
+
+```css
+background: #58a;
+background:
+    linear-gradient(135deg,  transparent 15px, #58a 0) top left,
+    linear-gradient(-135deg, transparent 15px, #58a 0) top right,
+    linear-gradient(-45deg, transparent 15px, #58a 0) bottom right,
+    linear-gradient(45deg, transparent 15px, #58a 0) bottom left;
+background-size: 50% 50%;
+background-repeat: no-repeat;
+```
+
+![](./images/CSS-secret/20.png)
+
+#### 弧形切角
+
+弧形切角，“内凹圆角”。
+
+```css
+background: #58a;
+background:
+    radial-gradient(circle at top left, transparent 15px, #58a 0) top left,
+    radial-gradient(circle at top right, transparent 15px, #58a 0) top right,
+    radial-gradient(circle at bottom right, transparent 15px, #58a 0) bottom right,
+    radial-gradient(circle at bottom left, transparent 15px, #58a 0) bottom left;
+background-size: 50% 50%;
+background-repeat: no-repeat;
+```
+
+![](./images/CSS-secret/21.png)
+
+#### 内联`SVG`与`border-image`方案
+
+详见67页
+
+#### 裁剪路径方案
+
+```css
+background: #58a;
+clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px), 0 20px
+);
+```
+
+### 13.梯形标签页
+
+三维世界中旋转一个矩形，由于透视的关系，我们最终看到的二维图像往往是一个梯形。
+
+```css
+transform: perspective(.5em) rotateX(5deg);
+```
+
+这样造成元素内容也变形，与伪元素平行四边形一致，使用伪元素来变形，内容可以保持不变。
+
+当没有设置`transform-origin`属性时，变形效果会让元素以它自身的中心线为轴进行空间上的旋转。
+
+![](./images/CSS-secret/22.png)
+
+高度会有缩水，通过`scaleY()`属性来弥补，这样一来如果浏览器不支持3D变形，所有的变形属性都会被丢弃。
+
+```css
+transform: scaleY(1.3) perspective(.5em) rotateX(5deg);
+transform-origin: bottom;
+```
+
+![](./images/CSS-secret/23.png)
+
+完整案例查看74页
+
+![](./images/CSS-secret/24.png)
+
+### 14.简单的拼图
+
