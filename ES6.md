@@ -1,18 +1,26 @@
 # [ECMAScript6 入门](http://es6.ruanyifeng.com/#README) ---阮一峰
 
+## tips
+
+1. `...`操作符
+
+`...`用在函数参数中是把剩余参数转化为数组。
+
+`...`用于数组操作则是将数组展开。
+
 ## 1. ECMAScript 6简介
 
-> ECMAScript 6.0（以下简称 ES6）是 JavaScript 语言的下一代标准，已经在2015年6月正式发布了。它的目标，是使得 JavaScript 语言可以用来编写复杂的大型应用程序，成为企业级开发语言。
+> ECMAScript 6.0（以下简称 ES6）是`JavaScript`语言的下一代标准，已经在2015年6月正式发布了。它的目标，是使得`JavaScript`语言可以用来编写复杂的大型应用程序，成为企业级开发语言。
 
-2011年，ECMAScript 5.1版发布后，就开始制定6.0版了。因此，ES6 这个词的原意，就是指 JavaScript 语言的下一个版本。
+2011年，`ECMAScript5.1`版发布后，就开始制定6.0版了。因此，`ES6`这个词的原意，就是指`JavaScript`语言的下一个版本。
 
 标准委员会最终决定，标准在每年的6月份正式发布一次，作为当年的正式版本。接下来的时间，就在这个版本的基础上做改动，直到下一年的6月份，草案就自然变成了新一年的版本。这样一来，就不需要以前的版本号了，只要用年份标记就可以了。
 
-ES6 的第一个版本，就这样在2015年6月发布了，正式名称就是《ECMAScript 2015标准》（简称 ES2015）。2016年6月，小幅修订的《ECMAScript 2016标准》（简称 ES2016）如期发布，这个版本可以看作是 ES6.1 版，因为两者的差异非常小（只新增了数组实例的includes方法和指数运算符），基本上是同一个标准。根据计划，2017年6月发布 ES2017 标准。
+`ES6`的第一个版本，就这样在2015年6月发布了，正式名称就是《ECMAScript 2015标准》（简称`ES2015`）。2016年6月，小幅修订的《ECMAScript2016标准》（简称`ES2016`）如期发布，这个版本可以看作是`ES6.1`版，因为两者的差异非常小（只新增了数组实例的includes方法和指数运算符），基本上是同一个标准。根据计划，2017年6月发布`ES2017`标准。
 
-因此，ES6 既是一个历史名词，也是一个泛指，含义是5.1版以后的 JavaScript 的下一代标准，涵盖了ES2015、ES2016、ES2017等等，而ES2015 则是正式名称，特指该年发布的正式版本的语言标准。本书中提到 ES6 的地方，一般是指 ES2015 标准，但有时也是泛指“下一代 JavaScript 语言”。
+因此，`ES6`既是一个历史名词，也是一个泛指，含义是5.1版以后的`JavaScript`的下一代标准，涵盖了`ES2015`、`ES2016`、`ES2017`等等，而`ES2015`则是正式名称，特指该年发布的正式版本的语言标准。本书中提到`ES6`的地方，一般是指`ES2015`标准，但有时也是泛指“下一代`JavaScript`语言”。
 
-`Babel`配合`ESlint`使用进行ES5转码
+`Babel`配合`ESlint`使用进行ES6转码。
 
 ## 2. `let`和`const`
 
@@ -1092,6 +1100,39 @@ Object.is(NaN, NaN) // true
 
 `Object.assign`方法用于对象的合并，将源对象（source）的所有可枚举属性，复制到目标对象（target）。
 
+### `super`关键字
+
+`this`关键字总是指向函数所在的当前对象，`ES6`新增了一个类似的关键字`super`，指向当前对象的原型对象。
+
+### `Object.keys()`,`Object.values()`,`Object.entries()`
+
+`ES5`引入了`Object.keys`方法，返回一个数组，成员是参数对象自身的（不含继承的）所有可遍历（enumerable）属性的键名。
+
+```js
+var obj = { foo: 'bar', baz: 42 };
+Object.keys(obj)
+// ["foo", "baz"]
+```
+
+`ES2017`引入了跟`Object.keys`配套的`Object.values`和`Object.entries`，作为遍历一个对象的手段，供`for...of`循环使用。
+
+```js
+let {keys, values, entries} = Object;
+let obj = { a: 1, b: 2, c: 3 };
+
+for (let key of keys(obj)) {
+  console.log(key); // 'a', 'b', 'c'
+}
+
+for (let value of values(obj)) {
+  console.log(value); // 1, 2, 3
+}
+
+for (let [key, value] of entries(obj)) {
+  console.log([key, value]); // ['a', 1], ['b', 2], ['c', 3]
+}
+```
+
 ## 10. `Symbol`
 
 ES5中的对象属性名都是字符串，容易造成属性名的冲突，`Symbol`机制保证每个属性的名字都是独一无二，从根本上防止属性名的冲突。
@@ -1200,7 +1241,23 @@ objectSymbols
 
 ## 11. `Set`和`Map`数据结构
 
+`ES6`提供了新的数据结构`Set`。它类似于数组，但是成员的值都是唯一的，没有重复的值。
 
+```js
+const s = new Set();
+
+[2, 3, 5, 4, 5, 2, 2].forEach(x => s.add(x));
+
+for (let i of s) {
+  console.log(i);
+}
+// 2 3 5 4
+```
+
+```js
+// 去除数组的重复成员
+[...new Set(array)]
+```
 
 ## 14. `Promise`对象
 
