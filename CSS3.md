@@ -304,3 +304,15 @@ Lightness：颜色越高色彩越亮。取值范围0-100%
 `padding-top`依照父元素的宽度来计算。
 
 `padding-top`设置为`100%`,图片通过`background`设置
+
+## `transform-origin`
+
+允许改变转换元素的参照位置，默认值`50% 50% 0`
+
+`transform-origin: x-axis y-axis z-axis;`
+
+可能的值
+
++ x-axis left|center|right|length|%
++ y-axis top|center|bottom|length|%
++ z-axis length

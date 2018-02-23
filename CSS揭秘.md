@@ -824,3 +824,90 @@ transform-origin: bottom;
 
 ### 14.简单的拼图
 
+思路:圆形左右两部分指定上述两种颜色，用伪元素覆盖上去，通过旋转来决定露出多大扇区。
+
+![](./images/CSS-secret/25.png)
+
+```css
+.pie {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: yellowgreen;
+    background-image: linear-gradient(to right, transparent 50%, #655 0);
+}
+.pie::before {
+    content: '';
+    display: block;
+    margin-left: 50%;
+    height: 100%;
+    border-radius: 0 100% 100% 0 / 50%;
+    background-color: inherit; // 避免代码重复
+    transform-origin: left;
+}
+```
+
+伪元素上加入`transform: rotate(.1turn);`，可以让伪元素转起来，`72deg(0.2x360=72)`。
+
+## 第四章 视觉效果
+
+### 15.单侧投影
+
+```css
+box-shadow: 2px 3px 4px rgba(0,0,0,.5);
+```
+
+![](./images/CSS-secret/26.png)
+
+1. 以该元素相同的尺寸和位置，画一个`rgba(0,0,0,.5)`的矩形。
+2. 右移`2px`，下移`3px`。
+3. 使用模糊算法进行`4px`模糊处理。
+4. 模糊后的矩形与原始元素的交集部分会被切除掉。
+
+`box-shadow`第四个参数会根据你指定的值去扩大或(当指定负值时)缩小投影的尺寸。
+
+```css
+box-shadow: 0 5px 4px -4px black;
+```
+
+这样可以看不见两边投影。
+
+![](./images/CSS-secret/27.png)
+
+#### 邻边投影
+
+![](./images/CSS-secret/28.png)
+
+```css
+box-shadow: 3px 3px 6px -3px black;
+```
+
+### 16.不规则投影
+
+当元素添加了一些伪元素或半透明装饰之后，`box-shadow`的表现不尽人意。
+
+![](./images/CSS-secret/29.png)
+
+滤镜效果规范为这个问题提供了一个解决方案。引入一个`filter`的新属性。
+
+可以方便指定滤镜效果，甚至可以串联起来，只需要用空格分隔起来。
+
+```css
+filter: blur() grayscale() drop-shadow();
+```
+
+`drop-shadow()`滤镜可接受的参数基本上跟`box-shadow`属性是一样的，但不包括扩张半径，不包括`inset`关键字，也不支持逗号分割的多层投影语法。
+
+```css
+box-shadow: 2px 2px 10px rgba(0,0,0,.5);
+```
+
+可以这样来写
+
+```css
+filter: drop-shadow(2px 2px 10px rgba(0,0,0,.5));
+```
+
+![](./images/CSS-secret/30.png)
+
+### 17.染色效果
