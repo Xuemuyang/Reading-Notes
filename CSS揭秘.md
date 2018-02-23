@@ -864,7 +864,7 @@ box-shadow: 2px 3px 4px rgba(0,0,0,.5);
 3. 使用模糊算法进行`4px`模糊处理。
 4. 模糊后的矩形与原始元素的交集部分会被切除掉。
 
-`box-shadow`第四个参数会根据你指定的值去扩大或(当指定负值时)缩小投影的尺寸。
+`box-shadow`第四个参数会根据你指定的值去扩大或(当指定负值时)缩小投影的尺寸。举例来说，一个`-5px`的扩张半径会把投影的宽度和高度各减少`10px`(即每边各`5px`)。
 
 ```css
 box-shadow: 0 5px 4px -4px black;
@@ -911,3 +911,40 @@ filter: drop-shadow(2px 2px 10px rgba(0,0,0,.5));
 ![](./images/CSS-secret/30.png)
 
 ### 17.染色效果
+
+#### 基于滤镜的方案
+
+`sepia()`滤镜会给图片增加一种降饱和度的橙黄色染色效果，像是老照片。
+
+`saturate()`滤镜会提升像素的饱和度。
+
+`hue-rotate()`滤镜把像素的色相以指定的度数进行偏移。
+
+```css
+filter: sepia(1) saturate(4) hue-rotate(295deg);
+```
+
+#### 基于混合模式的方案
+
+`mix-blend-mode`和`background-blend-mode`
+
+### 18.毛玻璃效果
+
+背景是图片，上面有文字显示，一般这么处理。
+
+```css
+body {
+    background: url("tiger.jpg") 0 / cover fixed;
+}
+main {
+    background: hsla(0,0%,100%,.3);
+}
+```
+
+![](./images/CSS-secret/31.png)
+
+![](./images/CSS-secret/32.png)
+
+传统的平面设计中，这个问题的解决方案通常是把文本层所覆盖的那部分图片作模糊处理。
+
+#### 解决方案

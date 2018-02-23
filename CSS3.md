@@ -134,6 +134,8 @@ html的`contenteditable`允许编辑段落。
 
 `background-size: length|percentage|cover|contain;`
 
+`length`和`percentage`中如果只设置一个值，另一个值为`auto`。
+
 > 背景图片要铺满一个容器，不论容器尺寸如何变化，`background-size:cover`这个属性都可以做到。
 
 `contain`使其宽度或者高度适应内容区域。
@@ -316,3 +318,13 @@ Lightness：颜色越高色彩越亮。取值范围0-100%
 + x-axis left|center|right|length|%
 + y-axis top|center|bottom|length|%
 + z-axis length
+
+## 伪元素
+
+`CSS`属性中有伪类和伪元素。
+
+伪类的意义在于如果不使用伪类，需要给元素添加一个样式。伪元素的意义在于如果不使用伪元素，需要多一个标签，并在此标签添加样式来达到我们想要的效果。
+
+> 伪类的效果可以通过添加一个实际的类来达到，而伪元素的效果则需要通过添加一个实际的元素才能达到，这也是为什么他们一个称为伪类，一个称为伪元素的原因。
+
+`CSS3`为了区分两者，伪类用`:`，伪元素用`::`来表示。
