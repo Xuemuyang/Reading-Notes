@@ -948,3 +948,38 @@ main {
 传统的平面设计中，这个问题的解决方案通常是把文本层所覆盖的那部分图片作模糊处理。
 
 #### 解决方案
+
+假定背景是固定的，不能直接对元素模糊处理，使用一个伪元素进行处理。
+
+```css
+main {
+    position: relative; /* [其余样式] */
+}
+main::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: rgba(255,0,0,.5); /* 仅用于调试 */
+}
+```
+
+伪元素现在覆盖在内容元素之上。用`z-index: -1;`来修正这个问题。
+
+模糊从边上向内算起，如果扩大模糊范围，给-的`margin`即可。父元素再配合使用`overflow:hidden;`使玻璃边缘锋芒。
+
+```css
+body, main::before {
+    background: url("tiger.jpg") 0 / cover fixed;
+}
+main {
+    position: relative;
+    background: hsla(0,0%,100%,.3);
+    overflow: hidden;
+}
+main::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0; filter: blur(20px);
+    margin: -30px;
+}
+```

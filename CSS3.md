@@ -328,3 +328,9 @@ Lightness：颜色越高色彩越亮。取值范围0-100%
 > 伪类的效果可以通过添加一个实际的类来达到，而伪元素的效果则需要通过添加一个实际的元素才能达到，这也是为什么他们一个称为伪类，一个称为伪元素的原因。
 
 `CSS3`为了区分两者，伪类用`:`，伪元素用`::`来表示。
+
+伪元素默认为行内元素。
+
+伪元素中的content是必须的，否则不生效。
+
+`::before creates a pseudo-element that is the first child of the selected element. It is often used to add cosmetic content to an element with the content property. It is inline by default.`
