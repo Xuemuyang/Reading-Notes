@@ -983,3 +983,117 @@ main::before {
     margin: -30px;
 }
 ```
+
+### 19.折角效果
+
+#### 45°折角的解决方案
+
+先弄出一个右上角斜面切角的元素。
+
+```css
+background: #58a; /* 回退样式 */
+background: linear-gradient(-135deg, transparent 2em, #58a 0);
+```
+
+增加一个暗色的三角形来实现翻折效果，再增加一层渐变生成这个三角形来实现翻折效果。实现方法是增加另一层渐变来生成这个三角形并将其定位在右上角。通过`background-size`来控制折角的大小。
+
+```css
+background: linear-gradient(to left bottom, transparent 50%, rgba(0,0,0,.4) 0) no-repeat 100% 0 / 2em 2em;
+```
+
+将切角放在渐变之上
+
+```css
+background: #58a; /* 回退样式 */
+background: linear-gradient(to left bottom, transparent 50%, rgba(0,0,0,.4) 0) no-repeat 100% 0 / 2em 2em, linear-gradient(-135deg, transparent 2em, #58a 0);
+```
+
+![](./images/CSS-secret/33.png)
+
+第二层渐变的`2em`折角尺寸是写在色标中的，沿着渐变轴进行度量，是对角线尺寸。勾股定理算一下。
+
+```css
+background: #58a; /* 回退样式 */
+background: linear-gradient(to left bottom, transparent 50%, rgba(0,0,0,.4) 0) no-repeat 100% 0 / 2em 2em, linear-gradient(-135deg, transparent 1.5em, #58a 0);
+```
+
+![](./images/CSS-secret/34.png)
+
+#### 其他角度的解决方案
+
+勾股定理勾股定理！
+
+![](./images/CSS-secret/35.png)
+
+```css
+background: #58a; /* 回退样式 */
+background: linear-gradient(to left bottom, transparent 50%, rgba(0,0,0,.4) 0) no-repeat 100% 0 / 3em 1.73em, linear-gradient(-150deg, transparent 1.5em, #58a 0);
+```
+
+![](./images/CSS-secret/36.png)
+
+真实的折角需要微微旋转。
+
+需要用到伪元素，因为背景不能旋转。
+
+```css
+.note::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    background: linear-gradient(to left bottom, transparent 50%, rgba(0,0,0,.4) 0) 100% 0 no-repeat; width: 1.73em;
+    height: 3em;
+    transform: rotate(-30deg);
+}
+```
+
+指定一下变形定位点
+
+```css
+.note::before {
+    /* [其余样式] */
+    transform: rotate(-30deg);
+    transform-origin: bottom right;
+}
+```
+
+![](./images/CSS-secret/37.png)
+
+垂直方向位置调整
+
+```css
+.note::before {
+    /* [其余样式] */
+    transform: translateY(-1.3em) rotate(-30deg);
+    transform-origin: bottom right;
+}
+```
+
+![](./images/CSS-secret/38.png)
+
+再加入一些圆角，渐变和投影
+
+```css
+.note {
+    position: relative;
+    background: #58a; /* 回退样式 */
+    background:
+        linear-gradient(-150deg, transparent 1.5em, #58a 0);
+    border-radius: .5em;
+}
+
+.note::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    background: linear-gradient(to left bottom, transparent 50%, rgba(0,0,0,.2) 0, rgba(0,0,0,.4)) 100% 0 no-repeat;
+    width: 1.73em;
+    height: 3em;
+    transform: translateY(-1.3em) rotate(-30deg);
+    transform-origin: bottom right;
+    border-bottom-left-radius: inherit;
+    box-shadow: -.2em .2em .3em -.1em rgba(0,0,0,.15);
+}
+```
+
+.png)

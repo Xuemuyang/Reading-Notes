@@ -1241,6 +1241,8 @@ objectSymbols
 
 ## 11. `Set`和`Map`数据结构
 
+### `Set`
+
 `ES6`提供了新的数据结构`Set`。它类似于数组，但是成员的值都是唯一的，没有重复的值。
 
 ```js
@@ -1258,6 +1260,26 @@ for (let i of s) {
 // 去除数组的重复成员
 [...new Set(array)]
 ```
+
+### `WeakSet`
+
+`WeakSet`与`Set`结构类似，是不重复的值的集合。与`Set`有两个区别。
+
+`WeakSet`中的成员只能是对象，而不能是其他类型的值。其次`WeakSet`中的对象都是弱引用，即垃圾回收机制不考虑`WeakSet`对该对象的引用，也就是说，如果其他对象都不再引用该对象，那么垃圾回收机制会自动回收该对象所占用的内存，不考虑该对象还存在于`WeakSet`之中。
+
+### `Map`
+
+`Map`数据结构类似于对象，也是键值对的集合，但是“键”的范围不限于字符串，各种类型的值（包括对象）都可以当做键。
+
+### `WeakMap`
+
+两点区别
+
+`WeakMap`只接受对象作为键名（`null`除外），不接受其他类型的值作为键名。其次，`WeakMap`的键名所指向的对象，不计入垃圾回收机制。
+
+## 12. `Proxy`
+
+`Proxy`可以理解成，在目标对象之前架设一层“拦截”，外界对该对象的访问，都必须先通过这层拦截，因此提供了一种机制，可以对外界的访问进行过滤和改写。`Proxy`这个词的原意是代理，用在这里表示由它来“代理”某些操作，可以译为“代理器”。
 
 ## 14. `Promise`对象
 
@@ -1400,3 +1422,334 @@ getJSON("/post/1.json").then(
 
 ## 15. Iterator 和 for...of 循环
 
+需要一种统一的接口机制，来处理所有不同的数据结构。
+
+遍历器（`Iterator`）就是这样一种机制。它是一种接口，为各种不同的数据结构提供统一的访问机制。任何数据结构只要部署`Iterator`接口，就可以完成遍历操作（即依次处理该数据结构的所有成员）。
+
+`Iterator`的作用有三个：一是为各种数据结构，提供一个统一的、简便的访问接口；二是使得数据结构的成员能够按某种次序排列；三是`ES6`创造了一种新的遍历命令`for...of`循环，`Iterator`接口主要供`for...of`消费。
+
+`Iterator`的遍历过程是这样的。
+
+（1）创建一个指针对象，指向当前数据结构的起始位置。也就是说，遍历器对象本质上，就是一个指针对象。
+
+（2）第一次调用指针对象的`next`方法，可以将指针指向数据结构的第一个成员。
+
+（3）第二次调用指针对象的`next`方法，指针就指向数据结构的第二个成员。
+
+（4）不断调用指针对象的`next`方法，直到它指向数据结构的结束位置。
+
+每一次调用`next`方法，都会返回数据结构的当前成员的信息。具体来说，就是返回一个包含`value`和`done`两个属性的对象。其中，`value`属性是当前成员的值，`done`属性是一个布尔值，表示遍历是否结束。
+
+当使用`for...of`循环遍历某种数据结构时，该循环会自动去寻找`Iterator`接口。
+
+原生具备`Iterator`接口的数据结构如下:
+
++ `Array`
++ `Map`
++ `Set`
++ `String`
++ `TypedArray`
++ 函数的`arguments`对象
++ `NodeList`对象
+
+```js
+let arr = ['a', 'b', 'c'];
+let iter = arr[Symbol.iterator]();
+
+iter.next() // { value: 'a', done: false }
+iter.next() // { value: 'b', done: false }
+iter.next() // { value: 'c', done: false }
+iter.next() // { value: undefined, done: true }
+```
+
+### `for...of`循环
+
+数组原生具备`iterator`接口。
+
+```js
+const arr = ['red', 'green', 'blue'];
+
+for(let v of arr) {
+  console.log(v); // red green blue
+}
+
+const obj = {};
+obj[Symbol.iterator] = arr[Symbol.iterator].bind(arr);
+
+for(let v of obj) {
+  console.log(v); // red green blue
+}
+```
+
+## 16. Generator 函数的语法
+
+### 基本概念
+
+`Generator`函数是`ES6`提供的一种异步编程解决方案，语法行为与传统函数完全不同。
+
+`Generator`函数是一个普通函数，但是有两个特征。一是，`function`关键字与函数名之间有一个星号；二是，函数体内部使用`yield`表达式，定义不同的内部状态（`yield`在英语里的意思就是“产出”）。
+
+```js
+function* helloWorldGenerator() {
+  yield 'hello';
+  yield 'world';
+  return 'ending';
+}
+
+var hw = helloWorldGenerator();
+```
+
+上面代码定义了一个`Generator`函数`helloWorldGenerator`，它内部有两个`yield`表达式（`hello`和`world`），即该函数有三个状态：`hello`，`world`和`return`语句（结束执行）。
+
+调用`Generator`函数后，该函数并不执行，返回的也不是函数运行结果，而是一个指向内部状态的指针对象，也就是上一章介绍的遍历器对象（`Iterator Object`）。
+
+```js
+hw.next()
+// { value: 'hello', done: false }
+
+hw.next()
+// { value: 'world', done: false }
+
+hw.next()
+// { value: 'ending', done: true }
+
+hw.next()
+// { value: undefined, done: true }
+```
+
+第一次调用，`Generator`函数开始执行，直到遇到第一个`yield`表达式为止。`next`方法返回一个对象，它的`value`属性就是当前`yield`表达式的值`hello`，`done`属性的值`false`，表示遍历还没有结束。
+
+第二次调用，`Generator`函数从上次`yield`表达式停下的地方，一直执行到下一个`yield`表达式。`next`方法返回的对象的`value`属性就是当前`yield`表达式的值`world`，`done`属性的值`false`，表示遍历还没有结束。
+
+第三次调用，`Generator`函数从上次`yield`表达式停下的地方，一直执行到`return`语句（如果没有`return`语句，就执行到函数结束）。`next`方法返回的对象的`value`属性，就是紧跟在`return`语句后面的表达式的值（如果没有`return`语句，则`value`属性的值为`undefined`），`done`属性的值`true`，表示遍历已经结束。
+
+第四次调用，此时`Generator`函数已经运行完毕，`next`方法返回对象的`value`属性为`undefined`，`done`属性为`true`。以后再调用`next`方法，返回的都是这个值。
+
+总结一下，调用`Generator`函数，返回一个遍历器对象，代表`Generator`函数的内部指针。以后，每次调用遍历器对象的`next`方法，就会返回一个有着`value`和`done`两个属性的对象。`value`属性表示当前的内部状态的值，是`yield`表达式后面那个表达式的值；`done`属性是一个布尔值，表示是否遍历结束。
+
+`ES6`没有规定，`function`关键字与函数名之间的星号，写在哪个位置。这导致下面的写法都能通过。
+
+```js
+function * foo(x, y) { ··· }
+function *foo(x, y) { ··· }
+function* foo(x, y) { ··· }
+function*foo(x, y) { ··· }
+```
+
+### `yield`表达式
+
+由于`Generator`函数返回的遍历器对象，只有调用`next`方法才会遍历下一个内部状态，所以其实提供了一种可以暂停执行的函数。`yield`表达式就是暂停标志。
+
+遍历器对象的`next`方法的运行逻辑如下。
+
+（1）遇到`yield`表达式，就暂停执行后面的操作，并将紧跟在`yield`后面的那个表达式的值，作为返回的对象的`value`属性值。
+
+（2）下一次调用`next`方法时，再继续往下执行，直到遇到下一个`yield`表达式。
+
+（3）如果没有再遇到新的`yield`表达式，就一直运行到函数结束，直到`return`语句为止，并将`return`语句后面的表达式的值，作为返回的对象的`value`属性值。
+
+（4）如果该函数没有`return`语句，则返回的对象的`value`属性值为`undefined`。
+
+需要注意的是，`yield`表达式后面的表达式，只有当调用`next`方法、内部指针指向该语句时才会执行，因此等于为`JavaScript`提供了手动的“惰性求值”（`Lazy Evaluation`）的语法功能。
+
+> `yield`表达式只能用在`Generator`函数中，其他地方都会报错。
+
+### `next`方法的参数
+
+`yield`表达式本身没有返回值，或者说总是返回`undefined`。`next`方法可以带一个参数，该参数就会被当作上一个`yield`表达式的返回值。
+
+```js
+function* foo(x) {
+  var y = 2 * (yield (x + 1));
+  var z = yield (y / 3);
+  return (x + y + z);
+}
+
+var a = foo(5);
+a.next() // Object{value:6, done:false}
+a.next() // Object{value:NaN, done:false}
+a.next() // Object{value:NaN, done:true}
+
+var b = foo(5);
+b.next() // { value:6, done:false }
+b.next(12) // { value:8, done:false }
+b.next(13) // { value:42, done:true }
+```
+
+上面代码中，第二次运行`next`方法的时候不带参数，导致`y`的值等于`2 * undefined`（即`NaN`），除以`3`以后还是`NaN`，因此返回对象的`value`属性也等于`NaN`。第三次运行`Next`方法的时候不带参数，所以`z`等于`undefined`，返回对象的`value`属性等于`5 + NaN + undefined`，即`NaN`。
+
+如果向`next`方法提供参数，返回结果就完全不一样了。上面代码第一次调用`b`的`next`方法时，返回`x+1`的值`6`；第二次调用`next`方法，将上一次`yield`表达式的值设为`12`，因此`y`等于`24`，返回`y / 3`的值`8`；第三次调用`next`方法，将上一次`yield`表达式的值设为`13`，因此`z`等于`13`，这时`x`等于`5`，`y`等于`24`，所以`return`语句的值等于`42`。
+
+### `for...of`循环
+
+`for...of`循环可以自动遍历`Generator`函数时生成的`Iterator`对象，且此时不再需要调用`next`方法。
+
+```js
+function* foo() {
+  yield 1;
+  yield 2;
+  yield 3;
+  yield 4;
+  yield 5;
+  return 6;
+}
+
+for (let v of foo()) {
+  console.log(v);
+}
+// 1 2 3 4 5
+```
+
+### `Generator.prototype.throw()`
+
+`Generator`函数返回的遍历器对象，都有一个`throw`方法，可以在函数体外抛出错误，然后在`Generator`函数体内捕获。
+
+```js
+var g = function* () {
+  try {
+    yield;
+  } catch (e) {
+    console.log('内部捕获', e);
+  }
+};
+
+var i = g();
+i.next();
+
+try {
+  i.throw('a');
+  i.throw('b');
+} catch (e) {
+  console.log('外部捕获', e);
+}
+// 内部捕获 a
+// 外部捕获 b
+```
+
+### `Generator.prototypr.return()`
+
+`Generator`函数返回的遍历器对象，还有一个`return`方法，可以返回给定的值，并且终结遍历`Generator`函数。
+
+```js
+function* gen() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+
+var g = gen();
+
+g.next()        // { value: 1, done: false }
+g.return('foo') // { value: "foo", done: true }
+g.next()        // { value: undefined, done: true }
+```
+
+> `next()`、`throw()`、`return()`这三个方法本质上是同一件事，可以放在一起理解。它们的作用都是让 `Generator`函数恢复执行，并且使用不同的语句替换`yield`表达式。
+
+### 应用
+
+异步操作的同步化表达
+
+通过`Generator`函数部署`Ajax`操作
+
+```js
+function* main() {
+  var result = yield request("http://some.url");
+  var resp = JSON.parse(result);
+    console.log(resp.value);
+}
+
+function request(url) {
+  makeAjaxCall(url, function(response){
+    it.next(response);
+  });
+}
+
+var it = main();
+it.next();
+```
+
+## 17. `Generator`函数的异步应用
+
+`ES6`诞生以前，异步编程的方法，大概有下面四种。
+
++ 回调函数
++ 事件监听
++ 发布/订阅
++ `Promise`对象
+
+`Generator`函数将`JavaScript`异步编程带入了一个全新的阶段。
+
+所谓异步，简单来说就是一个任务不是连续完成的，被分为两段，先执行第一段，然后转而执行其他任务，等做好准备，再回过头执行第二段。
+
+### 回调函数
+
+所谓回调函数，就是把任务的第二段单独写在一个函数里面，等到重新执行这个任务的时候，就直接调用这个函数。
+
+```js
+fs.readFile('/etc/passwd', 'utf-8', function (err, data) {
+  if (err) throw err;
+  console.log(data);
+});
+```
+
+一个有趣的问题是，为什么`Node`约定，回调函数的第一个参数，必须是错误对象`err`（如果没有错误，该参数就是`null`）？
+
+原因是执行分成两段，第一段执行完以后，任务所在的上下文环境就已经结束了。在这以后抛出的错误，原来的上下文环境已经无法捕捉，只能当作参数，传入第二段。
+
+### `Promise`
+
+回调函数容易形成`callback hell`。
+
+`Promise`对象将回调函数的嵌套改成链式调用。
+
+### `Generator`函数
+
+#### 协程
+
+传统的编程语言，早有异步编程的解决方案（其实是多任务的解决方案）。其中有一种叫做"协程"（`coroutine`），意思是多个线程互相协作，完成异步任务。
+
+协程有点像函数，又有点像线程。它的运行流程大致如下。
+
+第一步，协程`A`开始执行。
+第二步，协程`A`执行到一半，进入暂停，执行权转移到协程`B`。
+第三步，（一段时间后）协程`B`交还执行权。
+第四步，协程`A`恢复执行。
+上面流程的协程`A`，就是异步任务，因为它分成两段（或多段）执行。
+
+举例来说，读取文件的协程写法如下。
+
+```js
+function* asyncJob() {
+  // ...其他代码
+  var f = yield readFile(fileA);
+  // ...其他代码
+}
+```
+
+上面代码的函数`asyncJob`是一个协程，它的奥妙就在其中的`yield`命令。它表示执行到此处，执行权将交给其他协程。也就是说，`yield`命令是异步两个阶段的分界线。
+
+协程遇到`yield`命令就暂停，等到执行权返回，再从暂停的地方继续往后执行。它的最大优点，就是代码的写法非常像同步操作，如果去除`yield`命令，简直一模一样。
+
+#### 协程的`Generator`函数实现
+
+`Generator`函数是协程在`ES6`的实现，最大特点就是可以交出函数的执行权（即暂停执行）。
+
+整个`Generator`函数就是一个封装的异步任务，或者说是异步任务的容器。异步操作需要暂停的地方，都用`yield`语句注明。`Generator`函数的执行方法如下。
+
+```js
+function* gen(x) {
+  var y = yield x + 2;
+  return y;
+}
+
+var g = gen(1);
+g.next() // { value: 3, done: false }
+g.next() // { value: undefined, done: true }
+```
+
+上面代码中，调用`Generator`函数，会返回一个内部指针（即遍历器）`g`。这是`Generator`函数不同于普通函数的另一个地方，即执行它不会返回结果，返回的是指针对象。调用指针`g`的`next`方法，会移动内部指针（即执行异步任务的第一段），指向第一个遇到的`yield`语句，上例是执行到`x + 2`为止。
+
+换言之，`next`方法的作用是分阶段执行`Generator`函数。每次调用`next`方法，会返回一个对象，表示当前阶段的信息（`value`属性和`done`属性）。`value`属性是`yield`语句后面表达式的值，表示当前阶段的值；`done`属性是一个布尔值，表示`Generator`函数是否执行完毕，即是否还有下一个阶段。
+
+#### `Genertor`函数的数据交换和错误处理
