@@ -1096,4 +1096,86 @@ background: linear-gradient(to left bottom, transparent 50%, rgba(0,0,0,.4) 0) n
 }
 ```
 
-.png)
+## 第五章 字体排印
+
+### 20.连字符断行
+
+`CSS`第三版引入一个新属性`hyphens`，接受三个值`none`、`manual`和`auto`。
+
+配合`&shy;`来辅助浏览器进行断词，这里主要用于英文的处理。
+
+### 21.插入换行
+
+一个简单的定义列表
+
+![](./images/CSS-secret/39.png)
+
+```html
+<dl>
+    <dt>Name:</dt>
+    <dd>Lea Verou</dd>
+
+    <dt>Email:</dt>
+    <dd>lea@verou.me</dd>
+
+    <dt>Location:</dt>
+    <dd>Earth</dd>
+</dl>
+```
+
+`<dt>`和`<dd>`都是块级元素，默认显示如下图，显示效果是一个一行，通过指定`display`属性来修改样式，通常会得到下面的结果。
+
+![](./images/CSS-secret/40.png)
+
+#### 解决方案
+
+`<br>`这个标签在可维护性方面是一种糟糕的实践，并污染了结构层代码。
+
+`Unicode`字符中`0x000A`代表换行符，`CSS`中可以简写为`"\000A"`或者简化为`"\A"`。用它来作为伪元素的内容。
+
+```css
+dd::after {
+    content: "\A";
+}
+```
+
+此时，默认情况下的换行符会与相邻的其他空白符进行合并，此时我们需要保留代码中的这些空白符和换行。
+
+`white-space`这个属性控制了换行符空格和制表符的行为。
+
+```css
+dt, dd { display: inline; }
+dd {
+    margin: 0;
+    font-weight: bold;
+}
+dd::after {
+    content: "\A";
+    white-space: pre;
+}
+```
+
+为了健壮性，比如添加第二个邮箱，这种情况就不奏效了。
+
+![](./images/CSS-secret/41.png)
+
+于是我们的换行符加在`dt`的前面。
+
+```css
+dt::before {
+    content: '\A';
+    white-space: pre;
+}
+```
+
+尝试使用以下这些选择符：
+
++ `dt:not(:first-child)`
++ `dt ~ dt`
++ `dd + dt`
+
+这里回顾一下两个选择器。
+
+`~`通用兄弟选择器，用于选择某元素后面所在的兄弟元素。
+
+`+`相邻兄弟选择器，选择紧接在另一个元素后面的元素。它们具有一个相同的父元素。

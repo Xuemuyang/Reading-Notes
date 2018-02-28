@@ -334,3 +334,25 @@ Lightness：颜色越高色彩越亮。取值范围0-100%
 伪元素中的content是必须的，否则不生效。
 
 `::before creates a pseudo-element that is the first child of the selected element. It is often used to add cosmetic content to an element with the content property. It is inline by default.`
+
+## 高级选择器
+
+`~`通用兄弟选择器，用于选择某元素后面所在的兄弟元素。
+
+`+`相邻兄弟选择器，选择紧接在另一个元素后面的元素。它们具有一个相同的父元素。
+
+```html
+<div class="post">
+    <h1>这是标题一</h1>
+    <p>文章中第一个段落</p>
+    <p>文章中第二个段落</p>
+</div>
+```
+
+```css
+.post>p:nth-child(2){color:red}
+```
+
+实际效果是第一个段落变红。
+
+`:nth-child`选择的是某父元素的子元素，这个子元素并没有指定确切的类型，同时满足两个条件才能有效果，其一是子元素，其二是子元素刚好处在那个位置。
