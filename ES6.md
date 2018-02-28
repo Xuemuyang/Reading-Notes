@@ -1289,7 +1289,7 @@ for (let i of s) {
 
 两个特点
 
-1.对象的状态不收外界影响，`Promise`对象代表一个异步操作，有三种状态：`pending`（进行中）、`fulfilled`（已成功）和`rejected`（已失败）。只有异步操作的结果可以决定当前是哪一种状态，这正是"Promise"的由来。
+1.对象的状态不受外界影响，`Promise`对象代表一个异步操作，有三种状态：`pending`（进行中）、`fulfilled`（已成功）和`rejected`（已失败）。只有异步操作的结果可以决定当前是哪一种状态，这正是"Promise"的由来。
 
 2.一旦状态改变就不会再变。`Promise`对象的状态改变只有两种可能，`Pending`到`fulfilled`，`Pending`到`rejected`。只要这两种情况发生，状态就凝固了。
 
@@ -1752,4 +1752,69 @@ g.next() // { value: undefined, done: true }
 
 换言之，`next`方法的作用是分阶段执行`Generator`函数。每次调用`next`方法，会返回一个对象，表示当前阶段的信息（`value`属性和`done`属性）。`value`属性是`yield`语句后面表达式的值，表示当前阶段的值；`done`属性是一个布尔值，表示`Generator`函数是否执行完毕，即是否还有下一个阶段。
 
-#### `Genertor`函数的数据交换和错误处理
+#### `Generator`函数的数据交换和错误处理
+
+`Generator`函数可以暂停执行和恢复执行，这是它能封装异步任务的根本原因。除此之外，还有函数体内外的数据交换和错误处理机制。
+
+`next`返回值的`value`属性，是`Generator`函数向外输出数据；`next`方法还可以接受参数，向`Generator`函数体内输入数据。
+
+```js
+function* gen(x){
+  var y = yield x + 2;
+  return y;
+}
+
+var g = gen(1);
+g.next() // { value: 3, done: false }
+g.next(2) // { value: 2, done: true }
+```
+
+#### 异步任务的封装
+
+```js
+var fetch = require('node-fetch');
+
+function* gen(){
+  var url = 'https://api.github.com/users/github';
+  var result = yield fetch(url);
+  console.log(result.bio);
+}
+```
+
+执行的方法如下
+
+```js
+var g = gen();
+var result = g.next();
+
+result.value.then(function(data){
+  return data.json();
+}).then(function(data){
+  g.next(data);
+});
+```
+
+## 18. `async`函数
+
+`async`函数是`Generator`函数的语法糖。
+
+```js
+const gen = function* () {
+  const f1 = yield readFile('/etc/fstab');
+  const f2 = yield readFile('/etc/shells');
+  console.log(f1.toString());
+  console.log(f2.toString());
+};
+
+const asyncReadFile = async function () {
+  const f1 = await readFile('/etc/fstab');
+  const f2 = await readFile('/etc/shells');
+  console.log(f1.toString());
+  console.log(f2.toString());
+};
+```
+
+一比较就会发现，`async`函数就是将`Generator`函数的`*`替换成`async`，将`yield`替换成`await`
+
+### 基本用法
+
