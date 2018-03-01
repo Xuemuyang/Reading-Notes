@@ -1096,6 +1096,8 @@ background: linear-gradient(to left bottom, transparent 50%, rgba(0,0,0,.4) 0) n
 }
 ```
 
+![](./images/CSS-secret/39.png)
+
 ## 第五章 字体排印
 
 ### 20.连字符断行
@@ -1108,7 +1110,7 @@ background: linear-gradient(to left bottom, transparent 50%, rgba(0,0,0,.4) 0) n
 
 一个简单的定义列表
 
-![](./images/CSS-secret/39.png)
+![](./images/CSS-secret/40.png)
 
 ```html
 <dl>
@@ -1125,7 +1127,7 @@ background: linear-gradient(to left bottom, transparent 50%, rgba(0,0,0,.4) 0) n
 
 `<dt>`和`<dd>`都是块级元素，默认显示如下图，显示效果是一个一行，通过指定`display`属性来修改样式，通常会得到下面的结果。
 
-![](./images/CSS-secret/40.png)
+![](./images/CSS-secret/41.png)
 
 #### 解决方案
 
@@ -1157,7 +1159,7 @@ dd::after {
 
 为了健壮性，比如添加第二个邮箱，这种情况就不奏效了。
 
-![](./images/CSS-secret/41.png)
+![](./images/CSS-secret/42.png)
 
 于是我们的换行符加在`dt`的前面。
 
