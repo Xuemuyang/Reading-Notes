@@ -1181,3 +1181,40 @@ dt::before {
 `~`通用兄弟选择器，用于选择某元素后面所在的兄弟元素。
 
 `+`相邻兄弟选择器，选择紧接在另一个元素后面的元素。它们具有一个相同的父元素。
+
+### 22.文本行的斑马条纹
+
+```css
+tr:nth-child(even) {
+    background: rgba(0,0,0,.2);
+}
+```
+
+这样的做法当`DOM`元素过渡会拖累整个页面的性能；其实它不太健壮。
+
+#### 解决方案
+
+抛开以前那种给每一行元素再加背景的做法，可以一次性加上所有斑马条纹。用`em`来设定背景尺寸，这样背景就可以自动`font-size`的变化了。
+
+```css
+padding: .5em;
+line-height: 1.5;
+background: beige;
+background-image: linear-gradient(rgba(0,0,0 .2) 50%, transparent 0);
+background-size: auto 3em;
+```
+
+![](./images/CSS-secret/43.png)
+
+问题出在`padding`上面，可以让`background-origin`相对于`content-box`。
+
+```css
+padding: .5em;
+line-height: 1.5;
+background: beige;
+background-size: auto 3em;
+background-origin: content-box;
+background-image: linear-gradient(rgba(0,0,0 .2) 50%, transparent 0);
+```
+
+![](./images/CSS-secret/44.png)
