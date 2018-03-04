@@ -1218,3 +1218,134 @@ background-image: linear-gradient(rgba(0,0,0 .2) 50%, transparent 0);
 ```
 
 ![](./images/CSS-secret/44.png)
+
+### 23.调整tab的宽度
+
+包含大量代码的网页通常使用`<pre>`和`<code>`元素来显示代码，他们具有浏览器默认样式。通常是：
+
+```css
+pre, code {
+    font-family: monospace;
+}
+
+pre {
+    display: block;
+    margin: 1em 0;
+    white-space: pre;
+}
+```
+
+有些编码习惯喜欢使用`tab`来缩进代码，但是人们在网页中常常有意避开`tab`，因为浏览器会把其宽度显示为8个字符。
+
+`CSS文本(第三版)`中，`tab-size`属性可以控制这个情况。
+
+```css
+pre {
+    tab-size: 2;
+}
+```
+
+### 24.连字
+
+像人与人一样，字形(`glyph`)与字形也不都是和睦相处的。设计师们同上会在字体中包含一些额外的字形，称为连字(`ligature`)。这些字形被设计为双字形或三字形的一些单一组合体。不过默认情况下，浏览器不会使用连字。
+
+![](./images/CSS-secret/45.png)
+
+> 实际上我们常用的`and`符号(`&`)最开始就是字母`E`和`t`的连字。
+
+#### 解决方案
+
+`CSS字体(第三版)`中，原有的`font-variant`被升级成了一个简写属性，其中之一叫做`font-variant-liagtures`，专门用来控制连字效果的开启和关闭。如果需要启用所有可能的连字，需要同时指定这三个标识符:
+
+```css
+font-variant-ligatures: common-ligatures discretionary-ligatures historical-ligatures;
+```
+
+### 25.华丽的&符号
+
+对于标题来说，清爽的无衬线字体与华丽的衬线`&`符号之前的对比达到了美丽优雅的效果。
+
+![](./images/CSS-secret/46.png)
+
+`HTML`中有实体字符，`&amp;`就可以打出`&`符号。
+
+通常我们会这么做:
+
+```html
+<span class="amp">&amp;</span>
+```
+
+```css
+.amp {
+    font-family: Baskerville, "Goudy Old Style",
+Garamond, Palatino, serif;
+    font-style: italic;
+}
+```
+
+#### 解决方案
+
+用另外一种字体来单独美化某个特定字符(或者某个区间的多个字符)。
+
+通过`@font-face`规则来实现基本的字体嵌入。
+
+我们通常会在`font-family`声明中同时指定多个字体(即字体队列)。 这样，即使我们指定的最优先字体不可用，浏览器还可以回退到其他符合整体设计风格的字体。但是，很多开发者都忽略了一点:这个机制对单个字符来说也是有效的。如果某款字体可用，但仅包括某几个字符，那它就只会用来显示这几个字符;而在显示其他字符时，浏览器就会回退到其他字体。这个规则对本地字体和通过`@font-face`规则引入的嵌入字体都是有效的。
+
+只美化`&`字形的方法就是创建一种只包含`&`字形的`Web`字体，通过`@font-face`将其引入网页，然后把它排在字体队列的第一位:
+
+```css
+@font-face {
+    font-family: Ampersand;
+    src: url("fonts/ampersand.woff");
+}
+h1 {
+    font-family: Ampersand, Helvetica, sans-serif;
+}
+```
+
+这个方法比较灵活，但是多了一个`http`请求，我们可以使用本地字体实现这个效果。
+
+`@font-face`的`src`描述符还可以接受`local()`函数，是损失指定本地字体的名称。
+
+```css
+@font-face {
+    font-family: Ampersand;
+    src: local('Baskerville'), local('Goudy Old Style'), local('Garamond'), local('Palatino');
+}
+```
+
+这样做会导致整段文本都会被应用我们指定的字体，需要一个描述符`unicode-range`来指定应用范围。
+
+```js
+"&".charCodeAt(0).toString(16); //返回26
+```
+
+可以用这个方法查出我们需要字符的十六进制码位。
+
+就`&`符号为例，我们需要加上`U+`作为前缀。
+
+```css
+unicode-range: U+26;
+```
+
+如果想指定一个区间，还是需要`U+`前缀，还可以使用通配符。`U+4??`,`U+2665-2670`。
+
+一般来说，斜体的衬线字体往往可以显示出更美观的`&`符号。
+
+如果在`@font-face`中使用`font-style`描述符只不过告诉浏览器在斜体文本中使用这些字体，除非整个文本是斜体的，不然会起到效果。
+
+所以我们直接指定字体中我们想要的单个风格/字重所对应的"PostScript"名称。最终代码如下:
+
+```css
+@font-face {
+    font-family: Ampersand;
+    src: local('Baskerville-Italic'),
+         local('GoudyOldStyleT-Italic'),
+         local('Palatino-Italic'),
+         local('BookAntiqua-Italic');
+    unicode-range: U+26;
+    }
+h1 {
+    font-family: Ampersand, Helvetica, sans-serif;
+}
+```
