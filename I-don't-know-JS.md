@@ -53,7 +53,8 @@
 下面的程序既有`LHS`引用也有`RHS`引用
 
 ```javascript
-function foo(a) { console.log( a ); // 2
+function foo(a) { 
+    console.log( a ); // 2
 }
 foo( 2 );
 ```
@@ -70,13 +71,16 @@ var c = foo(2);
 ```
 
 三处`LHS`查询,四处`RHS`查询
-`foo(2)`RHS
-`a=2`LHS
-`a`RHS
-`b`LHS
-`a`RHS
-`b`RHS
-`c`LHS
+
+查询|类别
+---|---
+`foo(2)`|RHS
+`a=2`|LHS
+`a`|RHS
+`b`|LHS
+`a`|RHS
+`b`|RHS
+`c`|LHS
 
 ### 1.3 作用域嵌套
 
@@ -391,6 +395,16 @@ bar.call( obj2 ); //2，不是 3!!!
 ```
 
 箭头函数的绑定无法被修改
+
+再来看看`MDN`上对`this`的一些补充
+
+全局上下文中(在任何函数体外部),`this`都指代全局对象。
+
+函数内部则取决于调用的方式，这与上文所提到相同。
+
+> 如果要想把`this`的值从一个上下文传到另一个，就要用`call`，或者`apply`方法。
+
+当函数作为对象里的方法被调用时，它们的`this`是调用该函数的对象。`this`的绑定只受最靠近的成员引用的影响。
 
 ## chap3. 对象
 
