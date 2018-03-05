@@ -1349,3 +1349,50 @@ h1 {
     font-family: Ampersand, Helvetica, sans-serif;
 }
 ```
+
+### 26.自定义下划线
+
+`CSS`中的默认属性`text-decoration`或者是用`border`和`box-shadow`模拟出来的边框效果不尽人意。
+
+#### 解决方案
+
+使用渐变！
+
+```css
+background: linear-gradient(gray, gray) no-repeat; background-size: 100% 1px;
+background-position: 0 1.15em;
+```
+
+![](./images/CSS-secret/47.png)
+
+下划线会穿过某些字母，可以设置两层与背景色相同的`text-shadow`来模拟这种效果。
+
+```css
+background: linear-gradient(gray, gray) no-repeat;
+background-size: 100% 1px;
+background-position: 0 1.15em;
+text-shadow: .05em 0 white, -.05em 0 white;
+```
+
+用渐变生成的线条极为灵活，可以生成虚线下划线。
+
+![](./images/CSS-secret/48.png)
+
+通过色标百分比位置来微调虚线的虚实比例，还可以通过`background-size`来改变虚线的疏密。
+
+波浪型的下划线
+
+```css
+body {
+    font: 250%/1.6 Baskerville, Palatino, serif;
+}
+
+a {
+    background: linear-gradient(-45deg, transparent 40%, red 0, red 60%, transparent 0) 0 1em,            linear-gradient(45deg, transparent 40%, red 0, red 60%, transparent 0) .1em 1em;
+    background-repeat: repeat-x;
+    background-size: .2em .1em;
+    text-shadow: .05em 0 white, -.05em 0 white;
+}
+```
+
+![](./images/CSS-secret/49.png)
