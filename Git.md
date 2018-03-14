@@ -43,7 +43,7 @@ $git diff
 
 如果不小心给文件改乱了，可以从最近的一个`commit`恢复。
 
-`git log`可以查看最近提交的日志
+`git log`可以查看最近提交的日志,`git log --graph`可以看到分支合并图。
 
 ```sh
 $git log
@@ -80,3 +80,93 @@ $git checkout -- readme.md
 ```sh
 $git rm readme.md
 ```
+
+## 远程仓库
+
+```sh
+$git remote add origin xxx
+```
+
+`origin`是Git默认的远程仓库的叫法。
+
+第一次推送`master`分支需要加入`-u`参数，以后的推送或者拉取就可以简化命令。
+
+```sh
+$git push -u origin master
+```
+
+只要本地做了提交，就可以通过命令
+
+```sh
+$git push origin master
+```
+
+如果从零开始一个项目，最好的方式就是先创建远程库，然后`clone`。
+
+```sh
+$git clone xxx
+```
+
+## 分支管理
+
+`-b`参数表示创建并切换。
+
+```sh
+$git checkout -b dev
+```
+
+相当于下面两条命令，`git branch xxx`是创建`xxx`分支，`git checkout xxx`是切换分支。
+
+```sh
+$git branch dev
+$git checkout dev
+```
+
+`git merge`用于合并指定分支到当前分支。
+
+```sh
+$git merge dev
+```
+
+删除分支
+
+```sh
+$git branch -d dev
+```
+
+通常情况下Git会用`Fast forward`模式，删除分支会丢掉分支信息，可以强制禁用`Fast forward`模式。原理是在`merge`的时候`commit`一次，这样分支历史上就可以看出分支信息。
+
+```sh
+$git merge --no-ff -m "xxx" dev
+```
+
+`stash`功能可以把工作现场保存起来。
+
+```sh
+$git stash
+```
+
+查看保存的工作现场。
+
+```sh
+$git stash list
+```
+
+使用`git stash apply`恢复，之后stash内容并不删除，需要`git stash drop`来删除，另一种方式是`git stash pop`，恢复的同时把stash内容也删了。
+
+使用`git branch -D xxx`来删除一个还没有被合并的分支。
+
+使用`git remote`查看远程库的信息。`-v`显示更详细的信息。
+
+```sh
+$git remote
+```
+
+多人协作的模式通常是这样的:
+
+1. 首先通过`git push origin branch-name`推送自己修改
+1. 推送失败，因为远程分支比本地新，需要`git pull`合并
+1. 有冲突则解决冲突，并本地提交
+1. 之后`git push origin branch-name`推送就能成功
+
+如果`git pull`提示"no tracking information"，说明本地分支和远程分支的链接关系没有创建，用命令`git branch --set-upstream branch-name origin/branch-name`。
