@@ -6,6 +6,8 @@
 npm init [-f|--force|-y|--yes]
 ```
 
+这里的`-y`参数是跳过提问阶段
+
 添加参数会生成package.json文件
 
 ```bash
