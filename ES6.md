@@ -1418,8 +1418,6 @@ getJSON("/post/1.json").then(
 );
 ```
 
-### 4. Promise.prototype.catch()
-
 ## 15. Iterator 和 for...of 循环
 
 需要一种统一的接口机制，来处理所有不同的数据结构。
