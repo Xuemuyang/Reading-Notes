@@ -56,6 +56,28 @@ props是专门用来暴露组件的属性接口的
 </div>
 ```
 
+## Vue实例
+
+所有的`Vue`组件都是`Vue`实例，并且接受相同的选项对象 (一些根实例特有的选项除外)。
+
+值得注意的是只有当实例被创建时`data`中存在的属性才是响应式的。
+
+如果添加一个新的属性:
+
+```js
+vm.a = 'hehe';
+```
+
+`a`的改动不会触发任何视图的更新。
+
+### 生命周期钩子
+
+每个`Vue`实例在被创建时都要经过一系列的初始化过程——例如，需要设置数据监听、编译模板、将实例挂载到`DOM`并在数据变化时更新`DOM`等。同时在这个过程中也会运行一些叫做生命周期钩子的函数，这给了用户在不同阶段添加自己的代码的机会。
+
+> `Vue`中使用箭头函数一定要注意`this`的值。
+
+![](./images/vue/1.png)
+
 ## 基本指令
 
 声明式渲染
@@ -219,12 +241,6 @@ var app6 = new Vue({
 })
 ```
 
-## Vue实例
-
-生命周期
-
-![](http://ovyn493ey.bkt.clouddn.com/lifecycle.png)
-
 ## 模板语法
 
 通过使用`v-once`指令，你也能执行一次性地插值，当数据改变时，插值处的内容不会更新。但请留心这会影响到该节点上所有的数据绑定：
@@ -275,7 +291,7 @@ var app6 = new Vue({
 
 ## 计算属性
 
-对于任何复杂逻辑都应该使用**计算属性**
+模板中放入过多逻辑会让模板过重难以维护，对于任何复杂逻辑都应该使用**计算属性**。
 
 ```html
 <div id="example">
@@ -318,18 +334,6 @@ methods: {
 ```
 
 不同的是计算属性是基于它们的依赖关系进行缓存，只要依赖关系没有发生变化，多次访问会立即返回结果，不必再次执行函数。
-
-### `watch`例子
-
-```html
-<div id="watch-example">
-  <p>
-    Ask a yes/no question:
-    <input v-model="question">
-  </p>
-  <p>{{ answer }}</p>
-</div>
-```
 
 ### 计算属性的`setter`
 
@@ -499,6 +503,38 @@ v-else-if，顾名思义，充当 v-if 的“else-if 块”，可以连续使用
 
 类似于`v-else`，`v-else-if`也必须紧跟在带`v-if`或者`v-else-if`的元素之后。
 
+## 用`key`管理可复用的元素
+
+`Vue`会尽可能高效地渲染元素，通常会复用已有元素而不是从头开始渲染。
+
+```html
+<template v-if="loginType === 'username'">
+  <label>Username</label>
+  <input placeholder="Enter your username">
+</template>
+<template v-else>
+  <label>Email</label>
+  <input placeholder="Enter your email address">
+</template>
+```
+
+两个模板使用相同的元素，切换的时候仅仅是替换不同的属性或者内容。
+
+如果需要指明两个元素是完全独立的，不需要复用，指定一个`key`即可。
+
+```html
+<template v-if="loginType === 'username'">
+  <label>Username</label>
+  <input placeholder="Enter your username" key="username-input">
+</template>
+<template v-else>
+  <label>Email</label>
+  <input placeholder="Enter your email address" key="email-input">
+</template>
+```
+
+> `label`元素仍然会被复用，因为没有指定`key`
+
 ## 列表渲染
 
 变异方法
@@ -528,6 +564,59 @@ reverse()
 ```
 
 上面的代码只传递了未complete的todos。
+
+### 一个对象的`v-for`
+
+```js
+new Vue({
+  el: '#v-for-object',
+  data: {
+    object: {
+      firstName: 'John',
+      lastName: 'Doe',
+      age: 30
+    }
+  }
+})
+```
+
+```html
+<div v-for="(value, key, index) in object">
+  {{ index }}. {{ key }}: {{ value }}
+</div>
+```
+
+> 遍历对象按照`Object.keys()`的结果遍历，不能保证在不同引擎下的结果一致。
+
+## 对象更改的注意事项
+
+对于已经创建的实例，`Vue`不能动态添加根级别的响应式属性。但是，可以使用`Vue.set(object, key, value)`方法向嵌套对象添加响应式属性。
+
+```js
+var vm = new Vue({
+  data: {
+    userProfile: {
+      name: 'Anika'
+    }
+  }
+})
+```
+
+```js
+//添加一个新的 age 属性到嵌套的 userProfile 对象
+Vue.set(vm.userProfile, 'age', 27)
+//使用 vm.$set 实例方法，它只是全局 Vue.set 的别名
+vm.$set(vm.userProfile, 'age', 27)
+```
+
+需要对已有对象赋新属性最好这么做
+
+```js
+vm.userProfile = Object.assign({}, vm.userProfile, {
+  age: 27,
+  favoriteColor: 'Vue Green'
+})
+```
 
 ## 事件处理
 
