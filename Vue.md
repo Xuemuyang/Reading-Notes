@@ -76,7 +76,7 @@ vm.a = 'hehe';
 
 > `Vue`中使用箭头函数一定要注意`this`的值。
 
-![](./images/vue/1.png)
+![lifesycle](./images/vue/1.png)
 
 ## 基本指令
 
@@ -120,6 +120,8 @@ var app = new Vue({
 #### `v-bind`
 
 属性绑定
+
+使用`v-bind`就是让使用`v-bind`的地方当成`JavaScript`表达式来计算。
 
 ```html
 <div id="app-2">
@@ -711,3 +713,317 @@ Vue.config.keyCodes.f1 = 112
 1.`.lazy`
 
 当`enter`或者跳出时才更新数据。
+
+## 组件
+
+组件 (`Component`) 是`Vue.js`最强大的功能之一。组件可以扩展`HTML`元素，封装可重用的代码。在较高层面上，组件是自定义元素，`Vue.js`的编译器为它添加特殊功能。
+
+### 全局注册
+
+确保在初始化根实例之前注册组件。
+
+```js
+// 注册
+Vue.component('my-component', {
+  template: '<div>A custom component!</div>'
+})
+
+// 创建根实例
+new Vue({
+  el: '#example'
+})
+```
+
+### 局部注册
+
+通过某个`Vue`实例/组件的实例选项`components`注册仅在其作用域中可用的组件。
+
+```js
+var Child = {
+  template: '<div>A custom component!</div>'
+}
+
+new Vue({
+  // ...
+  components: {
+    // <my-component> 将只在父组件模板中可用
+    'my-component': Child
+  }
+})
+```
+
+### DOM模板解析注意事项
+
+当使用`DOM`作为模板时 (例如，使用`el`选项来把`Vue`实例挂载到一个已有内容的元素上)，你会受到`HTML`本身的一些限制，因为`Vue`只有在浏览器解析、规范化模板之后才能获取其内容。尤其要注意，像`<ul>`、`<ol>`、`<table>`、`<select>`这样的元素里允许包含的元素有限制，而另一些像`<option>`这样的元素只能出现在某些特定元素的内部。
+
+如果使用`JS`内联字符串模板则没有这些限制，`.vue`组件也没有这些限制。
+
+### data必须是函数
+
+在组件实例中`data`必须是一个函数。
+
+这里演示一下为什么这么做。
+
+```js
+var data = { counter: 0 }
+
+Vue.component('simple-counter', {
+  template: '<button v-on:click="counter += 1">{{ counter }}</button>',
+  // 技术上 data 的确是一个函数了，因此 Vue 不会警告，
+  // 但是我们却给每个组件实例返回了同一个对象的引用
+  data: function () {
+    return data
+  }
+})
+
+new Vue({
+  el: '#example-2'
+})
+```
+
+这样多个组件的状态共享(相同)。
+
+### 组件组合
+
+父子组件的关系可以总结为`prop`向下传递，事件向上传递。
+
+### 单向数据流
+
+每次父组件更新时，子组件的所有`prop`都会更新为最新值。这意味着不应该在子组件内部改变`prop`。如果这么做了，`Vue`会在控制台给出警告。
+
+在两种情况下，我们很容易忍不住想去修改`prop`中数据：
+
+1. `Prop`作为初始值传入后，子组件想把它当作局部数据来用；
+1. `Prop`作为原始数据传入，由子组件处理成其它数据输出。
+
+对这两种情况，正确的应对方式是：
+
+定义一个局部变量，并用`prop`的值初始化它：
+
+```js
+props: ['initialCounter'],
+data: function () {
+  return { counter: this.initialCounter }
+}
+```
+
+定义一个计算属性，处理`prop`的值并返回：
+
+```js
+props: ['size'],
+computed: {
+  normalizedSize: function () {
+    return this.size.trim().toLowerCase()
+  }
+}
+```
+
+### `Prop`验证
+
+可以为组件的`prop`指定验证规则。如果传入的数据不符合要求，`Vue`会发出警告。这对于开发给他人使用的组件非常有用。
+
+```js
+Vue.component('example', {
+  props: {
+    // 基础类型检测 (`null` 指允许任何类型)
+    propA: Number,
+    // 可能是多种类型
+    propB: [String, Number],
+    // 必传且是字符串
+    propC: {
+      type: String,
+      required: true
+    },
+    // 数值且有默认值
+    propD: {
+      type: Number,
+      default: 100
+    },
+    // 数组/对象的默认值应当由一个工厂函数返回
+    propE: {
+      type: Object,
+      default: function () {
+        return { message: 'hello' }
+      }
+    },
+    // 自定义验证函数
+    propF: {
+      validator: function (value) {
+        return value > 10
+      }
+    }
+  }
+})
+```
+
+### 自定义事件
+
+父组件可以在使用子组件的地方直接用`v-on`来监听子组件触发的事件。
+
+```html
+<div id="counter-event-example">
+  <p>{{ total }}</p>
+  <button-counter v-on:increment="incrementTotal"></button-counter>
+  <button-counter v-on:increment="incrementTotal"></button-counter>
+</div>
+```
+
+```js
+Vue.component('button-counter', {
+  template: '<button v-on:click="incrementCounter">{{ counter }}</button>',
+  data: function () {
+    return {
+      counter: 0
+    }
+  },
+  methods: {
+    incrementCounter: function () {
+      this.counter += 1
+      this.$emit('increment')
+    }
+  },
+})
+
+new Vue({
+  el: '#counter-event-example',
+  data: {
+    total: 0
+  },
+  methods: {
+    incrementTotal: function () {
+      this.total += 1
+    }
+  }
+})
+```
+
+这个例子中，子组件与和外部完全解耦。
+
+```html
+<div id="message-event-example" class="demo">
+  <p v-for="msg in messages">{{ msg }}</p>
+  <button-message v-on:message="handleMessage"></button-message>
+</div>
+```
+
+```js
+Vue.component('button-message', {
+  template: `<div>
+    <input type="text" v-model="message" />
+    <button v-on:click="handleSendMessage">Send</button>
+  </div>`,
+  data: function () {
+    return {
+      message: 'test message'
+    }
+  },
+  methods: {
+    handleSendMessage: function () {
+      this.$emit('message', { message: this.message })
+    }
+  }
+})
+
+new Vue({
+  el: '#message-event-example',
+  data: {
+    messages: []
+  },
+  methods: {
+    handleMessage: function (payload) {
+      this.messages.push(payload.message)
+    }
+  }
+})
+```
+
+这给例子子组件与外界仍是完全解耦的。
+
+## Vue-router
+
+## Vuex
+
+`Vuex`是一个专为`Vue.js`应用程序开发的状态管理模式。它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。
+
+`Vuex`与简单的全局对象有以下两点不同:
+
+1. `Vuex`的状态存储是响应式的。当`Vue`组件从`store`中读取状态的时候，若`store`中的状态发生变化，那么相应的组件也会相应地得到高效更新。
+1. 不能直接改变`store`中的状态。改变`store`中的状态的唯一途径就是显式地提交 (`commit`) `mutation`。这样使得我们可以方便地跟踪每一个状态的变化，从而让我们能够实现一些工具帮助我们更好地了解我们的应用。
+
+![vuex](./images/vue/2.png)
+
+### 一个最简单的计数应用
+
+```html
+<div id="app">
+  <p>{{ count }}</p>
+  <p>
+    <button @click="increment">+</button>
+    <button @click="decrement">-</button>
+  </p>
+</div>
+```
+
+```js
+// make sure to call Vue.use(Vuex) if using a module system
+
+const store = new Vuex.Store({
+  state: {
+    count: 0
+  },
+  mutations: {
+    increment: state => state.count++,
+    decrement: state => state.count--
+  }
+})
+
+new Vue({
+  el: '#app',
+  computed: {
+    count () {
+      return store.state.count
+    }
+  },
+  methods: {
+    increment () {
+      store.commit('increment')
+    },
+    decrement () {
+      store.commit('decrement')
+    }
+  }
+})
+```
+
+### 核心概念
+
+#### `State`
+
+`Vuex`通过`store`选项，提供了一种机制将状态从根组件“注入”到每一个子组件中（需调用`Vue.use(Vuex)`）。
+
+```js
+const app = new Vue({
+  el: '#app',
+  // 把 store 对象提供给 “store” 选项，这可以把 store 的实例注入所有的子组件
+  store,
+  components: { Counter },
+  template: `
+    <div class="app">
+      <counter></counter>
+    </div>
+  `
+})
+```
+
+通过在根实例中注册`store`选项，该`store`实例会注入到根组件下的所有子组件中，且子组件能通过`this.$store`访问到。
+
+```js
+const Counter = {
+  template: `<div>{{ count }}</div>`,
+  computed: {
+    count () {
+      return this.$store.state.count
+    }
+  }
+}
+```

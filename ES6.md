@@ -1100,6 +1100,132 @@ Object.is(NaN, NaN) // true
 
 `Object.assign`方法用于对象的合并，将源对象（source）的所有可枚举属性，复制到目标对象（target）。
 
+`Object.assign`方法的第一个参数是目标对象，后面的参数都是源对象。
+
+```js
+const target = { a: 1, b: 1 };
+
+const source1 = { b: 2, c: 2 };
+const source2 = { c: 3 };
+
+Object.assign(target, source1, source2);
+target // {a:1, b:2, c:3}
+```
+
+注意点:
+
+1.浅拷贝
+
+2.同名属性替换
+
+3.数组的处理
+
+将数组视为对象来处理，下标就是属性名。
+
+```js
+Object.assign([1, 2, 3], [4, 5])
+// [4, 5, 3]
+```
+
+4.取值函数的处理
+
+`Object.assign()`只能进行值的复制。
+
+```js
+const source = {
+  get foo() { return 1 }
+};
+const target = {};
+
+Object.assign(target, source)
+// { foo: 1 }
+```
+
+有如下用途:
+
+1.为对象添加属性
+
+```js
+class Point {
+  constructor(x, y) {
+    Object.assign(this, {x, y});
+  }
+}
+```
+
+2.为对象添加方法
+
+```js
+Object.assign(SomeClass.prototype, {
+  someMethod(arg1, arg2) {
+    ···
+  },
+  anotherMethod() {
+    ···
+  }
+});
+
+// 等同于下面的写法
+SomeClass.prototype.someMethod = function (arg1, arg2) {
+  ···
+};
+SomeClass.prototype.anotherMethod = function () {
+  ···
+};
+```
+
+3.克隆对象
+
+```js
+function clone(origin) {
+  return Object.assign({}, origin);
+}
+```
+
+上面代码将原始对象拷贝到一个空对象，就得到了原始对象的克隆。
+
+不过，采用这种方法克隆，只能克隆原始对象自身的值，不能克隆它继承的值。如果想要保持继承链，可以采用下面的代码。
+
+```js
+function clone(origin) {
+  let originProto = Object.getPrototypeOf(origin);
+  return Object.assign(Object.create(originProto), origin);
+}
+```
+
+4.合并多个对象
+
+将多个对象合并到某个对象。
+
+```js
+const merge =
+  (target, ...sources) => Object.assign(target, ...sources);
+```
+
+如果希望合并后返回一个新对象，可以改写上面函数，对一个空对象合并。
+
+```js
+const merge =
+  (...sources) => Object.assign({}, ...sources);
+```
+
+5.为属性指定默认值
+
+```js
+const DEFAULTS = {
+  logLevel: 0,
+  outputFormat: 'html'
+};
+
+function processContent(options) {
+  options = Object.assign({}, DEFAULTS, options);
+  console.log(options);
+  // ...
+}
+```
+
+浅拷贝！！！
+
 ### `super`关键字
 
 `this`关键字总是指向函数所在的当前对象，`ES6`新增了一个类似的关键字`super`，指向当前对象的原型对象。
@@ -1131,6 +1257,24 @@ for (let value of values(obj)) {
 for (let [key, value] of entries(obj)) {
   console.log([key, value]); // ['a', 1], ['b', 2], ['c', 3]
 }
+```
+
+### 对象的扩展运算符
+
+对象的扩展运算符(`...`)用于取出参数对象的所有可遍历属性，拷贝到当前对象之中。
+
+```js
+let z = { a: 3, b: 4 };
+let n = { ...z };
+n // { a: 3, b: 4 }
+```
+
+用于合并两个对象。
+
+```js
+let ab = { ...a, ...b };
+// 等同于
+let ab = Object.assign({}, a, b);
 ```
 
 ## 10. `Symbol`
