@@ -997,6 +997,12 @@ new Vue({
 
 ### 核心概念
 
+1. State
+1. Getter
+1. Mutation
+1. Action
+1. Module
+
 #### `State`
 
 `Vuex`通过`store`选项，提供了一种机制将状态从根组件“注入”到每一个子组件中（需调用`Vue.use(Vuex)`）。
@@ -1027,3 +1033,219 @@ const Counter = {
   }
 }
 ```
+
+使用`mapState`辅助函数来映射到计算属性。
+
+#### `Getter`
+
+`Vuex`允许我们在`store`中定义“getter”（可以认为是`store`的计算属性）。就像计算属性一样，`getter`的返回值会根据它的依赖被缓存起来，且只有当它的依赖值发生了改变才会被重新计算。
+
+`Getter`接受`state`作为其第一个参数:
+
+```js
+const store = new Vuex.Store({
+  state: {
+    todos: [
+      { id: 1, text: '...', done: true },
+      { id: 2, text: '...', done: false }
+    ]
+  },
+  getters: {
+    doneTodos: state => {
+      return state.todos.filter(todo => todo.done)
+    }
+  }
+})
+```
+
+`Getter`会暴露为`store.getters`对象：
+
+```js
+store.getters.doneTodos // -> [{ id: 1, text: '...', done: true }]
+```
+
+使用`mapGetter`辅助函数来映射到计算属性。
+
+#### `Mutation`
+
+更改`Vuex`的`store`中的状态的唯一方法是提交`mutation`。
+
+`Vuex`中的`mutation`非常类似于事件：每个`mutation`都有一个字符串的事件类型(`type`)和一个回调函数(`handler`)。这个回调函数就是我们实际进行状态更改的地方，并且它会接受`state`作为第一个参数。
+
+```js
+const store = new Vuex.Store({
+  state: {
+    count: 1
+  },
+  mutations: {
+    increment (state) {
+      // 变更状态
+      state.count++
+    }
+  }
+})
+```
+
+不能直接调用一个`mutation handler`。这个选项更像是事件注册：“当触发一个类型为`increment`的`mutation`时，调用此函数。”要唤醒一个`mutation handler`，你需要以相应的`type`调用`store.commit`方法。
+
+```js
+store.commit('increment')
+```
+
+可以向`store.commit`传入额外的参数，即`mutation`的 载荷（`payload`）。
+
+```js
+// ...
+mutations: {
+  increment (state, n) {
+    state.count += n
+  }
+}
+store.commit('increment', 10)
+```
+
+大多情况下载荷应该是一个对象，这样可以包含多个字段并且记录的`mutation`会更易读。
+
+```js
+// ...
+mutations: {
+  increment (state, payload) {
+    state.count += payload.amount
+  }
+}
+store.commit('increment', {
+  amount: 10
+})
+```
+
+##### 对象风格的提交方式
+
+提交`mutation`的另一种方式是直接使用包含`type`属性的对象。
+
+```js
+store.commit({
+  type: 'increment',
+  amount: 10
+})
+```
+
+##### `Mutation`需遵守`Vue`的响应规则
+
+1.最好提前在`store`中初始化好所有所需属性。
+
+2.当需要在对象上添加新属性时，应该使用
+
+```js
+Vue.set(obj, 'newProp', 123);
+```
+
+或者以新对象替换老对象。利用对象展开运算符我们可以这样写：
+
+```js
+state.obj = { ...state.obj, newProp: 123 }
+```
+
+##### `Mutation`必须是同步函数
+
+!!!
+
+#### `Action`
+
+`Action`类似于`mutation`。
+
++ `Action`提交的是`mutation`，而不是直接变更状态。+ `Action`可以包含任意异步操作。
+
+注册一个简单的`Action`：
+
+```js
+const store = new Vuex.Store({
+  state: {
+    count: 0
+  },
+  mutations: {
+    increment (state) {
+      state.count++
+    }
+  },
+  actions: {
+    increment (context) {
+      context.commit('increment')
+    }
+  }
+})
+```
+
+`Action`函数接受一个与`store`实例具有相同方法和属性的`context`对象，因此你可以调用`context.commit`提交一个`mutation`，或者通过`context.state`和`context.getters`来获取`state`和`getters`。
+
+使用参数解构来简化代码。
+
+```js
+actions: {
+  increment ({ commit }) {
+    commit('increment')
+  }
+}
+```
+
+##### 分发(dispatch)`Action`
+
+`Action`通过`store.dispatch`方法触发：
+
+```js
+store.dispatch('increment')
+```
+
+`Mutation`必须同步执行，异步操作在`Action`内部执行。
+
+```js
+actions: {
+  incrementAsync ({ commit }) {
+    setTimeout(() => {
+      commit('increment')
+    }, 1000)
+  }
+}
+```
+
+`Actions`支持同样的载荷方式和对象方式进行分发：
+
+```js
+// 以载荷形式分发
+store.dispatch('incrementAsync', {
+  amount: 10
+})
+
+// 以对象形式分发
+store.dispatch({
+  type: 'incrementAsync',
+  amount: 10
+})
+```
+
+同样支持`mapActions`辅助函数将组件的`methods`映射为`store.dispatch`调用（需要先在根节点注入`store`）：
+
+```js
+import { mapActions } from 'vuex'
+
+export default {
+  // ...
+  methods: {
+    ...mapActions([
+      'increment', // 将 `this.increment()` 映射为 `this.$store.dispatch('increment')`
+
+      // `mapActions` 也支持载荷：
+      'incrementBy' // 将 `this.incrementBy(amount)` 映射为 `this.$store.dispatch('incrementBy', amount)`
+    ]),
+    ...mapActions({
+      add: 'increment' // 将 `this.add()` 映射为 `this.$store.dispatch('increment')`
+    })
+  }
+}
+```
+
+##### 组合`Action`
+
+`store.dispatch`可以处理被触发的`action`的处理函数返回的`Promise`，并且`store.dispatch`仍旧返回`Promise`。
+
+使用`Promise`链式调用或者`async/await`进行复杂异步控制。
+
