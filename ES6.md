@@ -1960,3 +1960,6 @@ const asyncReadFile = async function () {
 
 ### 基本用法
 
+## Module
+
+使用`export default`命令，为模块指定默认输出，这样就不需要知道所要加载模块的变量名，通过`export`方式导出，在导入时要加`{ }`，`export default`则不需要。
