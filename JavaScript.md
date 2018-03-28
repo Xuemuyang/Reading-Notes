@@ -3793,6 +3793,16 @@ xhr.send(null);
 shr.open("get", "example.php?name1=value1&name2=value2", true);
 ```
 
+使用下面这个函数可以向现有`URL`的末尾添加查询字符串参数:
+
+```js
+function addURLParam(url, name, value) {
+    url += (url.indexOf('?') == -1 ? '?' : '&');
+    url += encodeURIComponent(name) + '=' + encodeURIComponent(value);
+    return url;
+}
+```
+
 ### GET与POST请求的区别
 
 + GET请求是将请求信息放在URL中的一种请求方式
@@ -3800,6 +3810,71 @@ shr.open("get", "example.php?name1=value1&name2=value2", true);
 + post请求内容作为`xhr.open()`方法参数传入
 + get请求速度快，最快可达到post的两倍
 + post请求内容大小一般可以达到4MB，get请求一般一次最多1kb~2kb
+
+### 跨域资源共享
+
+`CORS(Cross-Origin Resource Sharing)`跨域资源共享
+
+### 其他跨域技术
+
+#### 图像Ping
+
+使用`<img>`标签，一个网页可以从任何网页中加载图像，不用担心跨不跨域。
+
+```js
+var img = new Image();
+img.onload = img.onerror = function() {
+    alert('Done!');
+};
+img.src = 'http://www.example.com/test?name=Nicholas';
+```
+
+请求从设置`src`属性的那一刻开始，图像Ping最常用于跟踪用户点击页面或动态广告曝光次数。主要有两个缺点，一是只能发送`GET请求，二是无法访问服务器的响应文本。图像Ping只能用于浏览器与服务器间的单向通信。
+
+#### JSONP
+
+`JSONP`是`JSON with padding`(填充式JSON或参数式JSON)的简写。
+
+`JSONP`是包含在函数调用中的`JSON`。
+
+```js
+callback({ 'name': 'Nicholas' });
+```
+
+`JSONP`由两部分组成:回调函数和数据。
+
+`<script>`和`<img>`元素类似，都有能力不受限制从其他域加载资源。
+
+```js
+function handleResponse(response) {
+    alert('You\' re at IP address ' + response.ip + ', which is in ' + response.city + ', ' + response.region_name);
+}
+
+var script = document.createElement('script');
+script.src = 'http://freegeoip.net/json/?callback=handleResponse';
+document.body.insertBefore(script, document.body.firstChild);
+```
+
+通俗理解就是请求一段可执行`js`，这个`js`就是`functionName(json)`，我们告诉服务端需要调用的函数名`functionName`，`json`就是请求的`JSON`数据。
+
+## chap.22高级技巧
+
+### 函数节流
+
+比如在浏览器中使用`onresize`事件处理程序，调整浏览器窗口大小时，该事件会连续触发，如果在`onresize`事件处理程序内部尝试`DOM`操作，高频更改会导致浏览器崩溃，使用定时器对函数节流。
+
+函数节流的背后基本思想是，某些代码不可以在没有间断的情况下连续重复执行。第一次调用函数，创建一个定时器，在指定的时间间隔之后运行代码。当第二次调用该函数时，它会清除前一次的定时器并设置另一个。如果前一个定时器已经执行过了，这个操作没有任何意义。然而，如果前一个定时器尚未执行，就将其替换为一个新的定时器。目的是只有在函数执行的请求停止了一段时间后才执行。
+
+```js
+function throttle(method, context) {
+    clearTimeout(method.tId);
+    method.tId = setTimeout(function() {
+        method.call(context);
+    }, 100);
+}
+```
+
+由于`setTimeout`的`this`总是`window`，所以有些情况下需要传入`context`。
 
 ## chap.23离线应用与客户端储存
 
