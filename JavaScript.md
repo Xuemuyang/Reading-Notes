@@ -995,7 +995,7 @@ $|行尾|test$
 
 x* x+|重复次数>=0 重复次数>0 贪婪算法|正则表达式：abc*将匹配ab、abc/abccccc 正则表达式：abc+将匹配abc、abcccc、却不匹配ab
 ---|---|---
-x*? x+?|同x*,x+,非贪婪算法|正则表达式：abc*?在字符串abcccccc中将匹配ab，abc+？则匹配abc。
+x*? x+?|同x*,x+,非贪婪算法(往少了匹配)|正则表达式：abc*?在字符串abcccccc中将匹配ab，abc+？则匹配abc。
 x?|出现0或1次|
 x\|y|x或者y|x\|y匹配x，也匹配y 再比如：ab\|cd\|ef匹配ab或cd或ef
 x{n}x{n,}x{n,m}|重复n次，重复>=n次，重复次数满足n<=x<=m|x{5}匹配xxxxx，不匹配xxo，x{1，3}匹配x，xx，xxx
@@ -3299,6 +3299,36 @@ btn.onmouseover = handler;
 btn.onmouseout = handler;
 ```
 
+### HTML5事件
+
+1. hashchange事件
+
+### 触摸与手势事件
+
+触摸事件
+
++ `touchStart`:当手指触摸屏幕时触发；即使有一个手指放在屏幕上也会触发
++ `touchmove`:当手指在屏幕上滑动时连续地触发。在这个事件期间调用`preventDefault()`可以阻止滚动
++ `touchend`:当手指从屏幕上移开时触发
++ `touchcancel`:当系统停止跟踪触摸时触发
+
+除了常见的`DOM`属性外，触摸事件还包括下列三个用于跟踪触摸的属性
+
++ `touches`:表示当前跟踪的触摸操作的`Touch`对象的数组
++ `targetTouchs`:特定于事件目标的`Touch`对象的数组
++ `changeTouches`:表示自上次触摸以来发生了什么改变的`Touch`对象的数组
+
+每个`Touch`对象包含下列属性:
+
++ `clientX`:触摸目标在视口中的`x`坐标
++ `clientY`:触摸目标在视口中的`y`坐标
++ `identifier`:标识触摸的唯一`ID`
++ `pageX`:触摸目标在页面中的`x`坐标
++ `pageY`:触摸目标在页面中的`y`坐标
++ `screenX`:触摸目标在屏幕中的`x`坐标
++ `screenY`:触摸目标在屏幕中的`y`坐标
++ `target`:触摸的`DOM`节点目标
+
 ## Chap15.使用`Canvas`绘图
 
 ### 基本用法
@@ -4273,3 +4303,76 @@ test().then((
 ```
 
 首先执行`new`一个`promise`，这里传递给构造函数的是一个函数，函数有两个参数，调用立即执行，`promise`状态为`pending`，执行传入的异步任务，接着执行`then`方法，传入了一个回调，此时`promise`状态为`pending`，将回调放入`new`出来`promise`的事件队列里。
+
+### Node中的异步
+
+`Nodejs 8`有一个新的工具函数`util.promisify()`。他将一个接收回调函数参数的函数转换成一个返回`Promise`的函数。
+
+```js
+// echo.js
+
+const {promisify} = require('util');
+
+const fs = require('fs');
+const readFileAsync = promisify(fs.readFile); // (A)
+
+const filePath = process.argv[2];
+
+readFileAsync(filePath, {encoding: 'utf8'})
+  .then((text) => {
+      console.log('CONTENT:', text);
+  })
+  .catch((err) => {
+      console.log('ERROR:', err);
+  });
+```
+
+使用`async`函数
+
+```js
+// echoa.js
+
+const {promisify} = require('util');
+
+const fs = require('fs');
+const readFileAsync = promisify(fs.readFile);
+
+const filePath = process.argv[2];
+
+async function main() {
+    try {
+        const text = await readFileAsync(filePath, {encoding: 'utf8'});
+        console.log('CONTENT:', text);
+    }
+    catch (err) {
+        console.log('ERROR:', err);
+    }
+}
+main();
+```
+
+再看一个`async/await`改写
+
+```js
+function logFetch(url) {
+  return fetch(url)
+    .then(response => response.text())
+    .then(text => {
+      console.log(text);
+    }).catch(err => {
+      console.error('fetch failed', err);
+    });
+}
+```
+
+```js
+async function logFetch(url) {
+  try {
+    const response = await fetch(url);
+    console.log(await response.text());
+  }
+  catch (err) {
+    console.log('fetch failed', err);
+  }
+}
+```

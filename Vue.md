@@ -56,6 +56,20 @@ props是专门用来暴露组件的属性接口的
 </div>
 ```
 
+```html
+<template>
+  <div class="wrapper" ref="wrapper">
+    <ul class="content">
+      <li>...</li>
+      <li>...</li>
+      ...
+    </ul>
+  </div>
+</template>
+```
+
+`Vue.js`提供了我们一个获取`DOM`对象的接口——`vm.$refs`。在这里，我们通过了 `this.$refs.wrapper`访问到了这个`DOM`对象。
+
 ## Vue实例
 
 所有的`Vue`组件都是`Vue`实例，并且接受相同的选项对象 (一些根实例特有的选项除外)。
