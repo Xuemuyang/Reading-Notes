@@ -3906,6 +3906,30 @@ function throttle(method, context) {
 
 由于`setTimeout`的`this`总是`window`，所以有些情况下需要传入`context`。
 
+### 函数柯里化(function currying)
+
+用于创建已经设置好了一个或多个参数的函数。使用一个闭包返回一个函数。
+
+```js
+function curry(fn) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    return function() {
+        var innerArgs = Array.prototype.slice.call(arguments);
+        var finalArgs = args.concat(innerArgs);
+        return fn.apply(null, finalArgs);
+    };
+}
+```
+
+```js
+function add(num1 + num2) {
+    return num1 + num2;
+}
+
+var curriedAdd = curry(add, 5);
+alert(curriedAdd(3)); //8
+```
+
 ## chap.23离线应用与客户端储存
 
 ### 离线检测
