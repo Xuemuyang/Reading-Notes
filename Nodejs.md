@@ -43,3 +43,50 @@ console.log('发起读取文件');
 ## 模块机制
 
 B/S和C/S
+
+## Node中的定时器
+
+`Node`在`c++`层和`OS`中使用了`libuv`库处理回调函数执行。
+
+`Node`提供了四个定时器。
+
++ `setTimeout()`
++ `setInterval()`
++ `setImmediate()`
++ `prcess.nextTick()`
+
+先看一个小例子
+
+```js
+// test.js
+setTimeout(() => console.log(1));
+setImmediate(() => console.log(2));
+process.nextTick(() => console.log(3));
+Promise.resolve().then(() => console.log(4));
+(() => console.log(5))();
+```
+
+```js
+$ node test.js
+5
+3
+4
+1
+2
+```
+
+### 本轮循环和次轮循环
+
+`process.nextTick`和`Peomise`的回调函数追加在本轮循环。
+
+`Node`执行完所有同步任务，就会执行`process.nextTick`的任务队列。
+
+`Promise`对象的回调函数会进入异步任务里面的microtask队列。
+
+> 只有前一个队列全部清空，才会执行下一个队列。
+
+本轮循环的执行顺序为:
+
+1. 同步任务
+1. `process.nextTick()`
+1. 微任务
