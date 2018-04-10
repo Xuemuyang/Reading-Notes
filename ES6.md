@@ -1958,6 +1958,8 @@ const asyncReadFile = async function () {
 
 一比较就会发现，`async`函数就是将`Generator`函数的`*`替换成`async`，将`yield`替换成`await`
 
+`async`函数与`Promise`结合使用，可以将`Promise.then`中的链式写法改成语义更明了的“同步”写法。
+
 ### 基本用法
 
 ## Module

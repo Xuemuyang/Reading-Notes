@@ -10,7 +10,7 @@ JS诞生-->浏览器表单客户端验证
 1. DOM    提供访问和操作网页内容的方法和接口
 1. BOM    提供与浏览器交互的方法和接口
 
-web浏览器只是ECMAScript的宿主环境之一,Node是服务器端的JavaScript平台 
+web浏览器只是ECMAScript的宿主环境之一,Node是服务器端的JavaScript平台
 
 ## Chap2.在HTML中使用JavaScript
 
