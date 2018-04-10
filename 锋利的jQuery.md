@@ -264,9 +264,11 @@ $('p').attr('class','high');
 3. `$().ready(function(){ //编写代码 })`
 
 #### 事件绑定
+
 `bind( type [, data] , fn);`
 
 三个参数
+
 1. 事件类型，类型包括: blur、focus、load、resize、scroll、unload、click、dbclick、mousedown、mouseup、mouseover、mouseout、mouseenter、mouseleave、change、select、submit、keydown、keypress、keyup和error等
 2. 可选参数，作为`event.data`属性值传递给事件
 3. 事件处理函数
