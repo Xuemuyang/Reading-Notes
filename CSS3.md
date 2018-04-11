@@ -374,3 +374,129 @@ Lightness：颜色越高色彩越亮。取值范围0-100%
 `[attr^=val]`|匹配属性值以指定值开头的每个元素
 `[attr$=val]`|匹配属性值以指定值结尾的每个元素
 `[attr*=val]`|匹配属性值中包含指定值的每个元素
+
+## Flex
+
+水平轴(`main axis`)
+
+垂直交叉轴(`cross axis`)
+
+![flex](http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071004.png)
+
+### 容器的属性
+
++ flex-direction
++ flex-wrap
++ flex-flow
++ justify-content
++ align-items
++ align-content
+
+#### `flex-direction`
+
+`flex-direction`决定了主轴的方向，默认`row`。
+
+```css
+.box {
+  flex-direction: row | row-reverse | column | column-reverse;
+}
+```
+
+![flex-direction](http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071005.png)
+
+#### `flex-wrap`
+
+`flex-wrap`属性控制换行，默认`nowrap`。
+
+```css
+.box{
+  flex-wrap: nowrap | wrap | wrap-reverse;
+}
+```
+
+#### `flex-flow`
+
+是属性简写
+
+```css
+.box {
+  flex-flow: <flex-direction> || <flex-wrap>;
+}
+```
+
+默认`row nowrap`。
+
+#### `justify-content`
+
+`justify-content`定义了项目在主轴上的对齐方式，默认`flex-start`。
+
+```css
+.box {
+  justify-content: flex-start | flex-end | center | space-between | space-around;
+}
+```
+
+![justify-content](http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071010.png)
+
++ `space-between`：两端对齐，项目之间的间隔都相等。
++ `space-around`：每个项目两侧的间隔相等。所以，项目之间的间隔比项目与边框的间隔大一倍。
+
+#### `align-items`
+
+`align-items`属性定义项目在交叉轴上如何对齐，默认`stretch`。
+
+```css
+.box {
+  align-items: flex-start | flex-end | center | baseline | stretch;
+}
+```
+
+![align-items](http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071011.png)
+
+#### `align-content`
+
+`align-content`属性定义了多根轴线的对齐方式。如果只有一根轴线，该属性不起作用，默认`stretch`。
+
+![align-content](http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071012.png)
+
++ `flex-start`：与交叉轴的起点对齐。
++ `flex-end`：与交叉轴的终点对齐。
++ `center`：与交叉轴的中点对齐。
++ `space-between`：与交叉轴两端对齐，轴线之间的间隔平均分布。
++ `space-around`：每根轴线两侧的间隔都相等。所以，轴线之间的间隔比轴线与边框的间隔大一倍。
++ `stretch`（默认值）：轴线占满整个交叉轴。
+
+### 项目的属性
+
++ order
++ flex-grow
++ flex-shrink
++ flex-basis
++ flex
++ align-self
+
+#### `order`
+
+`order`属性定义项目的排列顺序，默认`0`。
+
+#### `flex-grow`
+
+`flex-grow`属性定义项目的放大比例，默认为`0`，即如果存在剩余空间，也不放大。
+
+如果所有项目的`flex-grow`属性都为1，则它们将等分剩余空间（如果有的话）。如果一个项目的`flex-grow`属性为2，其他项目都为1，则前者占据的剩余空间将比其他项多一倍。
+
+#### `flex-shrink`
+
+`flex-shrink`属性定义了项目的缩小比例，默认为`1`，即如果空间不足，该项目将缩小。
+
+#### `flex-basis`
+
+`flex-basis`属性定义了在分配多余空间之前，项目占据的主轴空间（main size），默认值`auto`，即项目本来的大小。
+
+#### `flex`
+
+`flex`属性是`flex-grow`,`flex-shrink`和`flex-basis`的简写，默认值为`0 1 auto`。后两个属性可选。
+
+#### `align-self`
+
+`align-self`属性允许单个项目有与其他项目不一样的对齐方式，可覆盖`align-items`属性。默认值为`auto`，表示继承父元素的`align-items`属性，如果没有父元素，则等同于`stretch`。
