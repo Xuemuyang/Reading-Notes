@@ -3099,6 +3099,18 @@ function g(selector) {
 
 `document.querySelectorAll()`则会返回当前文档中所有命中元素。
 
+## chap12.DOM2和DOM3
+
+### 元素大小
+
++ 偏移量(offset dimension)
++ 客户区大小(client dimension)
++ 滚动大小(scroll dimension)
+
+#### 客户区大小
+
+`clientWidth`与`clientHeight`是元素`padding-box`的宽高。
+
 ## chap13.事件
 
 ## 事件流

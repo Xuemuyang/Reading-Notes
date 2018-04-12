@@ -156,7 +156,7 @@ $git stash list
 
 使用`git branch -D xxx`来删除一个还没有被合并的分支。
 
-使用`git remote`查看远程库的信息。`-v`显示更详细的信息。
+使用`git remote`查看远程库的信息。`-v`显示更详细的信息(包含克隆地址)。
 
 ```sh
 $git remote
