@@ -3111,6 +3111,19 @@ function g(selector) {
 
 `clientWidth`与`clientHeight`是元素`padding-box`的宽高。
 
+### Image对象
+
+```js
+var img = new Image();
+    img.src = "logo.jpg";
+    img.onload = function () {
+    alert("image is loaded");
+};
+document.body.appendChild(img);
+```
+
+`Image`对象有`onload`和`onerror`属性
+
 ## chap13.事件
 
 ## 事件流

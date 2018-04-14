@@ -1,5 +1,22 @@
 # Git
 
+## 编号含义
+
++ A：add，新增
++ C：conflict，冲突
++ D：delete，删除
++ M：modify，本地已经修改
++ G：modify and merGed，本地文件修改并且和服务器的进行合并
++ U：update，从服务器更新
++ R：replace，从服务器替换
++ I：ignored，忽略
+
+## 常用命令
+
+```bash
+
+```
+
 ## 解决痛点
 
 1. 历史修改追溯
@@ -109,11 +126,17 @@ $git clone xxx
 
 ## 分支管理
 
-`-b`参数表示创建并切换。
+```sh
+$git branch -a
+```
+
+`-a`参数表示显示本地和远程的所有分支
 
 ```sh
 $git checkout -b dev
 ```
+
+`-b`参数表示创建并切换。
 
 相当于下面两条命令，`git branch xxx`是创建`xxx`分支，`git checkout xxx`是切换分支。
 
