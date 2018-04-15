@@ -1264,4 +1264,3 @@ export default {
 `store.dispatch`可以处理被触发的`action`的处理函数返回的`Promise`，并且`store.dispatch`仍旧返回`Promise`。
 
 使用`Promise`链式调用或者`async/await`进行复杂异步控制。
-
