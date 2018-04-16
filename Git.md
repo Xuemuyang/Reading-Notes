@@ -14,7 +14,9 @@
 ## 常用命令
 
 ```bash
-
+$git reset HEAD . //撤销git add .操作
+$git branch -d dev //删除dev分支
+$git rm --cached //删除文件的git追踪，但是本地还会有
 ```
 
 ## 解决痛点
