@@ -500,3 +500,75 @@ Lightness：颜色越高色彩越亮。取值范围0-100%
 #### `align-self`
 
 `align-self`属性允许单个项目有与其他项目不一样的对齐方式，可覆盖`align-items`属性。默认值为`auto`，表示继承父元素的`align-items`属性，如果没有父元素，则等同于`stretch`。
+
+## CSS3变形
+
+CSS3 2D变形函数:
+
++ translate()
++ scale()
++ rotate()
++ skew()
+
+CSS 3D变形函数:
+
++ rotateX()
++ rotateY()
++ rotate3d()
++ translateZ()
++ translate3d()
++ scaleZ()
++ scale3d()
+
+### transform属性
+
+```css
+transform: rotate(-360deg) scale(.7)
+```
+
+#### transform-origin
+
+改变变形原点
+
+#### transform-style
+
+flat | preserve-3d
+
+如果设置了`flat`那么`translateZ()`就会失效
+
+如果元素设置`preserve-3d`，就不能为了防止子元素溢出容器而设置`overflow`为`hidden`
+
+#### perspective
+
+通过给元素父节点设置`perspective`，使3d变形更加明显
+
+`perspective`取值越小，效果越明显
+
+#### perspective-origin
+
+`perspective`属性的观察者角度
+
+#### backface-visibility
+
+元素旋转背面是否可见
+
+### CSS3 2D变形
+
+```css
+transform: translate(x, y)
+```
+
+向右向下为正方向
+
+```css
+transform: rotate(a)
+```
+
+a为正，顺时针旋转，a为负，逆时针旋转
+
+### CSS3 3D变形
+
+`translate3d`启用硬件加速
+
+## CSS过渡
+

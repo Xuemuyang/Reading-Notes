@@ -19,6 +19,12 @@ $git branch -d dev //删除dev分支
 $git rm --cached //删除文件的git追踪，但是本地还会有
 ```
 
+option|description
+---|---
+-p|按补丁格式显示每个更新之间差异
+--stat|显示每次更新的文件修改统计信息
+--name-status|显示新增，修改，删除的文件清单
+
 ## 解决痛点
 
 1. 历史修改追溯
