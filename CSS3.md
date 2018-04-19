@@ -572,3 +572,79 @@ a为正，顺时针旋转，a为负，逆时针旋转
 
 ## CSS过渡
 
+`transition-property`指定过渡的CSS属性
+
+`transition-duration`指定完成过渡所需的时间
+
+`transition-timing-function`指定过渡函数
+
+`transition-delay`指定过渡开始出现的延迟时间
+
+`transition: <property> <dutation> <animation type> <delay>`
+
+### `transition-function`
+
+function|description
+---|---
+ease(默认)|由快到慢
+linear|线性
+ease-in|加速显示
+ease-out|减速显示
+ease-in-out|先加速再减速
+
+### CSS触发过渡
+
+1.伪元素触发
+
+2.媒体查询触发
+
+3.JavaScript触发
+
+通过JavaScript去控制标签的CSS样式达到目的
+
+## CSS3动画
+
++ animation-name
++ animation-duration
++ animation-timing-function
++ animation-delay
++ animation-iteration-count
++ animation-direction
++ animation-play-state
++ animation-fill-mode
+
+`animation-duration`是动画一次完成时间
+
+`animation-iteration-count`默认为`1`，可以设置`infinite`
+
+`animation-direction`设置动画的播放方向，`normal`每次都是向前播放，`alternate`偶数向后奇数向前
+
+`animation-play-state`属性有`pause`和`running`，`pause`可以暂停动画
+
+
+```css
+.demo {
+    margin-left: 100px;
+    background: blue;
+    animation: hehe .2s ease-in;
+}
+
+@keyframes hehe {
+    0% {
+        margin-left: 100px;
+        background: green;
+    }
+    40% {
+        margin-left: 150px;
+        background: orange;
+    }
+    60% {
+        margin-left: 75px;
+        background: blue;
+    }
+    100% {
+        margin-left: 100px;
+        background: red;
+    }
+}
+```
