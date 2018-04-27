@@ -173,6 +173,8 @@ html的`contenteditable`允许编辑段落。
 
 `scroll`,`fixed`和`inherit`。
 
+设置多重背景，先设置的在最上面
+
 ## box-shadow
 
 ```css
