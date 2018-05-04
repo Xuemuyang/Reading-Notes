@@ -3346,6 +3346,16 @@ btn.onmouseover = handler;
 btn.onmouseout = handler;
 ```
 
+### 键盘与文本事件
+
+有三个键盘事件
+
+1. `keydown`:用户按下键盘上的任意键时触发，如果按住不放，重复触发
+1. `keypress`:用户按下键盘上的字符键时触发，如果按住不放，重复触发
+1. `keyup`:用户释放键盘上的键时触发
+
+根据`keyCode`判断用户按的是哪个键
+
 ### HTML5事件
 
 1. hashchange事件
