@@ -2992,6 +2992,38 @@ _func()
 
 > BOM的核心对象是window，表示浏览器的一个实例。浏览器中，window对象具有双重角色，既是JavaScript访问浏览器窗口的一个街口，又是ECMAScript规定的Global对象。
 
+#### window.screen对象
+
++ `screen.height`显示设备的高度
++ `screen.width`显示设备的宽度
+
++ `screen.availHeight`显示屏幕的可用高度
++ `screen.availWidth`显示屏幕的可用宽度
+
+可用宽度的值为屏幕的实际大小减去操作系统某些功能占据的空间。
+
+#### window相关的高宽查询
+
++ `window.screenX`
++ `window.screenY`
+
+返回浏览器窗口左上角相对于当前屏幕左上角(0, 0)的水平距离和垂直距离，单位为像素。
+
++ `window.innerHeight`
++ `window.innerWidth`
+
+返回网页在当前窗口中可见部分的高度和宽度，即“视口”(viewport)，单位为像素。当用户给网页放大/缩小的时候这个值会变化。这两个属性值包括滚动条的高度和宽度。
+
++ `window.outerHeight`
++ `window.outerWidth`
+
+这两个属性返回浏览器窗口的高度和宽度，包括浏览器菜单和边框。
+
++ `window.pageXOffset`
++ `window.pageYOffset`
+
+这两个属性返回页面的水平/垂直滚动距离。
+
 ### 全局作用域
 
 所有在全局作用域中声明的变量、函数都会变成`window`对象的属性和方法。
