@@ -7,6 +7,7 @@
 ### 变量声明
 
 基本格式如下
+
 ```css
 $basic-border: 1px solid black;
 ```
@@ -385,19 +386,20 @@ h1.error { //应用到hl.seriousError
 /* 编译后 */
 .error a, .seriousError a {
   color: red;
-  font-weight: 100; 
+  font-weight: 100;
 }
 
 h1.error, h1.seriousError {
-  font-size: 1.2rem; 
+  font-size: 1.2rem;
 }
 ```
 
 ### 何时使用继承
 
 比如bootstrap中的按钮
-+ btn 
-+ btn-primary 
+
++ btn
++ btn-primary
 + btn-tiny
 
 ### 继承的高级用法
@@ -410,6 +412,3 @@ h1.error, h1.seriousError {
   @extend a;
 }
 ```
-
-
-
