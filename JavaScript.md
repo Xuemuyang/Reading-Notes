@@ -3117,6 +3117,42 @@ location.reload(); //重新加载（有可能从缓存中加载）
 location.reload(true); //重新加载（从服务器重新加载）
 ```
 
+## `history`对象
+
+`history`对象用来保存浏览历史。
+
++ `back()`:移动到上一个访问页面，等同于浏览器的后退键
++ `forward()`:移动到下一个访问页面，等同于浏览器的前进键
++ `go()`:接受一个整数作为参数，移动到该整数指定的页面，比如`go(1)`相当于`forward()`，`go(-1)`相当于`back()`。
+
+`history.go(0)`相当于刷新当前页面。
+
+```js
+if (!!(window.history && history.pushState)){
+  // 支持History API
+} else {
+  // 不支持
+}
+```
+
+以上代码用于检测浏览器是否支持History API，如果不支持可以考虑使用Polyfill库，比如`History.js`。
+
+`pushState()`、`replaceState()`这两个方法用于在浏览历史中添加和修改记录。
+
+`pushState()`方法传入三个参数:
+
++ `state`:这个对象可以在`popstate`事件触发时被传入callback
++ `title`:新页面的`title`，目前一般传字符串或者`null`
++ `url`:新的网址
+
+`replaceState()`方法的参数与`pushState()`相同，区别是修改浏览历史中的当前记录。
+
+`history.state`属性用来获取`state`对象的值。
+
+### `popstate`事件
+
+`popstate`事件能监听除`history.pushState()`和`history.replaceState()`外url的变化。
+
 ## `navigator`对象
 
 > 识别客户端浏览器的事实标准
