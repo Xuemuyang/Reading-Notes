@@ -650,3 +650,95 @@ ease-in-out|先加速再减速
     }
 }
 ```
+
+## 居中总结
+
+### `margin auto`
+
+块级元素水平居中
+
+### `text-align: center;`
+
+行级元素水平居中，添加在父元素上
+
+### 水平垂直居中有n种
+
+#### absolute负`margin`
+
+```css
+.parent{
+    position: relative;
+}
+.child{
+    width: 100px;
+    height: 150px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -75px;
+    margin-left: -50px;
+}
+```
+
+#### `absolute`和`margin:auto`
+
+```css
+.parent{
+    position: relative;
+}
+.child{
+    width: 100px;
+    height: 150px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
+```
+
+#### `absolute`和`transform`
+
+```css
+.parent{
+    position: relative;
+}
+.child{
+    width: 100px;
+    height: 150px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+```
+
+#### `display:table-cell`
+
+```css
+.parent{
+    display: table-cell;
+    verticle-align: middle;
+    text-align: center;
+}
+.child{
+    width: 100px;
+    height: 150px;
+    margin: 0 auto; // block元素要
+}
+```
+
+#### flex
+
+```css
+.parent{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.child{
+    width: 100px;
+    height: 150px;
+}
+```
