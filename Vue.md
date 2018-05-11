@@ -1264,3 +1264,41 @@ export default {
 `store.dispatch`可以处理被触发的`action`的处理函数返回的`Promise`，并且`store.dispatch`仍旧返回`Promise`。
 
 使用`Promise`链式调用或者`async/await`进行复杂异步控制。
+
+## Axios
+
+`axios.create()`创建一个实例，包含一些习惯的配置。
+
+```js
+const instance = axios.create({
+  baseURL: 'https://some-domain.com/api/',
+  timeout: 1000,
+  headers: {'X-Custom-Header': 'foobar'}
+});
+```
+
+### Interceptors(拦截器)
+
+intercept requests or responses before they are handled by then or catch.
+
+```js
+// Add a request interceptor
+axios.interceptors.request.use(function (config) {
+    // Do something before request is sent
+    return config;
+  }, function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+  });
+
+// Add a response interceptor
+axios.interceptors.response.use(function (response) {
+  // Do something with response data
+  return response;
+}, function (error) {
+  // Do something with response error
+  return Promise.reject(error);
+});
+```
+
+### 与`Vuex`配合使用检测`token`过期

@@ -1,5 +1,11 @@
 # The Linux Command Line
 
+## 命令速查
+
+```bash
+$ cd ~/.ssh //查看ssh秘钥
+```
+
 ## Chap1. Intro
 
 > "Graphical user interfaces make easy task easy, while command line interfaces make difficult tasks possible."
