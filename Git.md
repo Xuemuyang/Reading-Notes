@@ -16,6 +16,7 @@
 ```bash
 $git reset HEAD . // 撤销git add .操作
 $git checkout -b xxx // 切换并创建xxx分支
+$git branch -a // 查看所有分支
 $git branch -d dev // 删除dev分支
 $git rm --cached // 删除文件的git追踪，但是本地还会有
 $git log --stat/-p // 查看文件修改记录
