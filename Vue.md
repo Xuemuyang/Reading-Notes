@@ -957,6 +957,39 @@ new Vue({
 
 ## Vue-router
 
+### route object
+
+(route object)[https://router.vuejs.org/zh-cn/api/route-object.html]
+
+路由信息对象属性
+
++ $route.path
++ $route.params
++ $route.query
++ $route.hash
++ $route.fullPath
++ $route.matched
++ $route.name
++ $route.redirectedFrom
+
+### Navigation Guards
+
+可以通过`router.beforeEach`注册一个全局前置守卫
+
+```js
+const router = new VueRouter({ ... })
+
+router.beforeEach((to, from, next) => {
+  // ...
+})
+```
+
+每个守卫接收三个参数
+
++ to : Route 即将要进入目标的路由对象
++ from : Route 当前导航正要离开的路由
++ next : Function 调用该方法来`resolve`钩子
+
 ## Vuex
 
 `Vuex`是一个专为`Vue.js`应用程序开发的状态管理模式。它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。
