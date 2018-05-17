@@ -1151,6 +1151,32 @@ if (pattern.test(text)) {
 
 `RegExp`实例继承的`toLocaleString()`和`toString()`方法都会返回正则表达式的字面量。
 
+##### 匹配URL实例
+
+```js
+var parse_url = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
+var url = "https://harttle.land:80/tags.html?simple=true#HTML",
+    result = parse_url.exec(url);
+    blanks = '       ';
+    fields = ['url', 'scheme', 'slash', 'host', 'port', 'path', 'query', 'hash'];
+fields.forEach(function(field, i){
+    console.log(field + ':' + blanks.substr(field.length) + result[i]);
+});
+```
+
+```js
+// output
+url:    https://harttle.land:80/tags.html?simple=true#HTML
+scheme: http
+slash:  //
+host:   harttle.land
+port:   80
+path:   tags.html
+query:  single=true
+hash:   HTML
+```
+
+
 ### Function类型
 
 函数实际上是对象，每个函数都是Function类型的实例，函数名实际上是一个指向函数对象的指针。
