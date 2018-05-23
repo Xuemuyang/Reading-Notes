@@ -957,6 +957,165 @@ new Vue({
 
 ## Vue-router
 
+### Getting Start
+
+```js
+// 4. 创建和挂载根实例。
+// 记得要通过 router 配置参数注入路由，
+// 从而让整个应用都有路由功能
+const app = new Vue({
+  router
+}).$mount('#app')
+```
+
+通过注入路由，可以在任何组件内通过`this.$router`访问路由。
+
+### Dynamic Route Matching
+
+一个『路径参数』使用冒号`:`标记。当匹配到一个路由时，参数值会被设置到`this.$route.params`，可以在每个组件内使用。
+
+模式|匹配路径|$route.params
+---|---|---
+/user/:username|/user/evan|`{ username: 'evan' }`
+/user/:username/post/:post_id|/user/evan/post/123|`{ username: 'evan', post_id: 123 }`
+
+#### 响应路由参数的变化
+
+当使用路由参数时，比如从`/user/foo`导航到`/user/bar`，原有组件实例会被复用，这意味着不会调用组件的`destroy`钩子。
+
+### Nested Routes
+
+```js
+const User = {
+  template: `
+    <div class="user">
+      <h2>User {{ $route.params.id }}</h2>
+      <router-view></router-view>
+    </div>
+  `
+}
+```
+
+```js
+const router = new VueRouter({
+  routes: [
+    { path: '/user/:id', component: User,
+      children: [
+        {
+          // 当 /user/:id/profile 匹配成功，
+          // UserProfile 会被渲染在 User 的 <router-view> 中
+          path: 'profile',
+          component: UserProfile
+        },
+        {
+          // 当 /user/:id/posts 匹配成功
+          // UserPosts 会被渲染在 User 的 <router-view> 中
+          path: 'posts',
+          component: UserPosts
+        }
+      ]
+    }
+  ]
+})
+```
+
+### Programmatic Navigation
+
+声明式|编程式
+---|---
+`<router-link :to="...">`|`router.push(...)`
+
++ `router.push()` 向`history`栈添加一个新记录
++ `router.replace()` 不会向`history`添加新记录，替换掉当前的`history`记录
++ `router.go(n)` 在`history`记录中向前或向后退多少步
+
+### Named Routes
+
+给路由指定一个名称
+
+```js
+const router = new VueRouter({
+  routes: [
+    {
+      path: '/user/:userId',
+      name: 'user',
+      component: User
+    }
+  ]
+})
+```
+
+链接到命名路由
+
+```html
+<router-link :to="{ name: 'user', params: { userId: 123 }}">User</router-link>
+```
+
+```js
+router.push({ name: 'user', params: { userId: 123 }})
+```
+
+### Named Views
+
+命名视图提供了同级展示多个视图的能力。如果没有给`router-view`设置名字，默认为`default`。
+
+```html
+<router-view class="view one"></router-view>
+<router-view class="view two" name="a"></router-view>
+<router-view class="view three" name="b"></router-view>
+```
+
+```js
+const router = new VueRouter({
+  routes: [
+    {
+      path: '/',
+      components: {
+        default: Foo,
+        a: Bar,
+        b: Baz
+      }
+    }
+  ]
+})
+```
+
+### Redirect and Alias
+
+/a重定向到/b
+
+```js
+const router = new VueRouter({
+  routes: [
+    { path: '/a', redirect: '/b' }
+  ]
+})
+```
+
+```js
+const router = new VueRouter({
+  routes: [
+    { path: '/a', redirect: { name: 'foo' }}
+  ]
+})
+```
+
+/a 的别名是 /b，意味着，当用户访问 /b 时，URL 会保持为 /b，但是路由匹配则为 /a，就像用户访问 /a 一样。
+
+```js
+const router = new VueRouter({
+  routes: [
+    { path: '/a', component: A, alias: '/b' }
+  ]
+})
+```
+
+别名的功能让你可以自由地将 UI 结构映射到任意的。
+
+### Passing Props to Route Components
+
+### HTML5 History Mode
+
 ### route object
 
 (route object)[https://router.vuejs.org/zh-cn/api/route-object.html]
@@ -989,6 +1148,59 @@ router.beforeEach((to, from, next) => {
 + to : Route 即将要进入目标的路由对象
 + from : Route 当前导航正要离开的路由
 + next : Function 调用该方法来`resolve`钩子
+
+### Route Meta Fields
+
+我们称呼`routes`配置中的每个路由对象为 路由记录。路由记录可以是嵌套的，因此，当一个路由匹配成功后，他可能匹配多个路由记录。
+
+一个路由匹配到的所有路由记录会暴露为`$route`对象（还有在导航守卫中的路由对象）的`$route.matched`数组。因此，我们需要遍历`$route.matched`来检查路由记录中的`meta`字段。
+
+```js
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (!auth.loggedIn()) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      next()
+    }
+  } else {
+    next() // 确保一定要调用 next()
+  }
+})
+```
+
+### Data Fetching
+
+数据获取有两种方式，路由跳转之前和路由跳转之后
+
+### Scroll Behavior
+
+### Lazy Loading Routes
+
+```js
+const Foo = () => import('./Foo.vue')
+```
+
+```js
+const router = new VueRouter({
+  routes: [
+    { path: '/foo', component: Foo }
+  ]
+})
+```
+
+再使用webpack的注释
+
+```js
+const Foo = () => import(/* webpackChunkName: "group-foo" */ './Foo.vue')
+const Bar = () => import(/* webpackChunkName: "group-foo" */ './Bar.vue')
+const Baz = () => import(/* webpackChunkName: "group-foo" */ './Baz.vue')
+```
 
 ## Vuex
 
@@ -1310,6 +1522,22 @@ const instance = axios.create({
 });
 ```
 
+GET请求参数这么带
+
+```js
+axios.get('/user', {
+  params: {
+    ID: 12345
+  }
+})
+.then(function (response) {
+  console.log(response);
+})
+.catch(function (error) {
+  console.log(error);
+});
+```
+
 ### Interceptors(拦截器)
 
 intercept requests or responses before they are handled by then or catch.
@@ -1335,3 +1563,6 @@ axios.interceptors.response.use(function (response) {
 ```
 
 ### 与`Vuex`配合使用检测`token`过期
+
+## Vue.js运行机制
+
