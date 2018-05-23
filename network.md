@@ -83,7 +83,11 @@ console.log(print);
 
 IP地址是一个网卡在网络世界中的通讯地址，相当于现实世界中的门牌号码。
 
+![](./images/network/6.png)
+
 IP地址`10.100.122.2`布尔分隔为四个部分，每个部分8bit，所以IP地址总共是32位。后来产生了IPv6，`inet6 fe80::f816:3eff:fec7:7975/64`。这个是128位。
+
+![](./images/network/7.png)
 
 无类型域间选择(CIDR)
 
