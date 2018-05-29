@@ -623,7 +623,6 @@ ease-in-out|先加速再减速
 
 `animation-play-state`属性有`pause`和`running`，`pause`可以暂停动画
 
-
 ```css
 .demo {
     margin-left: 100px;
@@ -742,3 +741,27 @@ ease-in-out|先加速再减速
     height: 150px;
 }
 ```
+
+## BEM
+
+Block Element Modifier
+
++ `-`中划线 ：仅作为连字符使用，表示某个块或者某个子元素的多单词之间的连接记号。
++ `__`双下划线：双下划线用来连接块和块的子元素
++ `_`单下划线：单下划线用来描述一个块或者块的子元素的一种状态
+
+```css
+.type-block__element_modifier
+```
+
+### Block
+
+一个Block是设计或布局的一部分，要么是语义上的要么是视觉上的。
+
+### Element
+
+块中的子元素是块的子元素，并且子元素的子元素在BEM里也被认为是块的直接子元素。一个块中元素的类名必须用父级块的名称作为前缀。
+
+### Modifier
+
+一个“修饰符”可以理解为一个块的特定状态，标识着它持有一个特定的属性。
