@@ -1966,7 +1966,7 @@ const asyncReadFile = async function () {
 
 使用`export default`命令，为模块指定默认输出，这样就不需要知道所要加载模块的变量名，通过`export`方式导出，在导入时要加`{ }`，`export default`则不需要。
 
-## 一个简单的作用域测试
+### 一个简单的作用域测试
 
 export Module
 
@@ -1991,3 +1991,104 @@ geta()
 1. 当两个模块都定义`a`结果是`export`
 2. export模块没有`a`，import模块有`a`则报错
 3. export模块有`a`，import没有结果是`export`
+
+### 严格模式
+
+`ES6`的模块自动采用严格模式，不管你有没有在模块头部加上`use strict`。
+
+严格模式主要有以下限制:
+
++ 变量必须声明后再使用
++ 函数的参数不能有同名属性，否则报错
++ 不能使用`with`语句
++ 不能对只读属性赋值，否则报错
++ 不能使用前缀 0 表示八进制数，否则报错
++ 不能删除不可删除的属性，否则报错
++ 不能删除变量`delete prop`，会报错，只能删除属性`delete global[prop]`
++ `eval`不会在它的外层作用域引入变量
++ `eval`和`arguments`不能被重新赋值
++ `arguments`不会自动反映函数参数的变化
++ 不能使用`arguments.callee`
++ 不能使用`arguments.caller`
++ 禁止`this`指向全局对象
++ 不能使用`fn.caller`和`fn.arguments`获取函数调用的堆栈
++ 增加了保留字（比如`protected`、`static`和`interface`）
+
+### export命令
+
+```js
+// profile.js
+export var firstName = 'Michael';
+export var lastName = 'Jackson';
+export var year = 1958;
+```
+
+或者采用
+
+```js
+// profile.js
+var firstName = 'Michael';
+var lastName = 'Jackson';
+var year = 1958;
+
+export {firstName, lastName, year};
+```
+
+优先考虑采用下面的写法，在脚本尾部，更清楚输出哪些变量。
+
+`export`命令规定的是对外的接口，必须与模块内部的变量建立一一对应的关系。
+
+```js
+// 报错
+export 1;
+
+// 报错
+var m = 1;
+export m;
+```
+
+需要在接口名与模块内部的变量之间建立一一对应的关系。
+
+```js
+// 写法一
+export var m = 1;
+
+// 写法二
+var m = 1;
+export {m};
+
+// 写法三
+var n = 1;
+export {n as m};
+```
+
+### import命令
+
+```js
+// main.js
+import {firstName, lastName, year} from './profile.js';
+
+function setName(element) {
+  element.textContent = firstName + ' ' + lastName;
+}
+```
+
+使用`as`关键字命名
+
+```js
+import { lastName as surname } from './profile.js';
+```
+
+`import`命令具有提升效果，会提升到整个模块的头部，首先执行。
+
+`import`是静态执行，不能使用表达式和变量。
+
+### export default命令
+
+加载`export default`命令的模块，`import`命令为其制定任意名字。
+
+### 浏览器加载
+
+浏览器加载 ES6 模块，也使用`<script>`标签，但是要加入`type="module"`属性。
+
+浏览器对于带有`type="module"`的`<script>`，都是异步加载，不会造成堵塞浏览器，即等到整个页面渲染完，再执行模块脚本，等同于打开了`<script>`标签的`defer`属性。

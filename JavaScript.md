@@ -14,6 +14,12 @@ web浏览器只是ECMAScript的宿主环境之一,Node是服务器端的JavaScri
 
 ## Chap2.在HTML中使用JavaScript
 
+### 浏览器加载
+
+HTML网页中，浏览器通过`<script>`标签加载JavaScript脚本。
+
+由于脚本的默认语言是JavaScript，`type="application/javascript"`可以省略。
+
 ### 延迟脚本
 
 > HTML4.01为`<script>`标签定义了`defer`属性。这个属性的用途是表明脚本在执行时不会影响页面的构造。脚本会被延迟到整个页面都解析完毕后再运行。在`<script>`元素中设置`defer`属性，相当于告诉浏览器立即下载，但延迟执行。
@@ -31,6 +37,10 @@ web浏览器只是ECMAScript的宿主环境之一,Node是服务器端的JavaScri
 <script type="text/javascript" async src="example1.js"></script>
 <script type="text/javascript" async src="example2.js"></script>
 ```
+
+### `defer`与`async`差别
+
+`defer`与`async`的区别是：`defer`要等到整个页面在内存中正常渲染结束（`DOM`结构完全生成，以及其他脚本执行完成），才会执行；`async`一旦下载完，渲染引擎就会中断渲染，执行这个脚本以后，再继续渲染。一句话，`defer`是“渲染完再执行”，`async`是“下载完就执行”。另外，如果有多个`defer`脚本，会按照它们在页面出现的顺序加载，而多个`async`脚本是不能保证加载顺序的。
 
 ## Chap3.基本概念
 
