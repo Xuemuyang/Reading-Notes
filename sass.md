@@ -85,11 +85,12 @@ a {
 #content aside { background-color: #eee }
 ```
 
-### 父选择器的标识符&;
+### 父选择器的标识符&
 
 `sass`在解开一个嵌套规则时会把父选择器(`#content`)通过一个空格链接到子选择起的前面(`article`和`aside`)形成(`#content article`和`#content aside`)。即一个空格的后代选择器。
 
 当为链接写`:hover`这种伪类时
+
 ```css
 article a {
   color: blue;
@@ -100,6 +101,7 @@ article a {
 会被编译成`article a :hover`
 
 可以使用父选择器`&`
+
 ```css
 article a {
   color: blue;
@@ -167,6 +169,7 @@ nav {
   border-color: #ccc;
 }
 ```
+
 对于属性的缩写形式，可以像下边来嵌套
 
 ```css
@@ -215,6 +218,7 @@ width: $fancybox-width;
 ### 嵌套导入
 
 有一个名为`_blue-theme.scss`
+
 ```css
 aside {
   background: blue;
@@ -352,6 +356,7 @@ a:visited { color: green; }
 ## 使用选择器继承来精简CSS
 
 通过`@extend`语法实现继承
+
 ```css
 //通过选择器继承继承样式
 .error {
