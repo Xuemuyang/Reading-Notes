@@ -1965,3 +1965,29 @@ const asyncReadFile = async function () {
 ## Module
 
 使用`export default`命令，为模块指定默认输出，这样就不需要知道所要加载模块的变量名，通过`export`方式导出，在导入时要加`{ }`，`export default`则不需要。
+
+## 一个简单的作用域测试
+
+export Module
+
+```js
+const a = 'export'
+
+export const geta = () => {
+  console.log(a)
+}
+```
+
+import Module
+
+```js
+const a = 'import'
+
+import geta from './export.js'
+
+geta()
+```
+
+1. 当两个模块都定义`a`结果是`export`
+2. export模块没有`a`，import模块有`a`则报错
+3. export模块有`a`，import没有结果是`export`
