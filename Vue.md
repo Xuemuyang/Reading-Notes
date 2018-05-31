@@ -1510,6 +1510,16 @@ export default {
 
 使用`Promise`链式调用或者`async/await`进行复杂异步控制。
 
+## 使用vuex-router-sync
+
+可以在vuex中取到route的参数
+
+```js
+store.state.route.path   // current path (string)
+store.state.route.params // current params (object)
+store.state.route.query  // current query (object)
+```
+
 ## Axios
 
 `axios.create()`创建一个实例，包含一些习惯的配置。

@@ -562,6 +562,8 @@ transform: translate(x, y)
 
 向右向下为正方向
 
+这里使用百分比是针对元素自身的`border-box`尺寸
+
 ```css
 transform: rotate(a)
 ```
