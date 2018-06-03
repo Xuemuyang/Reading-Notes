@@ -955,6 +955,123 @@ new Vue({
 
 这给例子子组件与外界仍是完全解耦的。
 
+## 过渡 & 动画
+
+### 单元素/组件的过渡
+
+当插入或删除包含在`transition`组件中的元素时，Vue将会做以下处理：
+
+自动嗅探目标元素是否应用了CSS过渡或动画，如果是，在恰当的时机添加/删除CSS类名。
+
+如果过渡组件提供了JavaScript钩子函数，这些钩子函数将在恰当的时机被调用。
+
+如果没有找到JavaScript钩子并且也没有检测到CSS过渡/动画，DOM 操作 (插入/删除) 在下一帧中立即执行。(注意：此指浏览器逐帧动画机制，和Vue的`nextTick`概念不同)
+
+#### 过渡的类名
+
+在进入/离开的过渡中，会有6个class切换。
+
+`v-enter`：定义进入过渡的开始状态。在元素被插入之前生效，在元素被插入之后的下一帧移除。
+
+`v-enter-active`：定义进入过渡生效时的状态。在整个进入过渡的阶段中应用，在元素被插入之前生效，在过渡/动画完成之后移除。这个类可以被用来定义进入过渡的过程时间，延迟和曲线函数。
+
+`v-enter-to`: **2.1.8版及以上** 定义进入过渡的结束状态。在元素被插入之后下一帧生效(与此同时`v-enter`被移除)，在过渡/动画完成之后移除。
+
+`v-leave`: 定义离开过渡的开始状态。在离开过渡被触发时立刻生效，下一帧被移除。
+
+`v-leave-active`：定义离开过渡生效时的状态。在整个离开过渡的阶段中应用，在离开过渡被触发时立刻生效，在过渡/动画完成之后移除。这个类可以被用来定义离开过渡的过程时间，延迟和曲线函数。
+
+`v-leave-to`: **2.1.8版及以上**定义离开过渡的结束状态。在离开过渡被触发之后下一帧生效(与此同时`v-leave`被删除)，在过渡/动画完成之后移除。
+
+![vue-transition](./images/vue/3.png)
+
+#### CSS过渡
+
+```html
+<div id="example-1">
+  <button @click="show = !show">
+    Toggle render
+  </button>
+  <transition name="slide-fade">
+    <p v-if="show">hello</p>
+  </transition>
+</div>
+```
+
+```js
+new Vue({
+  el: '#example-1',
+  data: {
+    show: true
+  }
+})
+```
+
+```css
+/* 可以设置不同的进入和离开动画 */
+/* 设置持续时间和动画函数 */
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active for below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
+```
+
+### 多个元素的过渡
+
+> 相同标签名的元素切换时，需要通过`key`来让Vue区分他们
+
+#### 过渡模式
+
+同时生效的进入和离开的过渡不能满足所有要求，所以Vue提供了过渡模式:
+
+`in-out`：新元素先进行过渡，完成之后当前元素过渡离开。
+
+`out-in`：当前元素先进行过渡，完成之后新元素过渡进入。
+
+### 多个组件的过渡
+
+使用动态组件:
+
+```html
+<transition name="component-fade" mode="out-in">
+  <component v-bind:is="view"></component>
+</transition>
+```
+
+```js
+new Vue({
+  el: '#transition-components-demo',
+  data: {
+    view: 'v-a'
+  },
+  components: {
+    'v-a': {
+      template: '<div>Component A</div>'
+    },
+    'v-b': {
+      template: '<div>Component B</div>'
+    }
+  }
+})
+```
+
+```css
+.component-fade-enter-active, .component-fade-leave-active {
+  transition: opacity .3s ease;
+}
+.component-fade-enter, .component-fade-leave-to
+/* .component-fade-leave-active for below version 2.1.8 */ {
+  opacity: 0;
+}
+```
+
 ## Vue-router
 
 ### Getting Start
@@ -1130,6 +1247,7 @@ const router = new VueRouter({
 + $route.matched
 + $route.name
 + $route.redirectedFrom
++ $route.meta // 如果配置了的话,否则为undefined
 
 ### Navigation Guards
 
