@@ -1,6 +1,12 @@
-# Python Tutorial
+# Python
 
-## Numbers
+## Python编程快速上手
+
+这是机器代替人的时代，也是人控制机器的时代。这是程序员的时代，也是非程序员学习程序的时代。这是算法的时代，也是编程语言的时代。
+
+## Python Tutorial
+
+### Numbers
 
 ```py
 >>> 17 / 3  # classic division returns a float
@@ -30,7 +36,7 @@ In interactive mode, the last printed expression is assigned to the variable _.
 113.06
 ```
 
-## Strings
+### Strings
 
 Strings can be concatenated (glued together) with the + operator, and repeated with *:
 
@@ -84,4 +90,3 @@ The built-in function len() returns the length of a string:
 >>> len(s)
 34
 ```
-

@@ -1072,6 +1072,21 @@ new Vue({
 }
 ```
 
+## 过滤器
+
+在HTML模板中的用法
+
+```html
+<!-- 在双花括号中 -->
+{{ message | filterTest }}
+<!-- 在 `v-bind` 中 -->
+<div :id="message | filterTest"></div>
+```
+
+在组件script中的用法
+
+
+
 ## Vue-router
 
 ### Getting Start
