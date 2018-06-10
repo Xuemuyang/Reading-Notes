@@ -40,9 +40,13 @@ TeemoMac:~ mac$ cal
 24 25 26 27 28 29 30
 ```
 
++ `df`查看磁盘剩余空间的数量
++ `free`显示空闲内存的数量
++ `exit`终止终端会话
+
 ## Chap3. 文件系统中跳转
 
-+ pwd - Print name of current working directory 
++ pwd - Print name of current working directory
 + cd - Change directory
 + ls - List directory contents
 
@@ -184,3 +188,41 @@ n|向前查找下一个出现的字符串，这个字符串是之前所指定查
 h|显示帮助屏幕
 q|退出less程序
 
+## 5. 操作文件和目录
+
++ cp - Copy files and directories
++ mv - Move/rename files and directories
++ mkdir - Create directories
++ rm - Remove files and directories
++ ln - Create hard and symbolic links
+
+对于复杂的文件操作任务，使用命令行程序比较容易完成。
+
+### 通配符
+
+通配符|意义
+---|---
+*|匹配任意多个字符(包括零个或一个)
+?|匹配任意一个字符(不包括零个)
+[characters]|匹配任意一个属于字符集中的字符
+[!characters]|匹配任意一个不是字符集中的字符
+[[:class]]|匹配任意一个属于指定字符类中的字符
+
+字符类|意义
+---|---
+[:alnum:]|匹配任意一个字母或数字
+[:alpha:]|匹配任意一个字母
+[:digit:]|匹配任意一个数字
+[:lower:]|匹配任意一个小写字母
+[:upper]|匹配任意一个大写字母
+
+模式|匹配对象
+*|所有文件
+g*|文件名以"g"开头的文件
+b*.txt|以"b"开头，中间有零个或任意多个字符，并以".txt"结尾的文件
+Dara???|以"Data"开头，气候紧接着3个字符的文件
+[abc]*|文件名以"a","b"或"c"开头的文件
+BACKUP.[0-9][0-9][0-9]|以"BACKUP."开头，并紧接着3个数字的文件
+[[:upper:]]*|以大写字母开头的文件
+[![:digit:]]*|不以数字开头的文件
+*[[:lower:]123]|文件名以小写字母结尾，或以"1"，"2"，或"3"结尾的文件
