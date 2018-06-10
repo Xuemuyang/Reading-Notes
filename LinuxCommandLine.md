@@ -3,18 +3,20 @@
 ## 命令速查
 
 ```bash
-$ cd ~/.ssh //查看ssh秘钥
+$cd ~/.ssh //查看ssh秘钥
 ```
 
 ## Chap1. Intro
 
 > "Graphical user interfaces make easy task easy, while command line interfaces make difficult tasks possible."
 
+"自由"的真正含义在于其值得是一台没有任何秘密的计算机，可以从它哪里了解一切。
+
 ## Chap2. Shell
 
 shell是一个程序，接受从键盘输入的命令，把命令传递给操作系统去执行。`bash`是`Bourne Again SHell`的首字母缩写，`bash`是最初`Unix`上由`Steve Bourne`所写的`shell`程序`sh`的增强版。
 
-**终端仿真器(terminal emulator)**
+### 终端仿真器(terminal emulator)
 
 与shell交互的终端仿真器程序，一般为`terminal`
 
@@ -22,12 +24,12 @@ shell是一个程序，接受从键盘输入的命令，把命令传递给操作
 
 这叫做shell提示符，当shell准备好接受输入时，它就会出现。通常是用户名@主机名，紧接着是当前工作目录。如果提示符最后一个字符是`#`，而不是`$`，那么这个终端就会有超级用户权限。
 
-```
+```bash
 TeemoMac:~ mac$ date
 2017年 9月 5日 星期二 10时20分02秒 CST
 ```
 
-```
+```bash
 TeemoMac:~ mac$ cal
      九月 2017
 日 一 二 三 四 五 六
@@ -44,14 +46,14 @@ TeemoMac:~ mac$ cal
 + cd - Change directory
 + ls - List directory contents
 
-```
+```bash
 TeemoMac:~ mac$ pwd
 /Users/mac
 ```
 
 Home目录是唯一允许用户对文件进行写入的地方，在OSX上使用`echo $HOME`显示home目录路径。
 
-```
+```bash
 TeemoMac:~ mac$ echo $HOME
 /Users/mac
 ```
@@ -66,7 +68,7 @@ cd|更改工作目录到Home
 cd -|更改工作目录到先前的工作目录
 cd ~user_name|更改工作目录到用户Home目录
 
-**关于文件名的重要规则**
+### 关于文件名的重要规则
 
 1. 以`.`字符开头的文件名是隐藏文件。`ls`命令不能列出它们，用`ls-a`命令就可以。
 2. 文件名和命令名区分大小写敏感。`File1`和`file1`是两个不同的文件名。
@@ -79,28 +81,29 @@ cd ~user_name|更改工作目录到用户Home目录
 + file - Determine file type
 + less - View file contents
 
-1. `ls`命令
+1.`ls`命令
 
 `ls`可以指定目录
 
-```
+```bash
 TeemoMac:~ mac$ ls Desktop/
-Adobe Photoshop CC 2014	Steam
+Adobe Photoshop CC 2014 Steam
 ```
 
 `~`代表Home目录，`ls`后可以指定多个目录，用空格隔开
 
-```
+```bash
 TeemoMac:~ mac$ ls Desktop/ Desktop/GIT/
 Desktop/:
-Adobe Photoshop CC 2014	Steam
+Adobe Photoshop CC 2014 Steam
 
 Desktop/GIT/:
-BLOG full-stack	script
+BLOG full-stack script
 ```
 
 `ls-l`结果以长模式输出
-```
+
+```bash
 TeemoMac:~ mac$ ls -l Desktop/
 total 1448
 -rw-r--r--@  1 mac  staff     848  8 16 21:19 Adobe Photoshop CC 2014
@@ -108,7 +111,7 @@ total 1448
 drwxr-xr-x  21 mac  staff     714  8 24 21:01 GIT
 ```
 
-2. 选项和参数
+2.选项和参数
 
 大多数命令看起来是这样
 
@@ -129,9 +132,9 @@ option中有长选项和短选项，许多命令允许短选项串在一起使�
 -S||命令输出结果按照文件大小来排序
 -t||按照修改时间来排序
 
-3. 深入研究长格式输出
+3.深入研究长格式输出
 
-```
+```bash
 TeemoMac:Desktop mac$ ls -l
 total 1448
 -rw-r--r--@  1 mac  staff     848  8 16 21:19 Adobe Photoshop CC 2014
@@ -151,26 +154,26 @@ staff|文件所属用户组的名字
 8 16 21:19|上次修改文件的时间和日期
 Adobo Photoshop CC 2014|文件名
 
-4. 确定文件类型
+4.确定文件类型
 
 Linux中并不要求文件名来反映文件内容
 
 `file filename`查看文件内容的简单描述
 
-```
-TeemoMac:Reading mac$ file ES6.md 
+```bash
+TeemoMac:Reading mac$ file ES6.md
 ES6.md: UTF-8 Unicode text, with overstriking
 ```
 
 > Everything is a file!
 
-5. 用`less`浏览文件内容
+5.用`less`浏览文件内容
 
 这样使用less命令
 
 `less filename`
 
-`TeemoMac:Reading mac$ less ES6.md `
+`TeemoMac:Reading mac$ less ES6.md`
 
 命令|行为
 ---|---

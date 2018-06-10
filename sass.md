@@ -370,11 +370,11 @@ a:visited { color: green; }
 /* 编译后 */
 .error, .seriousError {
   border: 1px solid red;
-  background-color: #fdd; 
+  background-color: #fdd;
 }
 
 .seriousError {
-  border-width: 3px; 
+  border-width: 3px;
 }
 ```
 
