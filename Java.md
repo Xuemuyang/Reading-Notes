@@ -143,3 +143,18 @@ class Foo {
 
 使用`equals()`来判断两个对象在意义上是否相等(比如两个`String`对象是否带有相同的字节组合)。
 
+### Chap5. 编写程序
+
+伪码(专注于逻辑不需要考虑程序语法)
+
+测试码(测试用的程序代码)
+
+真实码(实际设计出的真正Java程序代码)
+
+```java
+Integer.parseInt("3"); // 将string转换成int
+
+for(int cell:locationCells) {} // for in
+
+int randomNum = (int)(Math.random() * 5) // Math.ramdom会返回一个0~1之间的书，double类型
+```
