@@ -91,3 +91,55 @@ nums = new int[7]; // 创建大小为7的数组，并将它赋值给nums
 
 Java是通过值传递传递的，也就是说通过拷贝传递。
 
+`getter`和`setter`正式的命名`Accessor`与`Mutator`
+
+封装的基本原则:
+
++ 将实例变量标记为`private`
++ 将`getter`和`setter`标记为`public`
+
+实例变量永远都会有默认值:
+
+类型|默认值
+---|---
+integers|0
+floating points|0.0
+booleans|false
+references|null
+
+实例变量与局部变量之间的差别:
+
+```java
+// 实例变量是声明在类内而不是方法中
+class Horse {
+    private double height = 15.2;
+    private String bread;
+    ...
+}
+
+// 局部变量是声明在方法中的
+class AddThing {
+    int a;
+    int b = 12;
+
+    public int add() {
+        int total = a + b;
+        return total;
+    }
+}
+
+// 局部变量在使用前必须初始化
+class Foo {
+    public void go() {
+        int x;
+        int z = x + 3; // !!!无法编译
+    }
+}
+```
+
+#### 变量的比较(primitive主数据类型或引用)
+
+使用`==`来比较两个`primitive`主数据类型或者判断两个引用是否引用同一个对象。
+
+使用`equals()`来判断两个对象在意义上是否相等(比如两个`String`对象是否带有相同的字节组合)。
+
