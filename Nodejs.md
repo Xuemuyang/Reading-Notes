@@ -1,4 +1,4 @@
-# 深入浅出Node.js
+# Node.js
 
 ## Node简介
 
@@ -77,7 +77,7 @@ $ node test.js
 
 ### 本轮循环和次轮循环
 
-`process.nextTick`和`Peomise`的回调函数追加在本轮循环。
+`process.nextTick`和`Promise`的回调函数追加在本轮循环。
 
 `Node`执行完所有同步任务，就会执行`process.nextTick`的任务队列。
 

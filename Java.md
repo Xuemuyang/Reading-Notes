@@ -158,3 +158,42 @@ for(int cell:locationCells) {} // for in
 
 int randomNum = (int)(Math.random() * 5) // Math.ramdom会返回一个0~1之间的书，double类型
 ```
+
+### Chap6. 使用Java API
+
+以`ArrayList`为例
+
+```java
+// 创建
+ArrayList<Egg> myList = new ArrayList<Egg>();
+
+// 加入元素
+Egg s = new Egg();
+myList.add(s);
+
+// 查询大小
+int theSize = myList.size();
+
+// 查询特定元素
+boolean isIn = myList.contains(s);
+
+// 查询特定元素的位置
+int inx = myList.indexOf(b);
+
+// 判断集合是否为空
+bpoolean empty = myList.isEmpty();
+
+// 删除元素
+myList.remove(s);
+```
+
+### Chap7. 继承与多态
+
+子类中引用父类的方法再加上额外的行为
+
+```java
+publiv void roam() {
+    super.roam();
+    // my own roam stuff
+}
+```
