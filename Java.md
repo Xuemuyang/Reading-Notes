@@ -254,3 +254,48 @@ abstract class Canine extends Animal {
 ```java
 public abstract void eat();
 ```
+
+Java中所有类都是从Object这个类继承出来的。
+
+有下面几个方法:
+
++ equals(Object o)
++ getClass()
++ hashCode()
++ toString()
+
+```java
+if (o instanceof Dog) {
+    Dog d = (Dog) o;
+}
+```
+
+将引用比作遥控器很恰当，我们可以吧`Snowboard`当做`Snowboard`或者`Object`，`Object`的遥控器只有几个按钮，`Snowboard`的遥控器包含`Object`和自己定义的按钮，在继承树往下走时，遥控器的按钮越来越多。
+
+关于多态的几句总结
+
++ 不管实际上所引用的对象是什么类型，只有在引用变量的类型就是带有某方法的类型时才能调用该方法
++ `Object`引用变量在没有类型转换的情况下不能赋值给其他类型`Dog d = (Dog) x.getObject(aDog);`
++ 从`ArrayList<Object>`取出的对象只能被`Object`引用，不然就要用类型转换来改变
+
+#### 接口
+
+```java
+// 接口的定义
+public interface Pet {
+    public abstract void beFriendly(); // 接口的方法一定是抽象的
+    public abstract void play();
+}
+
+// 接口的实现
+public class Dog extends Canine implements Pet {
+    public void beFriendly() {...} // 必须在这里实现出接口的方法
+    public void play();
+
+    public void roam() {...} // 一般的覆盖方法
+}
+```
+
+使用接口就可以继承超过一个以上的来源。
+
+`super`关键字可以实现在子类中调用父类的方法。
