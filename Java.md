@@ -239,10 +239,18 @@ final这个修饰符表示是继承树的末端，不能被继承。
 Animal anim = new Animal();
 ```
 
-需要有`Animal`这个类来产生继承和多态，但是要限制只有它的子类才能被初始化。我们要的是`Lion`,`Hippo`对象，而不是`Animal`对象。
+需要有`Animal`这个类来产生继承和多态，但是要限制只有它的子类才能被初始化。我们要的是`Lion`,`Hippo`对象，而不是`Animal`对象。于是有了抽象类。抽象的类代表此类必须要被`extend`过。
 
 ```java
-abstract class Canine extengs Animal {
+abstract class Canine extends Animal {
     public void roam() { }
 }
+```
+
+方法也可以抽象，抽象的方法没有实体。抽象的方法代表此方法一定要被覆盖。
+
+如果声明出一个抽象的方法，就必须将类也标记为抽象的。不能在非抽象类中拥有抽象方法。
+
+```java
+public abstract void eat();
 ```
