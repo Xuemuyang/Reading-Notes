@@ -197,3 +197,52 @@ publiv void roam() {
     // my own roam stuff
 }
 ```
+
++ public类型的成员会被继承
++ private类型的成员不会被继承
+
+子类会继承父类所有`public`类型的实例变量和方法，但不会继承父类所有`private`类型的变量和方法。
+
+继承下来的方法可以被覆盖掉，但实例变量不能被覆盖掉。
+
+当某个方法再子类中被覆盖过，调用这个方法时会调用到覆盖过的版本。
+
+#### 多态(`polymorphism`)
+
+```java
+// 引用类型与对象类型一致
+Dog myDog = new Dog();
+
+// 多态下，引用与对象可以是不同的类型
+Animal myDog = new Dog();
+```
+
+运用多态时，引用类型可以是实际对象类型的父类。
+
+final这个修饰符表示是继承树的末端，不能被继承。
+
+覆盖的规则:
+
++ 参数必须要一样，且返回类型必须要兼容
++ 不能降低方法的存取权限
+
+方法的重载：
+
++ 返回类型可以不同
++ 不能只改变返回类型
++ 可以更改存取权限
+
+### Chap8. 接口与抽象类
+
+```java
+// 有些类不应该被初始化
+Animal anim = new Animal();
+```
+
+需要有`Animal`这个类来产生继承和多态，但是要限制只有它的子类才能被初始化。我们要的是`Lion`,`Hippo`对象，而不是`Animal`对象。
+
+```java
+abstract class Canine extengs Animal {
+    public void roam() { }
+}
+```
