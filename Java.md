@@ -441,3 +441,22 @@ int unWrapped = iWrap.intValue();
 ```java
 String s = String.format("%, d", 1000000)
 ```
+
+### Chap11. 异常处理
+
+调用有风险的方法时需要加上异常处理
+
+异常是一种`Exception`的对象
+
+```java
+try {
+    // 危险动作
+} catch(Exception ex) {
+    // 尝试恢复
+} finally {
+    // 无论如何都会执行
+}
+```
+
+### Chap14. 序列化和文件的输入/输出
+

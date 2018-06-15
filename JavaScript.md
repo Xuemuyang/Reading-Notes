@@ -4339,6 +4339,28 @@ console.log(lotrChar.name);
 console.log(2 ** 3);
 ```
 
+## 异步
+
+JS中实现异步的几种方式
+
++ callbacks
++ listeners(事件监听)
++ publish-subscribe/observer pattern(发布订阅/观察者模式)
++ Promise
++ async/await
+
+事件监听的例子
+
+```js
+// 这里只是举个例子
+f1.on('done', f2);
+
+// 执行代码
+f1.trigger('done');
+```
+
+发布订阅指有一个"信号中心"，任务2区订阅一个信号，任务1在完成时向信号中心发送这个信号，任务2便可知道自己在什么时候执行。
+
 ### Promise
 
 一个`Promise`就是一个代表了异步操作最终完成或者失败的对象。
