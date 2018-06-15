@@ -1086,7 +1086,6 @@ new Vue({
 在组件script中的用法
 
 
-
 ## Vue-router
 
 ### Getting Start

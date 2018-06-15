@@ -299,3 +299,145 @@ public class Dog extends Canine implements Pet {
 使用接口就可以继承超过一个以上的来源。
 
 `super`关键字可以实现在子类中调用父类的方法。
+
+### Chap9. 构造器与垃圾收集器
+
++ 变量的生存空间 ==> 栈(stack)
++ 对象的生存空间 ==> 堆(heap)
+
+java同样有调用栈
+
++ 实例变量是声明在类中方法之外的地方，位于堆上
++ 局部变量声明在方法或方法的参数上
+
+创建对象的三个步骤
+
++ 声明
++ 创建
++ 赋值
+
+```java
+// 声明引用变量|
+Duck muDuck = new Duck(); // 创建出新的引用变量
+
+//          | 创建对象
+Duck muDuck = new Duck();
+
+//    |连接对象和引用|
+Duck muDuck = new Duck(); // 赋值对象给引用
+```
+
+`new Duck()`调用的是对象的构造函数
+
+构造函数必须与类同名且没有返回类型
+
+如果没有写构造函数，编译器会安排一个
+
+默认的构造函数没有参数
+
+如果写了构造函数，编译器就不会调用
+
+最好能有无参数的构造函数让人可以选择使用默认值
+
+某种对象不应该在状态被初始化前就用，使用构造函数来初始化`Duck`的状态
+
+构造函数重载
+
+在创建新对象时，所有继承下来的构造函数都会执行，这样的过程被称为"构造函数链(Constructor Chaining)"
+
+创建`Hippo`也代表创建`Animal`与`Object`
+
+```java
+new Hippo()
+```
+
+构造函数堆栈
+
+```chart
+                Object
+        Animal  Animal  Animal
+Hippo   Hippo   Hippo   Hippo
+```
+
+使用`super()`调用父类的构造函数，如果没有调用`super()`，编译器会帮我们加上`super()`的调用
+
+每个子类的构造函数会立即调用父类的构造函数
+
+```java
+public Boop(int i) {
+    size = i;
+    super(); // 这样过不了编译
+}
+```
+
+当把引用设置为`null`时，相当于一个没有电视的遥控器，对`null`引用使用圆点运算符会在执行期遇到`NullPointerException`这样的错误。
+
+### Chap10. 数字与静态
+
+> `Math`这个类中的所有方法都不需要实例变量值，这些方法都是静态的，无需`Math`的实例
+
+一个静态方法表示"一种不依靠实例变量就诶回去不需要对象的行为"
+
+```java
+// 以类的名称调用静态的方法
+Math.min(88, 86);
+
+// 以引用变量的名称调用非静态的方法
+Song t2 = new Song();
+t2.play();
+```
+
+静态的方法是在无关特定类的实例情况下执行的，不能调用非静态的变量，也不能调用非静态的方法
+
+静态变量的值对所有的实例来说都相同，静态变量被同类所有实例共享
+
++ 实例变量: 每个实例一个
++ 静态变量：每个类一个
+
+对于一个`final`变量，如果是基本数据类型的变量，则其数值一旦在初始化之后便不能更改；如果是引用类型的变量，则在对其初始化之后便不能再让其指向另一个对象。
+
+```java
+public static final double PI = 3.1415926;
+```
+
+`final`修饰`method`表示不能覆盖`method`
+
+`final`修饰类表示不能继承该类(也就是创建它的子类)
+
++ 如果类只有静态的方法，可以将构造函数标记为`private`以避免被初始化
++ Java中的常量是把变量同时标记为`static`和`final`的
++ 常量的命名惯例是全部使用大写字母
+
+Math的方法
+
++ `Math.random()`返回介于0.0~1.0之间的双精度浮点
++ `Math.abs()`返回双精度浮点参数的绝对值
++ `Math.round()`返回四舍五入的`int`
++ `Math.min()`返回两个参数中较小的
++ `Math.max()`返回两个参数中较大的
+
+包装类
+
++ Boolean
++ Character
++ Byte
++ Short
++ Interger
++ Long
++ Float
++ Double
+
+```java
+// 包装
+int i = 288;
+Interger iWrap = new Interger(i);
+
+// 解开包装
+int unWrapped = iWrap.intValue();
+```
+
+数字的格式化
+
+```java
+String s = String.format("%, d", 1000000)
+```

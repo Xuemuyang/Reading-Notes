@@ -4632,3 +4632,31 @@ async function logFetch(url) {
   }
 }
 ```
+
+一个反例
+
+```js
+async getBooksAndAuthor(authorId) {
+    const books = await bookModel.fetchAll();
+    const author = await authorModel.fetch(authorId);
+    return {
+        author,
+        books: books.filter(book => book.authorId === authorId),
+    };
+}
+```
+
+这个例子的错误在于，原本可以并行的事却做了串行，总的执行时间会变长，下面是正确版本
+
+```js
+async getBooksAndAuthor(authorId) {
+    const bookPromise = bookModel.fetchAll();
+    const authorPromise = authorModel.fetch(authorId);
+    const book = await bookPromise;
+    const author = await authorPromise;
+    return {
+        author,
+        books: books.filter(book => book.authorId === authorId),
+    };
+}
+```
