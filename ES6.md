@@ -1992,6 +1992,78 @@ geta()
 2. export模块没有`a`，import模块有`a`则报错
 3. export模块有`a`，import没有结果是`export`
 
+### 另一个简单的作用域测试
+
+export Module1
+
+```js
+let hehe = '1'
+
+export const asyncTest = (callback = res => console.log(hehe)) => {
+  FlameBridge.callAPI('getMacAddress', {}, callback)
+}
+```
+
+import Module1
+
+```js
+asyncTest() // 正常打印1
+```
+
+export Module2
+
+```js
+let hehe = '1'
+
+export const asyncTest = (callback = res => console.log(hehe)) => {
+  FlameBridge.callAPI('getMacAddress', {}, callback)
+}
+```
+
+import Module2
+
+```js
+let hehe = '2'
+console.log('hehe' + hehe)
+asyncTest() // 打印hehe2 1
+```
+
+export Module3
+
+```js
+let hehe = '1'
+
+export const asyncTest = (callback = res => console.log(hehe)) => {
+  FlameBridge.callAPI('getMacAddress', {}, callback)
+}
+```
+
+import Module3
+
+```js
+let hehe = '2'
+console.log('hehe' + hehe)
+asyncTest(() => {
+  console.log('hehe' + hehe)
+}) // 打印hehe2 hehe2
+```
+
+export Module4
+
+```js
+export const asyncTest = (callback = res => console.log(hehe)) => {
+  FlameBridge.callAPI('getMacAddress', {}, callback)
+}
+```
+
+import Module4
+
+```js
+let hehe = '2'
+console.log('hehe' + hehe)
+asyncTest() // 打印hehe2 报错hehe is not defined
+```
+
 ### 严格模式
 
 `ES6`的模块自动采用严格模式，不管你有没有在模块头部加上`use strict`。
