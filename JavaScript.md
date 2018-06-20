@@ -966,6 +966,14 @@ var sum = values.reduceRight(function(prev, cur, index, array) {
 alert(sum); //25
 ```
 
+### Date类型
+
+```js
+// 本地时间2005年5月5日下午5:55:55
+var date = new Date(2005, 4, 5, 17, 55, 55); // 注意这里传入的month是从0开始计算，而day从1计算
+date.getTime(); // 返回表示日期的毫秒数
+```
+
 ### RegExp类型
 
 #### RegExp基础
