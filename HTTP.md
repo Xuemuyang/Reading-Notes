@@ -591,3 +591,14 @@ Referer|请求|用户是从这个页面上依照链接跳转过来的
 ### cookie
 
 `cookie`是当前识别用户，实现持久会话的最好方式。`cookie`最初是由网景公司开发。
+
+笼统的将`cookie`分为两类
+
++ 会话cookie
++ 持久cookie
+
+会话`cookie`在用户退出浏览器时就被删除了，持久`cookie`存储在硬盘上。
+
+用户首次访问Web站点时给用户贴上一个独有的`cookie`，这样以后就可以识别出这个用户。`cookie`包含(name=value)这样的信息列表，通过`Set-Cookie`或者`Set/Cookie2`HTTP响应贴到用户身上去。
+
+`Set-Cookie`中有`Domain`域属性来控制哪些站点可以看到这个`cookie`
