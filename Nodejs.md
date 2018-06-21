@@ -97,3 +97,20 @@ $ node test.js
 
 ### 欢迎进入Node.js世界
 
++ 构建在JavaScript之上
++ 事件驱动和异步的
++ 专为数据密集型实时程序设计的
+
+#### 异步和事件触发:浏览器
+
+浏览器中的`alert`,`prompt`,`confirm`,同步`XHR`会阻塞程序执行。
+
+#### 异步和事件触发:服务器
+
+Nginx采用的就是带有异步I/O的事件轮询
+
+#### DIRT程序
+
+DIRT(data-intensive real-time)数据密集型实时程序
+
+文档在线协作，多人在线游戏
