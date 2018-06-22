@@ -461,6 +461,17 @@
 1. 响应首部字段(`Response Header Fields`)
 1. 实体首部字段(`Entity Header Fields`)
 
+## 第九章 基于HTTP功能追加协议
+
+### WebSocket
+
+使用Ajax和Comet技术进行通信可以提升Web浏览速度，问题在于使用HTTP无法解决瓶颈问题，WebSocket是为了解决这些问题而实现的一套新协议及API。
+
+WebSocket协议有以下主要特点:
+
++ 推送功能
++ 减少通信量
+
 ## 缓存
 
 `Web`缓存是可以自动保存常见文档副本的`HTTP`设备。当`Web`请求抵达缓存时，如果本地有“已缓存的”副本，就可以从本地存储设备而不是原始服务器中提取这个文档。

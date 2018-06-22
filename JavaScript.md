@@ -1,4 +1,4 @@
-# JS高级程序设计
+# 不只是JS高级程序设计
 
 ## Chap1.JavaScript简介
 
@@ -96,6 +96,7 @@ String | 任何非空字符串  | ""(空字符串)
 Number | 任何非零数字值(包括无穷大)  | 0和NaN
 Object | 任何对象  | null
 Undefined | n/a(not applicate)  | undefined
+
 这些转换规则对理解流程控制语句自动执行相应的Boolean转换非常重要
 
 ```javascript
@@ -4014,6 +4015,20 @@ function addURLParam(url, name, value) {
 
 `CORS(Cross-Origin Resource Sharing)`跨域资源共享
 
+其背后思想就是使用自定义的HTTP头部让浏览器与服务器进行沟通，从而决定请求或响应是否应该成功。
+
+```http req header
+Origin: http://www.nczonline.net
+```
+
+如果服务端认为这个请求可以接受，就会
+
+```http res header
+Access-Control-Allow-Origin: http://www.nczonline.net
+```
+
+请求或者响应都不应该带有`cookie`信息
+
 ### 其他跨域技术
 
 #### 图像Ping
@@ -4055,6 +4070,16 @@ document.body.insertBefore(script, document.body.firstChild);
 ```
 
 通俗理解就是请求一段可执行`js`，这个`js`就是`functionName(json)`，我们告诉服务端需要调用的函数名`functionName`，`json`就是请求的`JSON`数据。
+
+#### Comet
+
+Comet是一种服务器向页面推送数据的技术。有两种实现方式，长轮询和流。
+
+长轮询是传统轮询(也称为短轮询)的一个翻版。
+
+短轮询:客户端向服务器端发起请求，服务器端立即返回相关信息并且关闭链接。同时客户端再次发起请求，与服务器端建立链接。
+
+长轮询:与短轮询不同的是服务器端会保持住链接，等待有数据的情况下返回并且关闭连接。随即再次请求。
 
 ## chap.22高级技巧
 
@@ -4162,7 +4187,7 @@ function curry(fn) {
 ```
 
 ```js
-function add(num1 + num2) {
+function add(num1, num2) {
     return num1 + num2;
 }
 

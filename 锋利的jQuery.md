@@ -73,6 +73,7 @@ $(document.getElementById('idstr'))
 ```js
 document.getElementById('#tt').style.color='red';
 ```
+
 如果网页中没有id为"tt"的元素，那么浏览器会报错
 
 ```js
@@ -380,11 +381,13 @@ $('element').css('display', 'none'); //效果相同
 ```
 
 可以加动画持续时间参数
+
 + slow == 600
 + normal == 400
 + fast == 200
 
 还可以指定数字
+
 ```js
 $('element').show(1000);
 ```
@@ -396,6 +399,7 @@ $('element').show(1000);
 #### `animate()`
 
 `animate(params, speed, callback);`
+
 + params:包含属性样式属性及值的映射,比如{property1:"value1", property2:"value2",...}
 + speed:速度，可选
 + callback:动画完成时执行的函数，可选

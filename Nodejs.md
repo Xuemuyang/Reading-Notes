@@ -95,7 +95,7 @@ $ node test.js
 
 第一部分 Node基础
 
-### 欢迎进入Node.js世界
+### 第1章 欢迎进入Node.js世界
 
 + 构建在JavaScript之上
 + 事件驱动和异步的
@@ -114,3 +114,6 @@ Nginx采用的就是带有异步I/O的事件轮询
 DIRT(data-intensive real-time)数据密集型实时程序
 
 文档在线协作，多人在线游戏
+
+### 第2章 构建有多个房间的聊天室程序
+
