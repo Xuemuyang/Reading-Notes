@@ -4081,6 +4081,45 @@ Comet是一种服务器向页面推送数据的技术。有两种实现方式，
 
 长轮询:与短轮询不同的是服务器端会保持住链接，等待有数据的情况下返回并且关闭连接。随即再次请求。
 
+#### Web Sockets
+
+```js
+var socket = new WebSocket('ws://www.example.com/server.php');
+```
+
+必须给WebSocket构造函数传入绝对URL，同源策略对WebSocket不适用。
+
+```js
+// 关闭Web Socket连接
+socket.close()
+```
+
+Web Sockets只能发送纯文本，对于复杂的数据结构，发送之前需要进行序列化。
+
+有三个事件
+
++ open 在成功建立连接时触发
++ error 在发生错误时触发，连接不能持续
++ close 在连接关闭时触发
+
+```js
+var socket = new WebSocket('ws://www.example.com/server.php');
+
+socket.onopen = function() {
+    alert('Connection established.')
+};
+
+socket.onerror = function() {
+    alert('Connection error.');
+};
+
+socket.onclose = function() {
+    alert('Connection closed.');
+};
+```
+
+close事件的`event`对象有额外的信息,`wasClean`,`code`,和`reason`。
+
 ## chap.22高级技巧
 
 ### 函数节流(throttle)和防抖(debounce)
