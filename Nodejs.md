@@ -1,5 +1,109 @@
 # Node.js
 
+## 总结
+
+### 关于模块
+
++ 每个文件是一个模块，有自己的作用域
++ 模块内部`module`变量代表模块本身
++ `module.exports`属性代表模块对外接口
++ 通过`module.exports`暴露模块里面的变量和方法
+
+#### exports与module.exports的区别
+
+可以理解`exports`是`module.exports`的一个快捷方式。
+
+`exports`用字面量输出的时候会重写`exports`，此时`exports`与`module.exports`没有任何关系。
+
+使用`module.exports`导出没有任何问题。
+
+#### require
+
+引入规则:
+
+当 Node 遇到 require(X) 时，按下面的顺序处理。
+
+1.如果 X 是内置模块（比如 require('http'）)
+
+    a. 返回该模块。
+    b. 不再继续执行。
+
+2.如果 X 以 "./" 或者 "/" 或者 "../" 开头
+
+    a. 根据 X 所在的父模块，确定 X 的绝对路径。
+    b. 将 X 当成文件，依次查找下面文件，只要其中有一个存在，就返回该文件，不再继续执行。
+        X
+        X.js
+        X.json
+        X.node
+    c. 将 X 当成目录，依次查找下面文件，只要其中有一个存在，就返回该文件，不再继续执行。
+        X/package.json（main字段）
+        X/index.js
+        X/index.json
+        X/index.node
+
+3.如果 X 不带路径
+
+    a. 根据 X 所在的父模块，确定 X 可能的安装目录。
+    b. 依次在每个目录中，将 X 当成文件名或目录名加载。
+
+4.抛出 "not found"
+
+##### require特性
+
++ module被加载的时候执行，加载后缓存(如果一个模块被加载多次，只有第一次加载的时候执行模块中语句)
++ 一旦出现某个模块被循环加载(A,B模块互相引用)，就只输出已经执行的部分，还未执行的部分不会输出
+
+modA.js
+
+```js
+module.exports.test = 'A';
+
+const modB = require('./modB');
+console.log('modA: ', modB.test);
+
+module.exports.test = 'AA';
+```
+
+modB.js
+
+```js
+module.exports.test = 'B';
+
+const modA = require('./modA');
+console.log('modB: ', modA.test);
+
+module.exports.test = 'BB';
+```
+
+main.js
+
+```js
+const modA = require('./modA');
+
+const modB = require('./modB');
+```
+
+terminal打印
+
+```bash
+modB: A
+modA: BB
+```
+
+### 关于路径
+
+`path.resolve()`用来转换相对当前路径的绝对路径。
+
+以下都是绝对路径
+
++ `__dirname`: 获取当前执行文件所在目录的完整目录名
++ `__filename`: 获得当前执行文件的带有完整绝对路径的文件名
++ `process.cwd()`: 获得当前执行node命令时的文件夹目录名
++ `path.resolve('./')`: 文件所在目录(与`process.cwd()`一致)
+
+在`require()`时采用相对路径，其他地方一律使用绝对路径。
+
 ## Node简介
 
 + 事件驱动
@@ -117,3 +221,12 @@ DIRT(data-intensive real-time)数据密集型实时程序
 
 ### 第2章 构建有多个房间的聊天室程序
 
+为了提供静态文件，需要使用Node内置的http模块，通过HTTP提供文件时，通常不能只是发送文件中的内容，还应该有所发送文件的类型。也就是说要用正确的`MIME`类型设置HTTP头的`COntent-Type`。
+
+聊天程序需要具备三个基本功能:
+
++ 给用户的Web浏览器提供静态文件
++ 在服务端处理与聊天相关的消息
++ 在用户的Web浏览器中处理与聊天相关的消息
+
+访问内存(RAM)要比访问文件系统快，Node程序通常会把常用的数据存到内存里，第一次访问的时候会从文件系统中读取，后面就会从缓存中读取。

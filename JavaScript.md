@@ -4083,6 +4083,8 @@ Comet是一种服务器向页面推送数据的技术。有两种实现方式，
 
 #### Web Sockets
 
+WebSocket是一个为支持实时通讯而设计的轻量的双向通行协议。
+
 ```js
 var socket = new WebSocket('ws://www.example.com/server.php');
 ```
