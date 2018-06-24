@@ -414,3 +414,129 @@ util.inherits(Watcher, events.EventEmitter);
 
 实现串行化流程控制时，需要跟踪当前执行的任务，或维护一个尚未执行的任务队列。实现并行化流程控制需要跟踪有多少个任务已经执行完成。
 
+```js
+var fs = require('fs');
+var request = require('request');
+var htmlparser = require('htmlparser');
+var configFilename = './rss_feeds.txt';
+
+function checkForRSSFile() {
+    fs.exists(configFilename, function (exists) {
+        if (!exists)
+            return next(new Error('Missing RSS file: ' + configFilename));
+
+        next(null, configFilename);
+    });
+}
+
+function readRSSFile(configFilename) {
+    fs.readFile(configFilename, function (err, feedList) {
+        if (err) return next(err);
+
+        feedList = feedList
+            .toString()
+            .replace(/^\s+|\s+$/g, '')
+            .split("\n");
+        var random = Math.floor(Math.random() * feedList.length);
+        next(null, feedList[random]);
+    });
+}
+
+function downloadRSSFeed(feedUrl) {
+    request({
+        uri: feedUrl
+    }, function (err, res, body) {
+        if (err) return next(err);
+        if (res.statusCode != 200)
+            return next(new Error('Abnormal response status code'))
+
+        next(null, body);
+    });
+}
+
+function parseRSSFeed(rss) {
+    var handler = new htmlparser.RssHandler();
+    var parser = new htmlparser.Parser(handler);
+    parser.parseComplete(rss);
+
+    if (!handler.dom.items.length)
+        return next(new Error('No RSS items found'));
+
+    var item = handler.dom.items.shift();
+    console.log(item.title);
+    console.log(item.link);
+}
+
+var tasks = [checkForRSSFile,
+    readRSSFile,
+    downloadRSSFeed,
+    parseRSSFeed
+];
+
+function next(err, result) {
+    if (err) throw err;
+
+    var currentTask = tasks.shift();
+
+    if (currentTask) {
+        currentTask(result);
+    }
+}
+
+next();
+```
+
+本例中串行化流程控制本质是在需要时让回调进场、而不是简单地把它们嵌套起来。
+
+下面是并行化流程控制，程序会读取几个文本文件的内容，输出单词在整个文件中出现的次数。
+
+```js
+var fs = require('fs');
+var completedTasks = 0;
+var tasks = [];
+var wordCounts = {};
+var filesDir = './text';
+
+function checkIfComplete() {
+    completedTasks++;
+    if (completedTasks == tasks.length) {
+        for (var index in wordCounts) {
+            console.log(index + ': ' + wordCounts[index]);
+        }
+    }
+}
+
+function countWordsInText(text) {
+    var words = text
+        .toString()
+        .toLowerCase()
+        .split(/\W+/)
+        .sort();
+    for (var index in words) {
+        var word = words[index];
+        if (word) {
+            wordCounts[word] = (wordCounts[word]) ? wordCounts[word] + 1 : 1;
+        }
+    }
+}
+
+fs.readdir(filesDir, function (err, files) {
+    if (err) throw err;
+    for (var index in files) {
+        var task = (function (file) {
+            return function () {
+                fs.readFile(file, function (err, text) {
+                    if (err) throw err;
+                    countWordsInText(text);
+                    checkIfComplete();
+                });
+            }
+        })(filesDir + '/' + files[index]);
+        tasks.push(task);
+    }
+    for (var task in tasks) {
+        tasks[task]();
+    }
+});
+```
+
