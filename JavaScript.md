@@ -3105,6 +3105,12 @@ setTimeout(function() {
 
 传递字符串可能导致性能损失，不建议以字符串作为第一个参数。
 
+返回值`timeoutID`是一个正整数，表示定时器的编号。这个值可以传递给`clearTimeout()`来取消该定时。
+
+需要注意的是`setTimeout()`和`setInterval()`共用一个编号池，技术上，`clearTimeout()`和`clearInterval()`可以互换。但是，为了避免混淆，不要混用取消定时函数。
+
+在同一个对象上（一个window或者worker），`setTimeout()`或者`setInterval()`返回的定时器编号不会重复。但是不同的对象使用独立的编号池。
+
 ## `location`对象
 
 属性名|例子

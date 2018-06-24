@@ -11,7 +11,9 @@
 
 #### exports与module.exports的区别
 
-可以理解`exports`是`module.exports`的一个快捷方式。
+`exports`是对`module.exports`的一个全局引用。
+
+`exports.myFunc`只是`module.exports.myFunc`的简写。
 
 `exports`用字面量输出的时候会重写`exports`，此时`exports`与`module.exports`没有任何关系。
 
@@ -101,6 +103,8 @@ modA: BB
 + `__filename`: 获得当前执行文件的带有完整绝对路径的文件名
 + `process.cwd()`: 获得当前执行node命令时的文件夹目录名
 + `path.resolve('./')`: 文件所在目录(与`process.cwd()`一致)
+
+`require`模块的时候，Node会在被执行程序文件(即调用`require`的文件)所在的目录下寻找这个模块。
 
 在`require()`时采用相对路径，其他地方一律使用绝对路径。
 
@@ -233,4 +237,180 @@ DIRT(data-intensive real-time)数据密集型实时程序
 
 ### 第3章 Node编程基础
 
-Node模块
+#### Node模块
+
+Node模块化视为了重用，他们不会改变全局作用域。
+
+Node模块允许你从被引入文件中选择要暴露给程序的函数和变量。
+
+```js
+var canadianDollar = 0.91;
+
+function roundTwoDecimals(amount) {
+    return Math.round(amount * 100) / 100;
+}
+
+exports.canadianToUS = function(canadian) {
+    return roundTwoDecimals(canadian * canadianDollar);
+}
+
+exports.USToCanadian = function(us) {
+    return roundTwoDecimals(us / canadianDollar);
+}
+```
+
+这个模块的exports对象上只设定了两个属性，引入这个模块的代码只能访问到`candianToUS`和`USToCanadian`这两个函数。而变量`canadianDollar`作为私有变量仅作用在`candianToUS`和`USToCanadian`的逻辑内部，程序不能直接访问它。
+
+`require`是Node中少数几个同步I/O操作之一。
+
+`require`模块的时候，Node会在被执行程序文件所在的目录下寻找这个模块。
+
+![require模块规则](./images/actionsinnode/1.jpeg)
+
+#### 异步编程技术
+
+Node中比较常用的异步有
+
++ callback
++ 事件监听
+
+事件监听本质上也是回调，它跟事件相关联。
+
+每当服务器收到请求，就触发`handleRequest`这个函数。
+
+```js
+server.on('request', handleRequest);
+```
+
+callback hell的例子
+
+```js
+var http = require('http');
+var fs = require('fs');
+
+http.createServer(function (req, res) {
+    if (req.url == '/') {
+        fs.readFile('./titles.json', function (err, data) {
+            if (err) {
+                console.error(err);
+                res.end('Server Error');
+            } else {
+                var titles = JSON.parse(data.toString());
+
+                fs.readFile('./template.html', function (err, data) {
+                    if (err) {
+                        console.error(err);
+                        res.end('Server Error');
+                    } else {
+                        var tmpl = data.toString();
+
+                        var html = tmpl.replace('%', titles.join('</li><li>'));
+                        res.writeHead(200, {
+                            'Content-Type': 'text/html'
+                        });
+                        res.end(html);
+                    }
+                });
+            }
+        });
+    }
+}).listen(8000, "127.0.0.1");
+```
+
+calback时代的node程序为了减少callback嵌套可以使用创建中间函数，以及尽早返回的方法。
+
+```js
+var http = require('http');
+var fs = require('fs');
+
+var server = http.createServer(function (req, res) {
+    getTitles(res);
+}).listen(8000, "127.0.0.1");
+
+function getTitles(res) {
+    fs.readFile('./titles.json', function (err, data) {
+        if (err) return hadError(err, res);
+        getTemplate(JSON.parse(data.toString()), res);
+    })
+}
+
+function getTemplate(titles, res) {
+    fs.readFile('./template.html', function (err, data) {
+        if (err) return hadError(err, res);
+        formatHtml(titles, data.toString(), res);
+    });
+}
+
+function formatHtml(titles, tmpl, res) {
+    var html = tmpl.replace('%', titles.join('</li><li>'));
+    res.writeHead(200, {
+        'Content-Type': 'text/html'
+    });
+    res.end(html);
+}
+
+function hadError(err, res) {
+    console.error(err);
+    res.end('Server Error');
+}
+```
+
+##### 使用事件发射器处理重复性事件
+
+```js
+// 使用on监听事件
+socket.on('data', function(data) {
+    socket.write(data);
+});
+
+// 使用once方法响应单次事件
+socket.once('data', function(data) {
+    socket.write(data);
+});
+```
+
+所有触发事件的对象都是`events`的实例。
+
+```js
+const EventEmitter = require('events');
+
+class CustomEvent extends EventEmitter {
+
+}
+
+const ce = new CustomEvent();
+
+ce.on('error', (err, time) => {
+    console.log(err);
+    console.log(time);
+});
+
+ce.emit('error', new Error('opps!'), Date.now());
+```
+
+##### 扩展事件监听器:文件监视器
+
+扩展事件发射器需要三步
+
++ 创建类的构造器
++ 继承事件发射器的行为
++ 扩展这些行为
+
+`inherits`函数是Node内置的`util`模块里的，使用`inherits`函数继承另一个对象里的行为非常简洁。
+
+```js
+function Watcher(watchDir, processedDir) {
+    this.watchDir = watchDir;
+    this.processedDir = processedDir;
+}
+
+var events = require('events'),
+    util = require('util');
+
+util.inherits(Watcher, events.EventEmitter);
+```
+
+#### 流程控制(异步逻辑的顺序化)
+
+实现串行化流程控制时，需要跟踪当前执行的任务，或维护一个尚未执行的任务队列。实现并行化流程控制需要跟踪有多少个任务已经执行完成。
+
