@@ -540,3 +540,67 @@ fs.readdir(filesDir, function (err, files) {
 });
 ```
 
+### 第4章 构建Node Web程序
+
+Node的核心是一个强大的流式HTTP解析器。
+
+Node中的http模块提供了HTTP服务器和客户端接口。
+
+这个函数只有一个参数，是个callback，服务器每次收到HTTP请求后都会调用这个callback。
+
+```js
+http.createServer([requestListener]);
+```
+
+```js
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    // 处理请求
+});
+```
+
+Node不会自动往客户端写任何响应。需要调用`res.end()`方法结束响应，如果不结束，请求会挂起，直到客户端超时。
+
+Node提供了HTTP响应头的方法:
+
++ res.setHeader(name, value)
++ res.getHeader(name)
++ res.removeHeader(name)
+
+添加和移除响应头的顺序合一随意，但一定要在调用`res.write()`或`res.end()`之前。
+
+通过`res.statusCode`设置响应码。
+
+```js
+let url = 'http://google.com';
+
+let body = '<p>Redirecting to <a href="' + url + '">' + url + '</a></p>';
+
+res.setHeader('Location', url);
+
+res.setHeader('Content-Length', body.length);
+
+res.setHeader('Content-Type', 'text/html');
+
+res.statusCode = 302;
+
+res.end(body);
+```
+
+#### 构建RESTful Web服务
+
+创建、读取、更新和删除(CRUD)即增删改查
+
+实现一个简单的todolist
+
+创建标准的REST服务器需要实现四个HTTP谓词，每个谓词会覆盖一个todolist的操作任务
+
++ POST 向todolist中添加事项
++ GET 显示当前事项列表，或者显示某一事项的详情
++ DELETE 从todolist中移除事项
++ PUT 修改已有事项
+
+通过`req.method`属性查看用的是哪个HTTP方法，从而知道要执行哪个任务。
+
+设定`Content-Length`头提高响应速度，`Content-Length`的值是字节长度，而不是字符长度，在Node中，英文字符占一个字节，中文字符占3个，Node提供了`Bffer.byteLength()`方法规避这个问题。
