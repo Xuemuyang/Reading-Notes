@@ -3428,6 +3428,7 @@ btn.addEventListener('click', function(event) {
 ```
 
 event对象简要属性/方法
+
 属性/方法|类型|说明
 ---|---|---
 cancelable|Boolean|表明是否可以取消事件的默认行为
