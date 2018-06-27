@@ -604,3 +604,103 @@ res.end(body);
 通过`req.method`属性查看用的是哪个HTTP方法，从而知道要执行哪个任务。
 
 设定`Content-Length`头提高响应速度，`Content-Length`的值是字节长度，而不是字符长度，在Node中，英文字符占一个字节，中文字符占3个，Node提供了`Bffer.byteLength()`方法规避这个问题。
+
+```js
+const http = require('http');
+const url = require('url');
+const items = []; // 用一个JS数组存放数据
+
+const server = http.createServer((req, res) => {
+    switch (req.method) {
+        case 'POST':
+            let item = '';
+            req.setEncoding('utf8');
+            req.on('data', (chunk) => {
+                item += chunk;
+            });
+            req.on('end', () => {
+                items.push(item);
+                res.end('OK\n');
+            });
+            break;
+        case 'GET':
+            let body = items.map((item, i) => {
+                return i + ') ' + item;
+            }).join('\n');
+            res.setHeader('Content-Length', Buffer.byteLength(body));
+            res.setHeader('Content-Type', 'text/plain; charset="utf-8"');
+            res.end(body);
+            break;
+        case 'DELETE':
+            let path = url.parse(req.url).pathname;
+            let i = parseInt(path.slice(i), 10);
+
+            if (isNaN(i)) {
+                res.statusCode = 400;
+                res.end('Invalid item id');
+            } else if (!items[i]) {
+                res.statusCode = 404;
+                res.end('Item not found');
+            } else {
+                items.splice(i, 1);
+                res.end('OK\n');
+            }
+            break;
+    }
+
+});
+
+server.listen(3000, () => {
+    console.log('Server listening on port 3000.');
+})
+```
+
+#### 静态文件服务
+
+目录遍历攻击
+
+应该防止用户通过目录遍历攻击访问到本来不想开放给他们的那部分内容。
+
+使用流优化数据传输
+
+```js
+var server = http.createServer(function(req, res){
+    var url = parse(req.url);
+    var path = join(root, url.pathname);
+    fs.stat(path, function(err, stat){
+        if (err) {
+        if ('ENOENT' == err.code) {
+            res.statusCode = 404;
+            res.end('Not Found');
+        } else {
+            res.statusCode = 500;
+            res.end('Internal Server Error');
+        }
+        } else {
+        res.setHeader('Content-Length', stat.size);
+        var stream = fs.createReadStream(path);
+        stream.pipe(res);
+        stream.on('error', function(err){
+            res.statusCode = 500;
+            res.end('Internal Server Error');
+        });
+        }
+    });
+});
+
+server.listen(3000, () => {
+    console.log('Server listening on port 3000.');
+});
+```
+
+#### 从表单接受用户输入
+
+Node一贯宗旨是提供简单高效的API，把其他机会留给了社区。
+
+表单提交请求带的`Content-Type`值通常有两种:
+
++ application/x-www-form-urlencoded 这是HTML表单的默认值
++ multipart/form-data 在表单中含有文件或非ASCII或二进制数据时使用
+
+前端上传文件，需要把表单的`enctype`设置为`multipart/form-data`,这是个适用于BLOB(大型二进制文件)的MIME类型。
+
