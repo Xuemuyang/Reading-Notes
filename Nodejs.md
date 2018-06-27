@@ -189,7 +189,7 @@ $ node test.js
 
 `Node`执行完所有同步任务，就会执行`process.nextTick`的任务队列。
 
-`Promise`对象的回调函数会进入异步任务里面的microtask队列。
+`Promise`对象的回调函数会进入异步任务里面的"微任务"microtask队列，这个队列追加在`process.nextTick`队列的后面。
 
 > 只有前一个队列全部清空，才会执行下一个队列。
 
@@ -198,6 +198,82 @@ $ node test.js
 1. 同步任务
 1. `process.nextTick()`
 1. 微任务
+
+### Event Loop
+
+[玄学](http://www.ruanyifeng.com/blog/2018/02/node-event-loop.html)
+
+Node开始开始执行脚本时，会先进行事件循环初始化，先做下面这些事:
+
++ 同步任务
++ 发出异步请求
++ 规划定时器生效事件
++ 执行`process.nextTick()`等等
+
+事件循环的留个阶段
+
++ timers
++ I/O callbacks
++ idle, prepare
++ poll
++ check
++ close callbacks
+
+1.timers
+
+定时器阶段，处理`setTimeOut()`和`setInterval()`的回调函数。
+
+2.I/O callbacks
+
+除了下列操作的回调函数，其他的回调函数都在这个阶段执行
+
++ `setTimeOut()`和`setInterval()`的callback
++ `setImmediate()`的callback
++ 用于关闭请求的callback
+
+3.idle,prepare
+
+libuv内部调用
+
+4.Poll
+
+这个阶段用于等待还未返回的I/O事件，如果没有其他异步任务要处理，会一直停留在这个阶段
+
+5.check
+
+`setImmedeate()`的callback
+
+6.close callbacks
+
+该阶段执行关闭请求的callback
+
+### 一个时间循环的示例
+
+```js
+const fs = require('fs');
+
+const timeoutScheduled = Date.now();
+
+// 异步任务一：100ms 后执行的定时器
+setTimeout(() => {
+    const delay = Date.now() - timeoutScheduled;
+    console.log(`${delay}ms`);
+}, 100);
+
+// 异步任务二：文件读取后，有一个 200ms 的回调函数
+fs.readFile('test.js', () => {
+    const startCallback = Date.now();
+    while (Date.now() - startCallback < 200) {
+        // 什么也不做
+    }
+});
+```
+
+第一轮循环，没有到期的定时器以及可以执行的I/O callback，进入Poll阶段(文件读取操作)，由于小文件一般不会超过100ms，定时器到期之前，Poll阶段就会有结果，继续执行。
+
+第二轮事件循环，依旧没有到期的定时器，但是已经有了可执行的I/O callback，这个函数需要200ms，及执行一半不到的时候定时器就会到期，必须等到函数执行完毕才会离开这个阶段。
+
+第三轮时间循环，timer阶段定时器callback触发。
 
 ## Node实战
 
