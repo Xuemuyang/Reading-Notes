@@ -275,6 +275,22 @@ fs.readFile('test.js', () => {
 
 第三轮时间循环，timer阶段定时器callback触发。
 
+## 调试
+
+第一种方式，使用chrome
+
+```sh
+$node --inspect-brk xxx.js
+```
+
+-brk是指在程序刚执行的时候就打上断点
+
+之后在chrome://inspect进入调试
+
+第二种使用VScode
+
+
+
 ## Node实战
 
 第一部分 Node基础
