@@ -785,6 +785,8 @@ server.listen(3000, () => {
 });
 ```
 
+### 第5章 存储Node程序中的数据
+
 #### 从表单接受用户输入
 
 Node一贯宗旨是提供简单高效的API，把其他机会留给了社区。
@@ -811,3 +813,175 @@ DBMS(数据库管理系统)
 RDMBS(关系型数据库管理系统)
 
 ORM(Object Relational Mapping-对象关系映射)
+
+SQL语句中的?是用来指明应该把参数放在哪里的占位符。在添加到查询语句之前，query方法会自动把参数转义，以防遭受到SQL注入攻击。
+
+```js
+exports.add = function (db, req, res) {
+    exports.parseReceivedData(req, function (work) {
+        db.query(
+            "INSERT INTO work (hours, date, description) " +
+            " VALUES (?, ?, ?)", [work.hours, work.date, work.description],
+            function (err) {
+                if (err) throw err;
+                exports.show(db, res);
+            }
+        );
+    });
+};
+```
+
+#### NoSQL数据库
+
+##### Redis
+
+Redis适合处理那些不需要长期访问的简单数据存储。Redis将数据存在RAM中，并在磁盘中记录数据的变化。缺点是存储空间有限，好处是操作数据非常快。如果Redis服务器崩溃，RAM中的内容丢了，可以用磁盘中的日志回复数据。
+
+### 第6章 Connect
+
+```js
+const connect = require('connect');
+const app = connect();
+
+app.listen(3000);
+```
+
+在Connect中，中间件组件是一个JavaScript函数，按惯例会接受三个参数：一个请求对象，一个响应对象，还有一个通常命名为next 的参数，它是一个回调函数，表明这个组件已经完成了它的工作，可以执行下一个中间件组件了。
+
+再加上两个中间件，日志中间件和helloworld中间件
+
+```js
+const connect = require('connect');
+
+const logger = (req, res, next) => {
+    console.log('%s %s', req.method, req.url);
+    next();
+}
+
+const hello = (req, res) => {
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Hello World');
+}
+
+connect()
+    .use(logger)
+    .use(hello)
+    .listen(3000);
+```
+
+这个例子中的hello中间件没有`next`回调，因为这个组件结束了HTTP响应。
+
+如果中间件不调用`next()`，控制权就不会被交回到分派器去调用下一个中间件组件。
+
+下面这个例子用中间件来进行认证，防止没有登录的人访问某些内容。
+
+```js
+const connect = require('connect');
+
+connect()
+    .use(logger)
+    .use(restrictFileAccess) // 只有用户有效时才会调用next()
+    .use(hello)
+    .listen(3000);
+```
+
+#### 创建可配置的中间件
+
+为了向开发人员提供可配置的能力，中间件通常会遵循一个简单的惯例:用函数返回另一个函数
+
+##### 构建路由中间件组件
+
+在Web程序中，路由是个至关重要的概念。简言之，它会把请求URL映射到实现业务逻辑的函数上。
+
+调用
+
+```js
+var connect = require('connect');
+var router = require('./middleware/router');
+var routes = {
+  GET: {
+    '/users': function(req, res){
+      res.end('tobi, loki, ferret');
+    },
+    '/user/:id': function(req, res, id){
+      res.end('user ' + id);
+    }
+  },
+  DELETE: {
+    '/user/:id': function(req, res, id){
+      res.end('deleted user ' + id);
+    }
+  }
+};
+
+connect()
+  .use(router(routes))
+  .listen(3000);
+
+```
+
+路由中间件
+
+```js
+var parse = require('url').parse;
+
+module.exports = function route(obj) {
+    return function (req, res, next) {
+        if (!obj[req.method]) { // 检查确保req.method定义了
+            next();
+            return;
+        }
+        var routes = obj[req.method]; // 查找req.method对应的路径
+        var url = parse(req.url);   // 解析URL，以便跟pathname匹配
+        var paths = Object.keys(routes);    // 将req.method对应的路径存放到数组中
+
+        for (var i = 0; i < paths.length; i++) {
+            var path = paths[i];
+            var fn = routes[path];
+            path = path
+                .replace(/\//g, '\\/')
+                .replace(/:(\w+)/g, '([^\\/]+)');
+            var re = new RegExp('^' + path + '$');
+            var captures = url.pathname.match(re);
+            if (captures) {
+                var args = [req, res].concat(captures.slice(1));
+                fn.apply(null, args);
+                return;
+            }
+        }
+        next();
+    }
+};
+```
+
+构建中间件应该关注那些小型的，可配置的部分。构建大量微小的、模块化的、可重用的中间件组合，合起来搭成程序。
+
+##### 使用错误处理中间件
+
+```js
+var connect = require('connect');
+
+function badMiddleware(req, res, next) {
+    next(new Error('Bad middleware makes error'));
+}
+
+function errorHandler() {
+    var env = process.env.NODE_ENV || 'development';
+    return function (err, req, res, next) {
+        res.statusCode = 500;
+        switch (env) {
+            case 'development':
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify(err));
+                break;
+            default:
+                res.end('Server error');
+        }
+    }
+}
+
+connect()
+    .use(badMiddleware)
+    .use(errorHandler)
+    .listen(3000);
+```
