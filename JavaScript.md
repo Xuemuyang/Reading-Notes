@@ -4018,7 +4018,7 @@ function addURLParam(url, name, value) {
 + get请求速度快，最快可达到post的两倍
 + post请求内容大小一般可以达到4MB，get请求一般一次最多1kb~2kb
 
-### 跨域资源共享
+### 资源共享
 
 `CORS(Cross-Origin Resource Sharing)`跨域资源共享
 
@@ -4247,9 +4247,54 @@ alert(curriedAdd(3)); //8
 
 ### 离线检测
 
-`navigator.online`
+`navigator.onLine`，属性值为`true`表示能上网,`false`表示离线。
+
+除了`navigator.onLine`，还有`online`和`offline`两个事件，当网络从离线变为在线或者从在线变为离线时，分别触发这两个事件。
 
 ### 应用缓存
+
+application cache是专门为开发离线Web应用而设计的。使用一个描述文件`manifest file`列出要下载和缓存的资源。
+
+在html中将描述文件与页面关联起来:
+
+```html
+<html manifest="/offline.manifest">
+```
+
+通过window的`applicationCache`对象来控制页面的缓存。
+
+### Cookie
+
+cookie的构成
+
++ 名称 一个唯一确定的cookie的名称，这个名称不区分大小写，必须经过URL编码
++ 值 储存在cookie中的字符串值，必须经过url编码
++ 域 cookie对于哪个域是有效的
++ 路径 对于指定域中的路径
++ 失效时间 表示cookie何时应该被删除的时间戳
++ 安全标志 指定后，只有在使用SSL连接的时候才会发送到服务器
+
+通过`document.cookie`对象来操作cookie，一般会将其进行封装
+
+### Storage类型
+
+`Storage`类型提供最大的存储空间来存储key-value，实例有如下方法:
+
++ `clear()` 删除所有值
++ `getItem(name)` 根据指定的名字name获取对应的值
++ `key(index)` 获得index位置处的值的名字
++ `removeItem(name)` 删除由name指定的key-value
++ `setItem(name, value)` 为指定的name设置一个对应的值
+
+`sessionStorage`和`localStorage`的value只能存储字符串，如果是Object需要存储为JSON字符串。
+
+`localStorage`与`sessionStorage`的API都是同步操作。
+
+`sessionStorage`严格用于在一个浏览器会话中存储数据，数据只在当前标签页有效。
+
+`localStorage`用于跨会话持久化数据并遵循安全策略。
+
+对于`localStorage`而言，大多数桌面浏览器会设置每个来源5MB的限制，Chrome和Safari对每个来源的限制是2.5MB。iOS版Safari和Android版Webkit的限制也是2.5MB。
 
 ## ES6
 
