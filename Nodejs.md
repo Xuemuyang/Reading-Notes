@@ -986,4 +986,79 @@ connect()
 
 ### 第7章 Connect自带的中间件
 
-#### `cookieParser()`:解析HTTP cookie
+1.`cookieParser()`:解析HTTP cookie
+
+2.`bodyParser()`:解析请求主体
+
+3.`limit()`:请求主题的限制
+
+如果将`limit()`设定为32kb，会看到Connect请求到32kb时候终止请求
+
+4.`query()`:查询参数解析
+
+5.`logger()`:请求记录
+
+可以在这个中间件定制日志的格式
+
+6.`favicon()`:提供favicon
+
+7.`methodOverride()`:伪造HTTP方法
+
+`<form>`只能`GET`或`POST`，在HTML中返回一个隐藏的元素，通过这个元素的value来修改请求的方法
+
+```js
+var connect = require('connect');
+
+function edit(req, res, next) {
+    if ('GET' != req.method) return next();
+    res.setHeader('Content-Type', 'text/html');
+    res.write('<form method="post">');
+    res.write('<input type="hidden" name="_method" value="put" />');
+    res.write('<input type="text" name="user[name]" value="Tobi" />');
+    res.write('<input type="submit" value="Update" />');
+    res.write('</form>');
+    res.end();
+}
+
+function update(req, res, next) {
+    if ('PUT' != req.method) return next();
+    res.end('Updated name to ' + req.body.user.name);
+}
+
+var app = connect()
+    .use(connect.logger('dev'))
+    .use(connect.bodyParser())
+    .use(connect.methodOverride())
+    .use(edit)
+    .use(update)
+    .listen(3000);
+```
+
+8.`vhost()`:虚拟主机
+
+`vhost()`(虚拟主机)中间件是一种通过请求头Host 路由请求的简单、轻量的办法。这项任务通常是由反向代理完成的，可以把请求转发到运行在不同端口上的本地服务器那里。
+
+9.`session`:会话管理
+
++ 设定会话有效期
++ 处理会话数据
++ 操纵会话cookie
++ 会话存储
+
+10.`basicAuth()`:HTTP基本认证
+
+11.`csrf()`:跨站请求伪造(CSRF)保护
+
+12.`errorHandle()`:开发错误处理
+
+这个中间件在开发阶段使用，放在最后，捕获所有错误，仅在开发阶段使用。
+
+13.`static()`:静态文件服务
+
+14.`compress()`:压缩静态文件
+
+15.`directory()`:目录列表
+
+### 第8章 Express
+
+Express构建在Connect之上。
