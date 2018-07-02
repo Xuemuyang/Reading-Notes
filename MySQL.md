@@ -17,6 +17,12 @@
 
 ## MySQL管理
 
+退出mysql使用以下三个命令:
+
++ exit
++ quit
++ \q
+
 1.`USE 数据库名`
 
 选择要操作的Mysql数据库，使用该命令后所有Mysql命令都只针对该数据库。
@@ -101,3 +107,125 @@ mysql> SHOW INDEX FROM runoob_tbl;
 6.`SHOW TABLE STATUS LIKE [FROM db_name] [LIKE 'pattern'] \G:`
 
 该命令将输出Mysql数据库管理系统的性能及统计信息。
+
+## MySQL 数据库的创建、删除、切换
+
+```bash
+$SHOW DATABASES; // 列出MySQL数据库列表
+$CREATE DATABASE <数据库名>;
+$DROP DATABASE <数据库名>;
+$USE <数据库名>;
+```
+
+## 数据类型
+
+首先来看两个概念
+
++ 位(bit) 二进制位，计算机内部存储数据的最小单位
++ 字节(byte) 一个字节等于8个bit,通常一个字节可以存入一个ASCII码，两个字节可以存放一个汉字国标码
+
+数值类型
+
+类型|大小
+TINYINT|1字节
+SMALLINT|2字节
+MEDIUMINT|3字节
+INT或INTEGER|4字节
+BIGINT|8字节
+FLOAT|4字节
+DOUBLE|8字节
+DECIMAL|
+
+字符串类型
+
+类型|大小|用途
+CHAR|0-255字节|定长字符串
+VARCHAR|0-65535字节|变长字符串
+TINYBLOB|0-255字节|不超过255个字符的二进制字符串
+TINYTEXT|0-255字节|短文本字符串
+BLOB|0-65535字节|二进制形式的长文本数据
+TEXT|0-65535字节|长文本数据
+MEDIUMBLOB|0-16777215字节|二进制形式的中等长度文本数据
+MEDIUMTEXT|0-16777215字节|中等长度文本数据
+LONGBLOB|0-4294967295字节|二进制形式的极大文本数据
+LONGTEXT|0-4294967295字节|极大文本数据
+
+## 数据表操作
+
++ SELECT - 从数据库中提取数据
++ UPDATE - 更新数据库中的数据
++ DELETE - 从数据库中删除数据
++ INSERT INTO - 向数据库中插入新数据
++ CREATE DATABASE - 创建新数据库
++ ALTER DATABASE - 修改数据库
++ CREATE TABLE - 创建新表
++ ALTER TABLE - 变更（改变）数据库表
++ DROP TABLE - 删除表
++ CREATE INDEX - 创建索引（搜索键）
++ DROP INDEX - 删除索引
+
+创建数据表
+
+```sql
+CREATE TABLE table_name (column_name column_type);
+
+CREATE TABLE IF NOT EXISTS `runoob_tbl`(
+   `runoob_id` INT UNSIGNED AUTO_INCREMENT,
+   `runoob_title` VARCHAR(100) NOT NULL,
+   `runoob_author` VARCHAR(40) NOT NULL,
+   `submission_date` DATE,
+   PRIMARY KEY ( `runoob_id` )
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
+删除数据表
+
+```sql
+DROP TABLE table_name;
+```
+
+插入数据/增
+
+```sql
+INSERT INTO table_name ( field1, field2,...fieldN )
+                       VALUES
+                       ( value1, value2,...valueN );
+```
+
+查询数据/查
+
+```sql
+SELECT column_name,column_name
+FROM table_name
+[WHERE Clause]
+[LIMIT N][ OFFSET M]
+```
+
++ 查询语句中可以使用一个或者多个表，表之间使用逗号(,)分割，并使用WHERE语句来设定查询条件
++ SELECT 命令可以读取一条或者多条记录
++ 可以使用星号（*）来代替其他字段，SELECT语句会返回表的所有字段数据
++ 可以使用 WHERE 语句来包含任何条件
++ 可以使用 LIMIT 属性来设定返回的记录数
++ 可以通过OFFSET指定SELECT语句开始查询的数据偏移量。默认情况下偏移量为0
+
+WHERE 字句
+
+```sql
+SELECT field1, field2,...fieldN FROM table_name1, table_name2...
+[WHERE condition1 [AND [OR]] condition2.....
+```
+
+UPDATA查询/改
+
+```sql
+UPDATE table_name SET field1=new-value1, field2=new-value2
+[WHERE Clause]
+```
+
+DELETE语句
+
+```sql
+DELETE FROM table_name [WHERE Clause]
+```
+
++ 如果没有指定WHERE字句，MySQL表中的所有记录将被删除
