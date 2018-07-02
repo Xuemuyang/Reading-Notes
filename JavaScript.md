@@ -4493,220 +4493,33 @@ f1.trigger('done');
 
 本质上，一个`Promise`是某个函数返回的对象，可以把回调函数绑定在这个对象上，而不是把回调函数当参数传进函数。
 
+将callback包装成promise返回的形式
+
+```js
+import originJSONP from 'jsonp'
+
+export default function jsonp(url, data, option) {
+    url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
+
+    return new Promise((resolve, reject) => {
+        originJSONP(url, option, (err, data) => {
+            if (!err) {
+                resolve(data)
+            } else {
+                reject(err)
+            }
+        })
+    })
+}
+```
+
 `promise`会有如下保证:
 
 1. 在事件队列的当前运行完成之前，回调函数永远不会被调用。
 1. 通过`.then`形式添加的回调函数，都会被调用。
 1. 通过多次调用`.then`，可以添加多个回调函数，他们会按照插入顺序并且独立运行。
 
-下面参照[promise/A+](http://www.ituring.com.cn/article/66566)规范，一个开放、健全且通用的`JavaScript Promise`标准。由开发者制定，供开发者参考。
-
-#### 初始化一个Promise
-
-```js
-function Promise(executor) {
-    //executor 执行器
-    this.status = 'pending'
-    this.reason = null
-    this.data = null
-
-    function resolve() {
-
-    }
-    function reject() {
-
-    }
-    executor(resolve, reject)
-}
-Promise.prototype.then = function (res, rej) {
-
-}
-```
-
-增加对调用`resolve`以及`reject`时数据传入的处理。
-
-```js
-function Promise(executor) {
-    //executor 执行器
-    this.status = 'pending'
-    this.reason = null
-    this.data = null
-    const _this = this;
-    function resolve(data) {
-        if (_this.status == 'pending') {
-            _this.data = data
-            _this.status = 'onFulfilled'
-        }
-    }
-    function reject(e) {
-        if (_this.status == 'pending') {
-            _this.reason = e
-            _this.status = 'rejected'
-        }
-    }
-    executor(resolve, reject)
-}
-Promise.prototype.then = function (res, rej) {
-
-}
-```
-
-执行时对`Promise`状态进行修改以及`then`函数的调用时机进行处理，`then`中传递的是两个calback。
-
-```js
-function Promise(executor) {
-    //executor 执行器
-    this.status = 'pending'
-    this.reason = null
-    this.data = null
-    const _this = this;
-    function resolve(data) {
-        if (_this.status == 'pending') {
-            _this.data = data
-            _this.status = 'onFulfilled'
-        }
-    }
-    function reject(e) {
-        if (_this.status == 'pending') {
-            _this.reason = e
-            _this.status = 'rejected'
-        }
-    }
-    executor(resolve, reject)
-}
-Promise.prototype.then = function (res, rej) {
-    const _this =  this
-    if(_this.status=='onFulfilled'){
-        res(_this.data)
-        return
-    }
-    if(_this.status=='rejected'){
-        rej(_this.reason)
-    }
-}
-```
-
-进行简单测试
-
-```js
-function test() {
-    return new Promise(function (resolve, reject) {
-        console.log('promise is running')
-        resolve('2')
-    })
-}
-test().then((res) => {
-    console.log(res)
-}, (e) => {
-    console.log(e, e)
-})
-```
-
-接下来实现异步调用，新增两种属性`onFulFilledList`,`onRejectedList`分别在异步执行时调用
-
-```js
-function Promise(executor) {
-    //executor 执行器
-    this.status = 'pending'
-    this.reason = null
-    this.data = null
-    this.onFulFilledList = []
-    this.onRejectedList = []
-    const _this = this;
-    function resolve(data) {
-        if (_this.status == 'pending') {
-            _this.data = data
-            _this.status = 'onFulfilled'
-        }
-    }
-    function reject(e) {
-        if (_this.status == 'pending') {
-            _this.reason = e
-            _this.status = 'rejected'
-        }
-    }
-    executor(resolve, reject)
-}
-Promise.prototype.then = function (res, rej) {
-    const _this = this
-    if (_this.status == 'onFulfilled') {
-        res(_this.data)
-        return
-    }
-    if (_this.status == 'rejected') {
-        res(_this.reason)
-    }
-}
-```
-
-对异步调用的成功函数以及失败函数进行队列存储 方便调用 以及调用时直接执行回调队列中方法
-
-```js
-function Promise(executor) {
-    //executor 执行器
-    this.status = 'pending'
-    this.reason = null
-    this.data = null
-    this.onFulFilledList = []
-    this.onRejectedList = []
-    const _this = this;
-    function resolve(data) {
-        if (_this.status == 'pending') {
-            _this.data = data
-            _this.status = 'onFulfilled'
-            _this.onFulFilledList.forEach(element => {
-                element(_this.data)
-            });
-        }
-    }
-    function reject(e) {
-        if (_this.status == 'pending') {
-            _this.reason = e
-            _this.status = 'rejected'
-            _this.onRejectedList.forEach(element => {
-                element(_this.reason)
-            });
-        }
-    }
-    executor(resolve, reject)
-}
-Promise.prototype.then = function (res, rej) {
-    const _this = this
-    if (_this.status == 'onFulfilled') {
-        res(_this.data)
-        return
-    }
-    if (_this.status == 'rejected') {
-        res(_this.reason)
-    }
-    if (_this.status == "pending") {
-        _this.onFulFilledList.push(res)
-        _this.onRejectedList.push(rej)
-    }
-}
-```
-
-测试代码
-
-```js
-function test() {
-    return new Promise((res, rej) => {
-        setTimeout(function () {
-            console.time('promise')
-            console.log(123)
-            res('4')
-        }, 2000)
-    })
-}
-test().then((
-    params
-) => {
-    console.log(params)
-    console.timeEnd('promise')
-})
-```
-
-首先执行`new`一个`promise`，这里传递给构造函数的是一个函数，函数有两个参数，调用立即执行，`promise`状态为`pending`，执行传入的异步任务，接着执行`then`方法，传入了一个回调，此时`promise`状态为`pending`，将回调放入`new`出来`promise`的事件队列里。
+[promise/A+](http://www.ituring.com.cn/article/66566)规范，一个开放、健全且通用的`JavaScript Promise`标准。由开发者制定，供开发者参考。
 
 ### Node中的异步
 
@@ -4723,12 +4536,12 @@ const readFileAsync = promisify(fs.readFile); // (A)
 const filePath = process.argv[2];
 
 readFileAsync(filePath, {encoding: 'utf8'})
-  .then((text) => {
-      console.log('CONTENT:', text);
-  })
-  .catch((err) => {
-      console.log('ERROR:', err);
-  });
+    .then((text) => {
+        console.log('CONTENT:', text);
+    })
+    .catch((err) => {
+        console.log('ERROR:', err);
+    });
 ```
 
 使用`async`函数
@@ -4762,9 +4575,9 @@ function logFetch(url) {
   return fetch(url)
     .then(response => response.text())
     .then(text => {
-      console.log(text);
+        console.log(text);
     }).catch(err => {
-      console.error('fetch failed', err);
+        console.error('fetch failed', err);
     });
 }
 ```
