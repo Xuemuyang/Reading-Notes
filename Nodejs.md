@@ -1061,4 +1061,4 @@ var app = connect()
 
 ### 第8章 Express
 
-Express构建在Connect之上。
+Express构建在Connect之上
