@@ -1062,3 +1062,336 @@ var app = connect()
 ### 第8章 Express
 
 Express构建在Connect之上
+
+可以安装全局的express模块来搭建项目目录
+
+`express -e hehe` 这里的`-e`代表使用ejs模板引擎渲染，命令行使用`express -h`查看更多命令
+
+## Koa
+
+### 阮老师的Intro
+
+Koa的特点是优雅、简洁、表达力强、自由度高，本身代码只有1000+行，所有功能通过插件实现，符合Unix哲学。
+
+Koa对于Node版本有要求。
+
+#### 基本用法
+
+启动HTTP服务
+
+```js
+const Koa = require('koa');
+const app = new Koa();
+
+app.listen(3000);
+```
+
+Koa提供了一个Context对象，表示一次对话的上下文(包括HTTP请求和HTTP回复)。通过加工这个对象，可以控制返回给用户的内容。
+
+`Context.response.body`属性就是发送给用户的内容。
+
+```js
+const Koa = require('koa');
+const app = new Koa();
+
+const main = ctx => {
+  ctx.response.body = 'Hello World';
+};
+
+app.use(main);
+app.listen(3000);
+```
+
+Koa默认返回类型是`text/plain`，使用`ctx.request.accepts`判断客户端希望接收什么数据。
+
+```js
+const Koa = require('koa');
+const app = new Koa();
+
+const main = ctx => {
+  if (ctx.request.accepts('xml')) {
+    ctx.response.type = 'xml';
+    ctx.response.body = '<data>Hello World</data>';
+  } else if (ctx.request.accepts('json')) {
+    ctx.response.type = 'json';
+    ctx.response.body = { data: 'Hello World' };
+  } else if (ctx.request.accepts('html')) {
+    ctx.response.type = 'html';
+    ctx.response.body = '<p>Hello World</p>';
+  } else {
+    ctx.response.type = 'text';
+    ctx.response.body = 'Hello World';
+  }
+};
+
+app.use(main);
+app.listen(3000);
+```
+
+#### 路由
+
+`ctx.request.path`获取用户请求的路径，实现简单的路由。
+
+```js
+const Koa = require('koa');
+const app = new Koa();
+
+const main = ctx => {
+  if (ctx.request.path !== '/') {
+    ctx.response.type = 'html';
+    ctx.response.body = '<a href="/">Index Page</a>';
+  } else {
+    ctx.response.body = 'Hello World';
+  }
+};
+
+app.use(main);
+app.listen(3000);
+```
+
+原生路由用起来不够方便，可以使用封装好的`koa-router`模块。
+
+这段代码中，根路径`/`的处理函数是`main`，`/about`路径的处理函数是`about`。
+
+```js
+const Koa = require('koa');
+const route = require('koa-route');
+const app = new Koa();
+
+const about = ctx => {
+  ctx.response.type = 'html';
+  ctx.response.body = '<a href="/">Index Page</a>';
+};
+
+const main = ctx => {
+  ctx.response.body = 'Hello World';
+};
+
+app.use(route.get('/', main));
+app.use(route.get('/about', about));
+
+app.listen(3000);
+```
+
+使用`koa-static`实现静态资源服务
+
+```js
+const Koa = require('koa');
+const app = new Koa();
+const path = require('path');
+const serve = require('koa-static');
+
+const main = serve(path.join(__dirname));
+
+app.use(main);
+app.listen(3000);
+```
+
+`ctx.response.redirect()`实现302重定向
+
+```js
+const Koa = require('koa');
+const route = require('koa-route');
+const app = new Koa();
+
+const redirect = ctx => {
+  ctx.response.redirect('/');
+  ctx.response.body = '<a href="/">Index Page</a>';
+};
+
+const main = ctx => {
+  ctx.response.body = 'Hello World';
+};
+
+app.use(route.get('/', main));
+app.use(route.get('/redirect', redirect));
+
+app.use(main);
+app.listen(3000);
+```
+
+#### 中间件(middleware)
+
+看一个Logger的例子
+
+```js
+const Koa = require('koa');
+const app = new Koa();
+
+const logger = (ctx, next) => {
+  console.log(`${Date.now()} ${ctx.request.method} ${ctx.request.url}`);
+  next();
+}
+
+const main = ctx => {
+  ctx.response.body = 'Hello World';
+};
+
+app.use(logger);
+app.use(main);
+app.listen(3000);
+```
+
+这里的`logger`函数就是中间件，因为它处在HTTP Request和HTTP Response之间实现某种中间功能。使用`app.use()`来加载中间件。
+
+基本上Koa所有的功能都是通过中间件来实现的，每个中间件默认接受两个参数，`Context`对象和`next`函数。
+
+#### 中间件栈
+
+1. 最外层的中间件首先执行。
+1. 调用next函数，把执行权交给下一个中间件。
+1. ...
+1. 最内层的中间件最后执行。
+1. 执行结束后，把执行权交回上一层的中间件。
+1. ...
+1. 最外层的中间件收回执行权之后，执行next函数后面的代码。
+
+```js
+const Koa = require('koa');
+const app = new Koa();
+
+const one = (ctx, next) => {
+  console.log('>> one');
+  next();
+  console.log('<< one');
+}
+
+const two = (ctx, next) => {
+  console.log('>> two');
+  next();
+  console.log('<< two');
+}
+
+const three = (ctx, next) => {
+  console.log('>> three');
+  next();
+  console.log('<< three');
+}
+
+app.use(one);
+app.use(two);
+app.use(three);
+
+app.listen(3000);
+```
+
+输出
+
+```js
+>> one
+>> two
+>> three
+<< three
+<< two
+<< one
+```
+
+中间件中包含异步操作，必须写成`async`函数
+
+```js
+const main = async function (ctx, next) {
+  ctx.response.type = 'html';
+  ctx.response.body = await fs.readFile('./demos/template.html', 'utf8');
+};
+```
+
+`koa-compose`模块可以将多个中间件合成一个
+
+```js
+const logger = (ctx, next) => {
+  console.log(`${Date.now()} ${ctx.request.method} ${ctx.request.url}`);
+  next();
+  console.log('logger')
+}
+
+const main = ctx => {
+  console.log('main')
+  ctx.response.body = 'Hello World';
+};
+
+const middlewares = compose([logger, main]);
+```
+
+#### 错误处理
+
+Koa提供了`ctx.throw()`方法来抛出错误，`ctx.throw(500)`就是抛出500错误。
+
+```js
+const main = ctx => {
+  ctx.throw(500);
+};
+```
+
+将`ctx.response.status`设置成404相当于`ctx.throw(404)`。
+
+```js
+const main = ctx => {
+  ctx.response.status = 404;
+  ctx.response.body = 'Page Not Found';
+};
+```
+
+错误处理的中间件
+
+```js
+const handler = async (ctx, next) => {
+  try {
+    await next();
+  } catch (err) {
+    ctx.response.status = err.statusCode || err.status || 500;
+    ctx.response.body = {
+      message: err.message
+    };
+  }
+};
+
+const main = ctx => {
+  ctx.throw(500);
+};
+
+app.use(handler);
+app.use(main);
+```
+
+运行过程出错，Koa会触发一个`error`事件。监听这个事件也可以处理错误。
+
+```js
+const main = ctx => {
+  ctx.throw(500);
+};
+
+app.on('error', (err, ctx) => {
+  console.error('server error', err);
+});
+```
+
+如果错误被`try...catch`捕获就不会触发`error`事件，这时必须调用`ctx.app.emit()`，手动触发`error`事件，才能让监听函数生效。
+
+```js
+const app = new Koa();
+
+const handler = async (ctx, next) => {
+  try {
+    await next();
+  } catch (err) {
+    ctx.response.status = err.statusCode || err.status || 500;
+    ctx.response.type = 'html';
+    ctx.response.body = '<p>Something wrong, please contact administrator.</p>';
+    ctx.app.emit('error', err, ctx);
+  }
+};
+
+const main = ctx => {
+  ctx.throw(500);
+};
+
+app.on('error', function(err) {
+  console.log('logging error ', err.message);
+  console.log(err);
+});
+```
+
+#### Web App的功能
+
++ `ctx.cookies`实现读写Cookie
++ `koa-body`模块可以用来提取请求的key-value，以及文件上传等功能
