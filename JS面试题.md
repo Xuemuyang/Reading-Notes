@@ -90,3 +90,27 @@ result2.add();
 ```js
 [...new Set([...str.match(/\d/g),...str.match(/[a-zA-Z]/g)])].join('')
 ```
+
+5.小算法题
+
+给定两个长度相同的整数数组，将其中的数字分别一一配对，对每一对数字计算乘积，然后求和，计算出总和最小的配对方式，并打印出总和
+
+样例输入
+
+```js
+[1,2,3],[1,2,3]
+```
+
+样例输出
+
+```js
+10
+```
+
+```js
+module.exports = (arr1, arr2) => {
+    arr1 = arr1.sort((a, b) => a - b)
+    arr2 = arr2.sort((a, b) => b - a)
+    return arr1.reduce((sum, value, i) => sum + value * arr2[i], 0)
+}
+```
