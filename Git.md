@@ -24,6 +24,7 @@ $git stash // 工作区暂存
 $git stash list // 工作区暂存列表
 $git stash apply // 恢复工作区
 $git stash drop // 删除工作区
+$git reset --hard 版本号 // 强制回退某个版本
 ```
 
 option|description
