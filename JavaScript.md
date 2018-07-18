@@ -3231,10 +3231,69 @@ function g(selector) {
 }
 ```
 
+DOM是针对HTML和XML文档的一个API，DOM描绘了一个层次化的节点树，允许开发人员添加，移除和修改页面的某一部分。
+
+NodeList对象有length属性，但它并不是Array的实例，NodeList对象实际上是基于DOM结构动态执行查询的结果，DOM结构的变化能够自动反映在NodeList对象中。
+
+所有的NodeList对象都是在访问DOM文档时实时运行查询。下面这个例子会导致无限循环
+
+```js
+var divs = document.getElementsByTagName('div'),
+    i,
+    div;
+
+for (i = 0; i < divs.length; i++) {
+    div = docuemnt.createElement('div');
+    document.body.appendChild(div);
+}
+```
+
+### Document类型
+
+```js
+// 取得完整的URL
+var url = document.URL
+
+// 取得域名
+var domain = document.domain
+
+// 取得来源页面的URL
+var referrer = document.referrer
+```
+
+两个查找元素的方法
+
+`getElementById()`和`getElementByTagName()`
+
 两个获取`DOM`节点api
 
-+ document.querySelector()
-+ document.querySelectorAll()
++ `document.querySelector()`
++ `document.querySelectorAll()`
+
+特殊集合
+
++ `document.anchors` 文档中所有带`name`特性的`<a>`元素
++ `document.forms` 包含文档中所有的`<form>`元素
++ `document.images` 包含文档中所有的`<img>`元素
++ `document.links` 包含文档中所有带`href`特性的`<a>`元素
+
+### Element类型
+
+HTML元素的标准特性
+
++ `id` 元素在文档中的唯一标识
++ `title` 有关元素的附加说明信息
++ `lang` 元素内容的语言代码
++ `dir` 语言的方向，值为"ltr"或"rtl"
++ `className` 与元素的class特性对应
+
+操作特性的三个主要方法
+
++ `getAttribute()`
++ `setAttribute()`
++ `removeAttribute()`
+
+理解DOM的关键，就是理解DOM对性能的影响。DOM操作往往是JavaScript程序是中开销最大的部分，NodeList对象是"动态的"，意味着每次访问"NodeList"对象，都会运行一次查询。最好的办法就是尽量减少DOM操作。
 
 `document.querySelector()`会返回当前文档中第一个命中元素。
 
