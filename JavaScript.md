@@ -3295,11 +3295,59 @@ HTML元素的标准特性
 
 理解DOM的关键，就是理解DOM对性能的影响。DOM操作往往是JavaScript程序是中开销最大的部分，NodeList对象是"动态的"，意味着每次访问"NodeList"对象，都会运行一次查询。最好的办法就是尽量减少DOM操作。
 
+## chap11.DOM扩展
+
 `document.querySelector()`会返回当前文档中第一个命中元素。
 
-`document.querySelectorAll()`则会返回当前文档中所有命中元素。
+`document.querySelectorAll()`则会返回当前文档中所有命中元素，返回的是一个NodeList实例。
+
+具体来说，返回的值是带有属性和方法的NodeList，这样可以避免直接使用NodeList带来的性能问题。
+
+### HTML5扩展
+
+`getElementsByClassName()`
+
+#### 焦点管理
+
+`document.activeElement`这个属性始终引用DOM中当前获得焦点的元素
+
+`document.hasFocus()`方法用于确定文档是否获得焦点
+
+#### 自定义数据属性
+
+通过自定义前缀`data-`，目的是为元素提供与渲染无关的信息，或者提供语义信息。
+
+```html
+<div id="myDiv" data-appId="12345" data-myName="Nicholas"></div>
+```
+
+自定义属性通过元素的`dataset`属性来访问。
+
+```js
+var div = document.getElementById('myDiv');
+
+var appId = div.dataset.appId
+var myName = div.dataset.myName
+```
 
 ## chap12.DOM2和DOM3
+
+### 样式
+
+CSS属性|JavaScript属性
+---|---
+background-image|style.backgroundImage
+color|style.color
+display|style.display
+font-family|style.fontFamily
+
+```js
+var myDiv = document.getElementById('myDiv');
+
+myDiv.style.backgroundColor = 'red';
+```
+
+通过`getComputedStyle()`获取元素的计算属性
 
 ### 元素大小
 
@@ -3564,6 +3612,34 @@ btn.onmouseout = handler;
 + `screenX`:触摸目标在屏幕中的`x`坐标
 + `screenY`:触摸目标在屏幕中的`y`坐标
 + `target`:触摸的`DOM`节点目标
+
+### 模拟事件
+
+#### 自定义DOM事件
+
+DOM3级定义了"自定义事件"，返回的对象有一个`initCustomEvent()`的方法，接收如下三个参数。
+
++ `type`(String): 触发的事件类型
++ `bubbles`(Boolean): 该事件是否应该冒泡
++ `cancelable`(Boolean): 表示该事件是否可以取消
++ `detail`(Object): 任意值，保存在`event`对象的`detail`属性中
+
+```js
+var div = document.getElementById('myDiv'),
+    event;
+
+EventUtil.addHandler(div, 'myevent', function(event) {
+    alert('DIV: ' + event.detail);
+});
+
+EventUtil.addHandler(document, 'myevent', function(event) {
+    alert('DOCUMENT: ' + event.detail);
+});
+
+event = document.createEvent('CustomEvent');
+event.initCustomEvent('myevent', true, false, 'Hello world!');
+div.dispatchEvent(event);
+```
 
 ## Chap15.使用`Canvas`绘图
 
