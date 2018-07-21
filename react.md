@@ -1,66 +1,62 @@
 # React
 
-## JSX简介
+## JSX 简介
 
 `JSX`是`JavaScript`扩展语法，`React`推荐使用`JSX`来描述用户界面。
 
-### JSX属性
+### JSX 属性
 
 可以使用引号来定义以字符串为值的属性：
 
 ```js
-const element = <div tabIndex="0"></div>
+const element = <div tabIndex="0" />;
 ```
 
 也可以使用大括号来定义以`JavaScript`表达式为值的属性：
 
 ```js
-const element = <img src={user.avatarUrl}></img>
+const element = <img src={user.avatarUrl} />;
 ```
 
 这里的代码没有问题，
 
 `JSX`会将引号中的内容识别为字符串而不是表达式。
 
-### JSX嵌套
+### JSX 嵌套
 
 如果`JSX`标签是闭合式的，需要在结尾处用`/>`。
 
-> jsx和原生html是有区别的，元素可以是自闭和也可以是`</ele>`这样闭合，最后jsx都会转换成合法的格式，如果你写一个空div，也可以是`<div />`
+> jsx 和原生 html 是有区别的，元素可以是自闭和也可以是`</ele>`这样闭合，最后 jsx 都会转换成合法的格式，如果你写一个空 div，也可以是`<div />`
 
 还有一些其他的点
 
 `class`=>`className`,`for`=>`htmlFor`
 
-### JSX防注入攻击
+### JSX 防注入攻击
 
 可以放心的在`JSX`中使用用户输入，`React DOM`在渲染之前会默认过滤所有传入的值，确保不会被注入攻击。
 
-### JSX代表Objects
+### JSX 代表 Objects
 
 `Babel`会把`JSX`转换成一个名为`React.createElement()`的方法调用。
 
 下面两种代码的作用是完全相同的:
 
 ```js
-const element = (
-    <h1 className="greeting">
-        Hello, world!
-    </h1>
-);
+const element = <h1 className="greeting">Hello, world!</h1>;
 ```
 
 ```js
 const element = React.createElement(
-    'h1',
-    {className: 'greeting'},
-    'Hello, world!'
+  "h1",
+  { className: "greeting" },
+  "Hello, world!"
 );
 ```
 
 ## 元素渲染
 
-### 将元素渲染到DOM中
+### 将元素渲染到 DOM 中
 
 ```html
 <div id="root"></div>
@@ -68,17 +64,14 @@ const element = React.createElement(
 
 ```js
 const element = <h1>Hello, world</h1>;
-ReactDOM.render(
-    element,
-    document.getElementById('root')
-);
+ReactDOM.render(element, document.getElementById("root"));
 ```
 
 ### 更新元素渲染
 
 `React`元素都是`immutable`不可变的，当元素被创建之后，是无法改变其内容或属性的，一个元素就好像是动画里的一帧，代表应用界面在某一时间点的样子。
 
-### React只会更新必要的部分
+### React 只会更新必要的部分
 
 `React DOM`首先会比较元素内容先后的不同，在渲染过程中只会更新改变的部分。
 
@@ -92,7 +85,7 @@ ReactDOM.render(
 
 ```js
 function Welcome(props) {
-    return <h1>Hello, {props.name}</h1>
+  return <h1>Hello, {props.name}</h1>;
 }
 ```
 
@@ -102,9 +95,9 @@ function Welcome(props) {
 
 ```js
 class Welcome extends React.Component {
-    render() {
-        return <h1>Hello, {this.props.name}</h1>
-    }
+  render() {
+    return <h1>Hello, {this.props.name}</h1>;
+  }
 }
 ```
 
@@ -116,14 +109,11 @@ class Welcome extends React.Component {
 
 ```js
 function Welcome(props) {
-    return <h1>Hello, {props.name}</h1>;
+  return <h1>Hello, {props.name}</h1>;
 }
 
 const element = <Welcome name="Sara" />;
-ReactDOM.render(
-    element,
-    document.getElementById('root')
-);
+ReactDOM.render(element, document.getElementById("root"));
 ```
 
 > 组件名称必须以大写字母开头。
@@ -132,23 +122,20 @@ ReactDOM.render(
 
 ```js
 function Welcome(props) {
-    return <h1>Hello, {props.name}</h1>;
+  return <h1>Hello, {props.name}</h1>;
 }
 
 function App() {
-    return (
-        <div>
-            <Welcome name="Sara" />
-            <Welcome name="Cahal" />
-            <Welcome name="Edite" />
-        </div>
-    );
+  return (
+    <div>
+      <Welcome name="Sara" />
+      <Welcome name="Cahal" />
+      <Welcome name="Edite" />
+    </div>
+  );
 }
 
-ReactDOM.render(
-    <App />,
-    document.getElementById('root')
-);
+ReactDOM.render(<App />, document.getElementById("root"));
 ```
 
 组件的返回值只能有一个根元素。这也是我们要用一个`<div>`来包裹所有`<Welcome />`元素的原因。
@@ -164,20 +151,15 @@ function Comment(props) {
   return (
     <div className="Comment">
       <div className="UserInfo">
-        <img className="Avatar"
+        <img
+          className="Avatar"
           src={props.author.avatarUrl}
           alt={props.author.name}
         />
-        <div className="UserInfo-name">
-          {props.author.name}
-        </div>
+        <div className="UserInfo-name">{props.author.name}</div>
       </div>
-      <div className="Comment-text">
-        {props.text}
-      </div>
-      <div className="Comment-date">
-        {formatDate(props.date)}
-      </div>
+      <div className="Comment-text">{props.text}</div>
+      <div className="Comment-date">{formatDate(props.date)}</div>
     </div>
   );
 }
@@ -188,10 +170,7 @@ function Comment(props) {
 ```js
 function Avatar(props) {
   return (
-    <img className="Avatar"
-      src={props.user.avatarUrl}
-      alt={props.user.name}
-    />
+    <img className="Avatar" src={props.user.avatarUrl} alt={props.user.name} />
   );
 }
 ```
@@ -204,28 +183,22 @@ function Comment(props) {
     <div className="Comment">
       <div className="UserInfo">
         <Avatar user={props.author} />
-        <div className="UserInfo-name">
-          {props.author.name}
-        </div>
+        <div className="UserInfo-name">{props.author.name}</div>
       </div>
-      <div className="Comment-text">
-        {props.text}
-      </div>
-      <div className="Comment-date">
-        {formatDate(props.date)}
-      </div>
+      <div className="Comment-text">{props.text}</div>
+      <div className="Comment-date">{formatDate(props.date)}</div>
     </div>
   );
 }
 ```
 
-### Props的只读性
+### Props 的只读性
 
 无论是使用函数或是类来声明一个组件，它决不能修改它自己的`props`。
 
 ```js
 function sum(a, b) {
-    return a + b;
+  return a + b;
 }
 ```
 
@@ -235,7 +208,7 @@ function sum(a, b) {
 
 ```js
 function withdraw(account, amount) {
-    account.total -= amount;
+  account.total -= amount;
 }
 ```
 
@@ -258,18 +231,15 @@ function Clock(props) {
 }
 
 function tick() {
-  ReactDOM.render(
-    <Clock date={new Date()} />,
-    document.getElementById('root')
-  );
+  ReactDOM.render(<Clock date={new Date()} />, document.getElementById("root"));
 }
 
 setInterval(tick, 1000);
 ```
 
-通过5个步骤将函数组件`Clock`转换为类
+通过 5 个步骤将函数组件`Clock`转换为类
 
-1. 创建一个名称扩展为`React.Componet`的ES6类
+1. 创建一个名称扩展为`React.Componet`的 ES6 类
 1. 创建一个叫做`render()`的空方法
 1. 将函数体移动到`render()`方法中
 1. 在`render()`方法中，使用`this.props`替换`props`
@@ -294,7 +264,7 @@ class Clock extends React.Component {
 
 ### 为一个类添加局部状态
 
-3个步骤将`date`从属性移动到状态中：
+3 个步骤将`date`从属性移动到状态中：
 
 1.在`render()`方法中使用`this.state.date`替代`this.props.date`
 
@@ -317,7 +287,7 @@ class Clock extends React.Component {
 class Clock extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {date: new Date()};
+    this.state = { date: new Date() };
   }
 
   render() {
@@ -336,10 +306,7 @@ class Clock extends React.Component {
 3.从`<Clock />`元素移除`date`属性：
 
 ```js
-ReactDOM.render(
-    <Clock />,
-    document.getElementById('root')
-);
+ReactDOM.render(<Clock />, document.getElementById("root"));
 ```
 
 结果如下：
@@ -348,7 +315,7 @@ ReactDOM.render(
 class Clock extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {date: new Date()};
+    this.state = { date: new Date() };
   }
 
   render() {
@@ -361,10 +328,7 @@ class Clock extends React.Component {
   }
 }
 
-ReactDOM.render(
-  <Clock />,
-  document.getElementById('root')
-);
+ReactDOM.render(<Clock />, document.getElementById("root"));
 ```
 
 ### 将生命周期方法添加到类中
@@ -375,16 +339,12 @@ ReactDOM.render(
 class Clock extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {date: new Date()};
+    this.state = { date: new Date() };
   }
 
-  componentDidMount() {
+  componentDidMount() {}
 
-  }
-
-  componentWillUnmount() {
-
-  }
+  componentWillUnmount() {}
 
   render() {
     return (
@@ -424,14 +384,11 @@ componentWillUnmount() {
 class Clock extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {date: new Date()};
+    this.state = { date: new Date() };
   }
 
   componentDidMount() {
-    this.timerID = setInterval(
-      () => this.tick(),
-      1000
-    );
+    this.timerID = setInterval(() => this.tick(), 1000);
   }
 
   componentWillUnmount() {
@@ -455,10 +412,7 @@ class Clock extends React.Component {
   }
 }
 
-ReactDOM.render(
-  <Clock />,
-  document.getElementById('root')
-);
+ReactDOM.render(<Clock />, document.getElementById("root"));
 ```
 
 调用顺序：
@@ -469,7 +423,7 @@ ReactDOM.render(
 
 1. 当`Clock`的输出插入到`DOM`中时，`React`调用`componentDidMount()`生命周期钩子。在其中，`Clock`组件要求浏览器设置一个定时器，每秒钟调用一次`tick()`。
 
-1. 浏览器每秒钟调用`tick()`方法。在其中，`Clock`组件通过使用包含当前时间的对象调用`setState()`来调度UI更新。 通过调用`setState()`，`React`知道状态已经改变，并再次调用`render()`方法来确定屏幕上应当显示什么。这一次，`render()`方法中的`this.state.date`将不同，所以渲染输出将包含更新的时间，并相应地更新`DOM`。
+1. 浏览器每秒钟调用`tick()`方法。在其中，`Clock`组件通过使用包含当前时间的对象调用`setState()`来调度 UI 更新。 通过调用`setState()`，`React`知道状态已经改变，并再次调用`render()`方法来确定屏幕上应当显示什么。这一次，`render()`方法中的`this.state.date`将不同，所以渲染输出将包含更新的时间，并相应地更新`DOM`。
 
 1. 一旦`Clock`组件被从`DOM`中移除，`React`会调用`componentWillUnmount()`这个钩子函数，定时器也就会被清除。
 
@@ -482,13 +436,13 @@ ReactDOM.render(
 此代码不会重新渲染组件：
 
 ```js
-this.state.comment = 'Hello';
+this.state.comment = "Hello";
 ```
 
 应当使用`setState()`
 
 ```js
-this.setState({comment: 'Hello'});
+this.setState({ comment: "Hello" });
 ```
 
 构造函数式唯一能够初始化`this.state`的地方。
@@ -499,7 +453,7 @@ this.setState({comment: 'Hello'});
 
 ```js
 this.setState((prevState, props) => ({
-    counter: prevState.counter + props.increment
+  counter: prevState.counter + props.increment
 }));
 ```
 
@@ -537,16 +491,16 @@ componentDidMount() {
 
 ### 数据自顶向下流动
 
-自顶向下或单向数据流。任何状态始终由某些特定组件所有，并且从该状态导出的任何数据或UI只能影响树中下方的组件。
+自顶向下或单向数据流。任何状态始终由某些特定组件所有，并且从该状态导出的任何数据或 UI 只能影响树中下方的组件。
 
 ## 事件处理
 
 `React`元素的事件处理和`DOM`元素很相似，有一点语法上的不同：
 
-+ `React`事件绑定属性的命名采用驼峰式写法，而不是小写。
-+ 如果采用`JSX`的语法你需要传入一个函数作为事件处理函数，而不是一个字符串(`DOM`元素的写法)
+- `React`事件绑定属性的命名采用驼峰式写法，而不是小写。
+- 如果采用`JSX`的语法你需要传入一个函数作为事件处理函数，而不是一个字符串(`DOM`元素的写法)
 
-传统HTML
+传统 HTML
 
 ```html
 <button onclick="activateLasers()">
@@ -557,14 +511,12 @@ componentDidMount() {
 `React`中稍有不同
 
 ```js
-<button onClick={activateLasers}>
-  Activate Lasers
-</button>
+<button onClick={activateLasers}>Activate Lasers</button>
 ```
 
 另一个不同是不能使用返回`false`的方式阻止默认行为。必须明确的使用`preventDefault`。
 
-传统HTML
+传统 HTML
 
 ```html
 <a href="#" onclick="console.log('The link was clicked.'); return false">
@@ -576,16 +528,16 @@ componentDidMount() {
 
 ```js
 function ActionLink() {
-    function handleClick(e) {
-        e.preventDefault();
-        console.log('The link was clicked.');
-    }
+  function handleClick(e) {
+    e.preventDefault();
+    console.log("The link was clicked.");
+  }
 
-    return (
-        <a href="#" onClick={handleClick}>
-            Click me
-        </a>
-    );
+  return (
+    <a href="#" onClick={handleClick}>
+      Click me
+    </a>
+  );
 }
 ```
 
@@ -595,7 +547,7 @@ function ActionLink() {
 class Toggle extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {isToggleOn: true};
+    this.state = { isToggleOn: true };
 
     // This binding is necessary to make `this` work in the callback
     this.handleClick = this.handleClick.bind(this);
@@ -610,16 +562,13 @@ class Toggle extends React.Component {
   render() {
     return (
       <button onClick={this.handleClick}>
-        {this.state.isToggleOn ? 'ON' : 'OFF'}
+        {this.state.isToggleOn ? "ON" : "OFF"}
       </button>
     );
   }
 }
 
-ReactDOM.render(
-  <Toggle />,
-  document.getElementById('root')
-);
+ReactDOM.render(<Toggle />, document.getElementById("root"));
 ```
 
 除了`bind`之外，还有两种方式可以解决。
@@ -631,15 +580,11 @@ class LoggingButton extends React.Component {
   // This syntax ensures `this` is bound within handleClick.
   // Warning: this is *experimental* syntax.
   handleClick = () => {
-    console.log('this is:', this);
-  }
+    console.log("this is:", this);
+  };
 
   render() {
-    return (
-      <button onClick={this.handleClick}>
-      Click me
-      </button>
-    );
+    return <button onClick={this.handleClick}>Click me</button>;
   }
 }
 ```
@@ -649,16 +594,12 @@ class LoggingButton extends React.Component {
 ```js
 class LoggingButton extends React.Component {
   handleClick() {
-    console.log('this is:', this);
+    console.log("this is:", this);
   }
 
   render() {
     // This syntax ensures `this` is bound within handleClick
-    return (
-      <button onClick={(e) => this.handleClick(e)}>
-      Click me
-      </button>
-    );
+    return <button onClick={e => this.handleClick(e)}>Click me</button>;
   }
 }
 ```
@@ -680,12 +621,12 @@ class LoggingButton extends React.Component {
 
 ### Introduction
 
-这是create-react-app生成的代码，理解component,instance和element之间的关系至关重要
+这是 create-react-app 生成的代码，理解 component,instance 和 element 之间的关系至关重要
 
 ```js
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import logo from "./logo.svg";
+import "./App.css";
 
 class App extends Component {
   render() {
@@ -706,29 +647,26 @@ class App extends Component {
 export default App;
 ```
 
-App是一个React组件，实例化之后使用，通过`render()`方法返回元素(element)
+App 是一个 React 组件，实例化之后使用，通过`render()`方法返回元素(element)
 
-JSX语法允许将HTML与JavaScript混合使用
+JSX 语法允许将 HTML 与 JavaScript 混合使用
 
-JSX中使用`{}`包裹JS表达式
+JSX 中使用`{}`包裹 JS 表达式
 
 #### ReactDOM
 
 ```js
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-);
+ReactDOM.render(<App />, document.getElementById("root"));
 ```
 
-在一个纯React应用中，只需使用一次`render()`
+在一个纯 React 应用中，只需使用一次`render()`
 
-`render`接收两个参数，第一个参数是需要被渲染的JSX，第二个参数是React的挂载点，挂载之后会将index.html中挂载点中的元素全部替换
+`render`接收两个参数，第一个参数是需要被渲染的 JSX，第二个参数是 React 的挂载点，挂载之后会将 index.html 中挂载点中的元素全部替换
 
 #### 模块热更新
 
@@ -740,21 +678,139 @@ if (module.hot) {
 }
 ```
 
-#### 复杂的JSX
+#### 复杂的 JSX
 
-React可以借助key这个辅助属性提高性能
+React 可以借助 key 这个辅助属性提高性能
 
-需要给key这个属性一个稳定的标识符，索引往往是不稳定的
+需要给 key 这个属性一个稳定的标识符，索引往往是不稳定的
 
-ES6的箭头函数允许省略return表达式
+ES6 的箭头函数允许省略 return 表达式
 
 ```js
-{list.map(item =>
-  <div key={item.objctId}>
-    <span>
-      <a href={item.url}>{item.title}</a>
-    </span>
-    <span>{item.author}</span>
-  </div>
-)}
+{
+  list.map(item => (
+    <div key={item.objctId}>
+      <span>
+        <a href={item.url}>{item.title}</a>
+      </span>
+      <span>{item.author}</span>
+    </div>
+  ));
+}
+```
+
+ES6 的 class
+
+```js
+class Developer {
+  constructor(firstname, lastname) {
+    this.firstname = firstname;
+    this.lastname = lastname;
+  }
+
+  getName() {
+    return `${this.firstname} ${this.lastname}`
+  }
+}
+```
+
+```js
+const robin = new Developer('Robin', 'Wieruch');
+console.log(robin.getName());
+// output: Robin Wieruch
+```
+
+### Basics in React
+
+每当我们改变了组件的state，`render()`方法都会执行
+
+```js
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hehe: 'hehe'
+    };
+  }
+}
+```
+
+元素中一行有多个属性看起来会比较混乱，推荐使用多行格式来书写以保持可读性
+
+```js
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      hehe,
+    };
+
+    this.onDismiss = this.onDismiss.bind(this)
+  }
+
+  onDismiss(id) {
+    const updatedList = this.state.list.filter(item => item.objectID !== id);
+    this.setState({ list: updatedList });
+  }
+
+  render() {
+    ...
+  }
+}
+```
+
+使用类方法`setState()`来更新组件state
+
+binding操作是必要的，方法不会自动绑定到类的实例上
+
+构造函数的目的只是实例化一个类以及所有属性，业务逻辑应该写在构造函数之外，这就是为什么需要`this.onDismiss = this.onDismiss.bind(this)`
+
+类方法可以通过箭头函数做到自动地绑定
+
+#### 事件处理
+
+传递参数时需要涉及到高阶函数(higher-order functions)，使用一个函数返回另一个函数
+
+```jsx
+<button
+  onClick={() => this.onDismiss(item.objectId)}
+  type="button"
+>
+  Dismiss
+</button>
+```
+
+传给事件处理器的一定是一个函数
+
+像下面这样的写法，testMethod函数会在浏览器打开程序的时候立即执行
+
+```js
+render() {
+  return (
+    <div className="App">
+      <h2 onClick={this.testMethod('hehe')}>{this.state.hehe}</h2>
+    </div>
+  );
+}
+```
+
+这是搜索的一个例子
+
+```js
+render() {
+  return (
+    <div className="App">
+      <form>
+        <input
+          type="text"
+          onChange={this.onSearchChange}
+        />
+      </form>
+      {this.state.list.filter(isSearched(this.state.searchTerm)).map(item =>
+        ...
+      )}
+    </div>
+  );
+}
 ```
