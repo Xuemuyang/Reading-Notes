@@ -628,19 +628,19 @@ ReactDOM.render(
 
 ```js
 class LoggingButton extends React.Component {
-     // This syntax ensures `this` is bound within handleClick.
-    // Warning: this is *experimental* syntax.
-    handleClick = () => {
-        console.log('this is:', this);
-    }
+  // This syntax ensures `this` is bound within handleClick.
+  // Warning: this is *experimental* syntax.
+  handleClick = () => {
+    console.log('this is:', this);
+  }
 
-    render() {
-        return (
-            <button onClick={this.handleClick}>
-            Click me
-            </button>
-        );
-    }
+  render() {
+    return (
+      <button onClick={this.handleClick}>
+      Click me
+      </button>
+    );
+  }
 }
 ```
 
@@ -648,18 +648,18 @@ class LoggingButton extends React.Component {
 
 ```js
 class LoggingButton extends React.Component {
-    handleClick() {
-        console.log('this is:', this);
-    }
+  handleClick() {
+    console.log('this is:', this);
+  }
 
-    render() {
-        // This syntax ensures `this` is bound within handleClick
-        return (
-            <button onClick={(e) => this.handleClick(e)}>
-            Click me
-            </button>
-        );
-    }
+  render() {
+    // This syntax ensures `this` is bound within handleClick
+    return (
+      <button onClick={(e) => this.handleClick(e)}>
+      Click me
+      </button>
+    );
+  }
 }
 ```
 
@@ -676,3 +676,85 @@ class LoggingButton extends React.Component {
 
 ## 条件渲染
 
+## the-road-to-learn-react
+
+### Introduction
+
+这是create-react-app生成的代码，理解component,instance和element之间的关系至关重要
+
+```js
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import './App.css';
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h1 className="App-title">Welcome to React</h1>
+        </header>
+        <p className="App-intro">
+          To get started, edit <code>src/App.js</code> and save to reload.
+        </p>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+App是一个React组件，实例化之后使用，通过`render()`方法返回元素(element)
+
+JSX语法允许将HTML与JavaScript混合使用
+
+JSX中使用`{}`包裹JS表达式
+
+#### ReactDOM
+
+```js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+);
+```
+
+在一个纯React应用中，只需使用一次`render()`
+
+`render`接收两个参数，第一个参数是需要被渲染的JSX，第二个参数是React的挂载点，挂载之后会将index.html中挂载点中的元素全部替换
+
+#### 模块热更新
+
+在`index.js`中加入下面这段模块热更新代码
+
+```js
+if (module.hot) {
+  module.hot.accept();
+}
+```
+
+#### 复杂的JSX
+
+React可以借助key这个辅助属性提高性能
+
+需要给key这个属性一个稳定的标识符，索引往往是不稳定的
+
+ES6的箭头函数允许省略return表达式
+
+```js
+{list.map(item =>
+  <div key={item.objctId}>
+    <span>
+      <a href={item.url}>{item.title}</a>
+    </span>
+    <span>{item.author}</span>
+  </div>
+)}
+```
