@@ -814,3 +814,15 @@ render() {
   );
 }
 ```
+
+#### Controlled Components(受控组件)
+
+比如表单元素`<input>`，它的值可以通过value元素来改变，在React中这被称为不受控组件。
+
+```jsx
+<input
+type="text" value={searchTerm} onChange={this.onSearchChange}
+/>
+```
+
+这样处理之后，就形成了自包含的单向数据流
