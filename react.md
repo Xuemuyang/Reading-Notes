@@ -826,3 +826,36 @@ type="text" value={searchTerm} onChange={this.onSearchChange}
 ```
 
 这样处理之后，就形成了自包含的单向数据流
+
+#### Functional Stateless Components(函数式无状态组件)
+
+这类组件可以可以理解为函数，输入props，输出JSX组件实例，这类组件中没有`this.state`和`this.setState()`因为他们没有`this`对象，也没有生命周期方法，但是可以有`constructor()`和`render()`
+
+### Lifecycle
+
+在挂载过程中有四个生命周期方法，调用顺序如下
+
++ `constructor()`
++ `componentWillMount()`
++ `render()`
++ `componentDidMount()`
+
+当组件状态或属性改变有五个生命周期用于组件更新
+
++ `componentWillReceiveProps()`
++ `shouldComponentUpdate()`
++ `componentWillUpdate()`
++ `render()`
++ `componentDidUpdate()`
+
+组件卸载
+
++ `componentWillUnmount()`
+
+React允许组件通过返回`null`来不渲染任何东西
+
+React拥护不可变的数据结构，相比直接改变对象的属性，更好的做法是创建一个新的对象
+
+对象的扩展运算符可以用来替代`Object.assign()`
+
+使用PropTypes来进行参数类型检查
