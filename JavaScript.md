@@ -4334,6 +4334,41 @@ close 事件的`event`对象有额外的信息,`wasClean`,`code`,和`reason`。
 
 ## chap.22 高级技巧
 
+### once
+
+高阶函数: 接受一个函数为参数，返回另一个函数
+
+```js
+function once(fn){
+  return function(...args){
+    if(fn){
+      let ret = fn.apply(this, args);
+      fn = null;
+      return ret;
+    }
+  }
+}
+
+function foo(idx){
+  console.log(`I'm called:${idx}`);
+}
+
+foo(0);
+foo(1);
+foo(2);
+
+foo = once(foo);
+
+foo(3);
+foo(4);
+foo(5);
+
+// "I'm called:0"
+// "I'm called:1"
+// "I'm called:2"
+// "I'm called:3"
+```
+
 ### 函数节流(throttle)和防抖(debounce)
 
 以下是高程上的函数节流
@@ -4422,6 +4457,72 @@ function handle() {
 window.addEventListener("scroll", throttle(handle, 1000));
 ```
 
+75团版本
+
+```js
+function throttle(fn, time = 500){
+  let timer;
+  return function(...args){
+    if(timer == null){
+      fn.apply(this,  args);
+      timer = setTimeout(() => {
+        timer = null;
+      }, time)
+    }
+  }
+}
+```
+
+```js
+function debounce(fn, dur){
+  dur = dur || 100;
+  var timer;
+  return function(){
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn.apply(this, arguments);
+    }, dur);
+  }
+}
+```
+
+```js
+function debounce(fn){
+  let timer = null
+  return function(...args){
+    if(timer != null) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      fn.apply(this, args)
+      timer = null
+    }, 300)
+  }
+}
+```
+
+还有consumer函数用于将操作累计滞后触发事件
+
+```js
+function consumer(fn, time){
+  let tasks = [],
+      timer;
+  
+  return function(...args){
+    tasks.push(fn.bind(this, ...args));
+    if(timer == null){
+      timer = setInterval(() => {
+        tasks.shift().call(this)
+        if(tasks.length <= 0){
+          clearInterval(timer);
+          timer = null;
+        }
+      }, time)
+    }
+  }
+}
+```
+
 ### 函数柯里化(function currying)
 
 用于创建已经设置好了一个或多个参数的函数。使用一个闭包返回一个函数。
@@ -4444,6 +4545,119 @@ function add(num1, num2) {
 
 var curriedAdd = curry(add, 5);
 alert(curriedAdd(3)); //8
+```
+
+### 函数式编程
+
+Declarative声明式 What to do
+Imperative指令式 How to do
+
+看一个相加的例子
+
+```js
+function add(x, y){
+  return x + y;
+}
+
+function sub(x, y){
+  return x - y;
+}
+
+console.log(add(add(add(1,2),3),4));  //不好！！
+console.log([1, 2, 3, 4].reduce(add));
+console.log([1, 2, 3, 4].reduce(sub));
+```
+
+```js
+function add(x, y){
+  return x + y;
+}
+
+function sub(x, y){
+  return x - y;
+}
+
+function addMany(...args){
+  return args.reduce(add);
+}
+
+function subMany(...args){
+  return args.reduce(sub);
+}
+
+console.log(addMany(1,2,3,4));
+console.log(subMany(1,2,3,4));
+```
+
+```js
+function iterative(fn){
+  return function(...args){
+    return args.reduce(fn.bind(this));
+  }
+}
+
+const add = iterative((x, y) => x + y);
+const sub = iterative((x, y) => x - y);
+
+console.log(add(1,2,3,4));
+console.log(sub(1,2,3,4));
+```
+
+再看一个切换状态的例子
+
+指令式
+
+```js
+switcher.onclick = function(evt){
+  if(evt.target.className === 'on'){
+    evt.target.className = 'off';
+  }else{
+    evt.target.className = 'on';
+  }
+}
+```
+
+声明式
+
+```js
+function toggle(...actions){
+  return function(...args){
+    let action = actions.shift();
+    actions.push(action);
+    return action.apply(this, args);
+  }
+}
+
+switcher.onclick = toggle(
+  evt => evt.target.className = 'off',
+  evt => evt.target.className = 'on'
+);
+```
+
+使用生成器
+
+```js
+function * loop(list, max = Infinity){
+  let i = 0;
+  
+  //noprotect
+  while(i < max){
+    yield list[i++ % list.length];
+  }
+}
+
+function toggle(...actions){
+  let action = loop(actions);
+  return function(...args){
+    return action.next().value.apply(this, args);
+  }
+}
+
+switcher.onclick = toggle(
+  evt => evt.target.className = 'warn',
+  evt => evt.target.className = 'off',
+  evt => evt.target.className = 'on'
+);
 ```
 
 ## chap.23 离线应用与客户端储存
