@@ -1623,6 +1623,60 @@ for(let v of obj) {
 }
 ```
 
+### 调用Iterator接口的场合
+
+1.解构赋值
+
+对数组和Set结构进行解构赋值时，会默认调用`Symbol.iterator`方法
+
+```js
+let set = new Set().add('a').add('b').add('c');
+
+let [x,y] = set;
+// x='a'; y='b'
+
+let [first, ...rest] = set;
+// first='a'; rest=['b','c'];
+```
+
+2.扩展运算符
+
+扩展运算符(...)也会调用默认的Iterator接口
+
+```js
+// 例一
+var str = 'hello';
+[...str] //  ['h','e','l','l','o']
+
+// 例二
+let arr = ['b', 'c'];
+['a', ...arr, 'd']
+// ['a', 'b', 'c', 'd']
+```
+
+可以将任何部署了Iterator接口的数据结构转为数组，只要某个数据结构部署了Iterator接口，就可以使用扩展运算符，将其转为数组。
+
+3.yield*
+
+`yield*`后面跟的是一个可遍历的结构，它会调用该结构的遍历器接口。
+
+```js
+let generator = function* () {
+  yield 1;
+  yield* [2,3,4];
+  yield 5;
+};
+
+var iterator = generator();
+
+iterator.next() // { value: 1, done: false }
+iterator.next() // { value: 2, done: false }
+iterator.next() // { value: 3, done: false }
+iterator.next() // { value: 4, done: false }
+iterator.next() // { value: 5, done: false }
+iterator.next() // { value: undefined, done: true }
+```
+
 ## 16. Generator 函数的语法
 
 ### 基本概念
