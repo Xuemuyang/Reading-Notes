@@ -5032,8 +5032,8 @@ async getBooksAndAuthor(authorId) {
     const book = await bookPromise;
     const author = await authorPromise;
     return {
-        author,
-        books: books.filter(book => book.authorId === authorId),
+      author,
+      books: books.filter(book => book.authorId === authorId),
     };
 }
 ```
