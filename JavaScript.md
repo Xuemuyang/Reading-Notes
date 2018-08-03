@@ -6,9 +6,9 @@ JS 诞生-->浏览器表单客户端验证
 
 完整的 Javascript 实现由以下三个部分组成
 
-1.  核心 ECMAScript
-1.  DOM 提供访问和操作网页内容的方法和接口
-1.  BOM 提供与浏览器交互的方法和接口
+1. 核心 ECMAScript
+1. DOM 提供访问和操作网页内容的方法和接口
+1. BOM 提供与浏览器交互的方法和接口
 
 web 浏览器只是 ECMAScript 的宿主环境之一,Node 是服务器端的 JavaScript 平台
 
@@ -135,8 +135,8 @@ NaN(Not a Number)
 
 NaN 有两个特点
 
-1.  任何涉及 NaN 的操作都会返回 NaN
-1.  NaN 与任何值都不相等，包括 NaN 本身
+1. 任何涉及 NaN 的操作都会返回 NaN
+1. NaN 与任何值都不相等，包括 NaN 本身
 
 isNaN()函数判断传入参数是否“不是数值”
 
@@ -206,13 +206,13 @@ alert(num.toString(16)); // 'a'
 
 Object 的每个实例都具有下列属性和方法
 
-1.  `constructor`:保存着用于创建当前对象的函数，如果是`var o = new Object();`，那么构造函数`constructor`就是`Object()`。
-1.  `hasOwnProperty(propertyName)`:用于检查给定的属性在当前对象实例中（而不是在实例的原型中）是否存在。其中`propertyName`必须以字符串的形式指定。
-1.  `isPrototypeOf(object)`:用于检查传入的对象是否是当前对象的原型。
-1.  `propertyIsEnumerable(propertyName)`:用于检查给定的属性是否能够使用 for-in 语句来枚举，同样传入的`propertyName`必须以字符串的形式指定。
-1.  `toLocaleString()`:返回对象的字符串表示，该字符串与执行环境的地区对应。
-1.  `toString()`:返回对象的字符串表示。
-1.  `valueOf()`:返回对象的字符串、数值或布尔值表示。
+1. `constructor`:保存着用于创建当前对象的函数，如果是`var o = new Object();`，那么构造函数`constructor`就是`Object()`。
+1. `hasOwnProperty(propertyName)`:用于检查给定的属性在当前对象实例中（而不是在实例的原型中）是否存在。其中`propertyName`必须以字符串的形式指定。
+1. `isPrototypeOf(object)`:用于检查传入的对象是否是当前对象的原型。
+1. `propertyIsEnumerable(propertyName)`:用于检查给定的属性是否能够使用 for-in 语句来枚举，同样传入的`propertyName`必须以字符串的形式指定。
+1. `toLocaleString()`:返回对象的字符串表示，该字符串与执行环境的地区对应。
+1. `toString()`:返回对象的字符串表示。
+1. `valueOf()`:返回对象的字符串、数值或布尔值表示。
 
 ### 操作符
 
@@ -269,13 +269,13 @@ o = +o; // 值变成数值-1
 
 > 位操作符用在最基本的层次上，即按内存中表示数值的位来操作数值。ECMAScript 中的所有数值都以 IEEE-754 64 位格式存储，但位操作符并不直接操作 64 位的值。而是先将 64 位的值转换成 32 位的整数，然后执行操作，最后再将结果转换回 64 位。
 
-1.  按位非（NOT）`~`
-1.  按位与 (AND) `&`
-1.  按位或 (OR) `|`
-1.  按位异或 (XOR) `^` 两个数值对应位上只有一个 1 时才返回 1
-1.  左移 `<<` 左移不会影响符号位
-1.  有符号的右移 `>>`
-1.  无符号右移 `>>>`
+1. 按位非（NOT）`~`
+1. 按位与 (AND) `&`
+1. 按位或 (OR) `|`
+1. 按位异或 (XOR) `^` 两个数值对应位上只有一个 1 时才返回 1
+1. 左移 `<<` 左移不会影响符号位
+1. 有符号的右移 `>>`
+1. 无符号右移 `>>>`
 
 #### 逻辑非
 
@@ -453,8 +453,8 @@ var result 6 = 5 - null; // 5
 console.log("hehe" == true);
 ```
 
-1.  首先，布尔值会被转成数字
-1.  字符串转换成数字，因为包含字母，所以`NaN`，于是结果是`false`
+1. 首先，布尔值会被转成数字
+1. 字符串转换成数字，因为包含字母，所以`NaN`，于是结果是`false`
 
 ##### `===`
 
@@ -2089,16 +2089,16 @@ var person2 = new Person("Greg", "27", "Doctor");
 
 new 操作符构造函数实际经历以下 4 个步骤:
 
-1.  创建一个新对象；
-1.  将构造函数的作用域赋给新对象（因此 this 就指向了这个新对象）；
-1.  执行构造函数中的代码（为这个新对象添加属性）；
-1.  返回新对象。
+1. 创建一个新对象；
+1. 将构造函数的作用域赋给新对象（因此 this 就指向了这个新对象）；
+1. 执行构造函数中的代码（为这个新对象添加属性）；
+1. 返回新对象。
 
 MDN 上对 new foo(...)执行的解释:
 
-1.  一个新对象被创建。它继承自 foo.prototype.
-1.  构造函数 foo 被执行。执行的时候，相应的参数会被传入，同时上下文(this)会被指定为这个新实例。new foo 等同于 new foo(), 只能用在不传递任何参数的情况。
-1.  如果构造函数返回了一个“对象”，那么这个对象会取代整个 new 出来的结果。如果构造函数没有返回对象，那么 new 出来的结果为步骤 1 创建的对象，ps：一般情况下构造函数不返回任何值，不过用户如果想覆盖这个返回值，可以自己选择返回一个普通对象来覆盖。当然，返回数组也会覆盖，因为数组也是对象。
+1. 一个新对象被创建。它继承自 foo.prototype.
+1. 构造函数 foo 被执行。执行的时候，相应的参数会被传入，同时上下文(this)会被指定为这个新实例。new foo 等同于 new foo(), 只能用在不传递任何参数的情况。
+1. 如果构造函数返回了一个“对象”，那么这个对象会取代整个 new 出来的结果。如果构造函数没有返回对象，那么 new 出来的结果为步骤 1 创建的对象，ps：一般情况下构造函数不返回任何值，不过用户如果想覆盖这个返回值，可以自己选择返回一个普通对象来覆盖。当然，返回数组也会覆盖，因为数组也是对象。
 
 #### 将构造函数当做函数
 
@@ -2284,8 +2284,8 @@ alert(person2.friends); //"Shelby,Court,Van"
 alert(person1.friends === person2.friends); //true
 ```
 
-1.  省略了为构造函数传递初始化参数这一环节，所有实例默认情况下都取得相同的属性值
-1.  原型中的所有属性被很多实例共享，由于 friends 数组存在于 Person.prototype 而非 person1 中，所以 person1 的 push('Van')在 person2 中也会反映出来
+1. 省略了为构造函数传递初始化参数这一环节，所有实例默认情况下都取得相同的属性值
+1. 原型中的所有属性被很多实例共享，由于 friends 数组存在于 Person.prototype 而非 person1 中，所以 person1 的 push('Van')在 person2 中也会反映出来
 
 实例上访问原型对象的属性，如果是引用类型的属性比如数组，实例上访问的是该数组的引用，任何操作都会发生改变
 
@@ -2800,23 +2800,23 @@ In English
 
 创建阶段（当函数被调用，内部的代码还没开始执行）：
 
-1.  创建作用域链
-1.  创建变量、函数以及参数
-1.  决定`this`的值
+1. 创建作用域链
+1. 创建变量、函数以及参数
+1. 决定`this`的值
 
 激活、代码执行阶段：
 
-1.  赋值，寻找函数引用以及解释/执行代码
+1. 赋值，寻找函数引用以及解释/执行代码
 
 Creation Stage [when the function is called, but before it executes any code inside]:
 
-1.  Create the Scope Chain.
-1.  Create variables, functions and arguments.
-1.  Determine the value of "this".
+1. Create the Scope Chain.
+1. Create variables, functions and arguments.
+1. Determine the value of "this".
 
 Activation / Code Execution Stage:
 
-1.  Assign values, references to functions and interpret / execute code.
+1. Assign values, references to functions and interpret / execute code.
 
 It is possible to represent each execution context conceptually as an object with 3 properties:
 
@@ -2836,21 +2836,21 @@ executionContextObj = {
 
 这是解释器执行代码时的伪概述:
 
-1.  寻找调用函数的代码
-1.  在执行函数代码之前, 创建执行上下文.
-1.  进入创建阶段:
-1.  初始化 作用域链.
-1.  创建变量对象：
-1.  创建参数对象, 检查参数的上下文,初始化其名称和值并创建一个引用拷贝。
-1.  扫描上下文中的函数声明：
-1.  对于每个被发现的函数, 在变量对象中创建一个和函数名同名的属性，这是函数在内存中的引用。
-1.  如果函数名已经存在,引用值将会被覆盖。
-1.  扫描上下文中的变量声明：
-1.  对于每个被发现的变量声明,在变量对象中创建一个同名属性并初始化值为 undefined。
-1.  如果变量名在变量对象中已经存在, 什么都不做，继续扫描。
-1.  确定上下文中的"this"
-1.  激活 / 代码执行阶段：
-1.  执行 / 在上下文中解释函数代码，并在代码逐行执行时给变量赋值。
+1. 寻找调用函数的代码
+1. 在执行函数代码之前, 创建执行上下文.
+1. 进入创建阶段:
+1. 初始化 作用域链.
+1. 创建变量对象：
+1. 创建参数对象, 检查参数的上下文,初始化其名称和值并创建一个引用拷贝。
+1. 扫描上下文中的函数声明：
+1. 对于每个被发现的函数, 在变量对象中创建一个和函数名同名的属性，这是函数在内存中的引用。
+1. 如果函数名已经存在,引用值将会被覆盖。
+1. 扫描上下文中的变量声明：
+1. 对于每个被发现的变量声明,在变量对象中创建一个同名属性并初始化值为 undefined。
+1. 如果变量名在变量对象中已经存在, 什么都不做，继续扫描。
+1. 确定上下文中的"this"
+1. 激活 / 代码执行阶段：
+1. 执行 / 在上下文中解释函数代码，并在代码逐行执行时给变量赋值。
 
 ```javascript
 function foo(i) {
@@ -3467,9 +3467,9 @@ document.body.appendChild(img);
 
 缺点:
 
-1.  存在时差，事件处理程序可能不具备执行条件
-1.  作用域链在不同浏览器中不同
-1.  HTML 与 JavaScript 紧密耦合
+1. 存在时差，事件处理程序可能不具备执行条件
+1. 作用域链在不同浏览器中不同
+1. HTML 与 JavaScript 紧密耦合
 
 ### DOM0 级事件处理程序
 
@@ -3490,14 +3490,14 @@ btn.onclick = function() {
 
 定义了两个方法
 
-1.  `addEventListener()`
-1.  `removeEventListener()`
+1. `addEventListener()`
+1. `removeEventListener()`
 
 所有 DOM 节点都包含这两个方法，三个参数：
 
-1.  要处理的事件名
-1.  作为事件处理程序的函数
-1.  `true`表示在捕获阶段调用事件处理程序；`false`表示在冒泡阶段调用事件处理程序
+1. 要处理的事件名
+1. 作为事件处理程序的函数
+1. `true`表示在捕获阶段调用事件处理程序；`false`表示在冒泡阶段调用事件处理程序
 
 ```javascript
 var btn = document.getElementById("myBtn");
@@ -3549,8 +3549,8 @@ btn.removeEventListener("click", handler, false); //有效!
 
 IE 实现了类似于 DOM 的两个方法
 
-1.  `attachEvent()`
-1.  `detachEvent()`
+1. `attachEvent()`
+1. `detachEvent()`
 
 ```javascript
 var btn = document.getElementById("myBtn");
@@ -3657,15 +3657,15 @@ btn.onmouseout = handler;
 
 有三个键盘事件
 
-1.  `keydown`:用户按下键盘上的任意键时触发，如果按住不放，重复触发
-1.  `keypress`:用户按下键盘上的字符键时触发，如果按住不放，重复触发
-1.  `keyup`:用户释放键盘上的键时触发
+1. `keydown`:用户按下键盘上的任意键时触发，如果按住不放，重复触发
+1. `keypress`:用户按下键盘上的字符键时触发，如果按住不放，重复触发
+1. `keyup`:用户释放键盘上的键时触发
 
 根据`keyCode`判断用户按的是哪个键
 
 ### HTML5 事件
 
-1.  hashchange 事件
+1. hashchange 事件
 
 ### 触摸与手势事件
 
@@ -3826,13 +3826,13 @@ try {
 
 ECMA-262 定义了下列 7 种错误类型：
 
-1.  Error
-1.  EvalError
-1.  RangeError
-1.  ReferenceError
-1.  SyntaxError
-1.  TypeError
-1.  URIError
+1. Error
+1. EvalError
+1. RangeError
+1. ReferenceError
+1. SyntaxError
+1. TypeError
+1. URIError
 
 `Error`是基类型，其他错误类型继承自该类型。
 
@@ -4932,11 +4932,330 @@ export default function jsonp(url, data, option) {
 
 `promise`会有如下保证:
 
-1.  在事件队列的当前运行完成之前，回调函数永远不会被调用。
-1.  通过`.then`形式添加的回调函数，都会被调用。
-1.  通过多次调用`.then`，可以添加多个回调函数，他们会按照插入顺序并且独立运行。
+1. 在事件队列的当前运行完成之前，回调函数永远不会被调用。
+1. 通过`.then`形式添加的回调函数，都会被调用。
+1. 通过多次调用`.then`，可以添加多个回调函数，他们会按照插入顺序并且独立运行。
 
 [promise/A+](http://www.ituring.com.cn/article/66566)规范，一个开放、健全且通用的`JavaScript Promise`标准。由开发者制定，供开发者参考。
+
+#### 几个Promise的例子
+
+1.立即执行性
+
+```js
+var p = new Promise(function(resolve, reject){
+  console.log("create a promise");
+  resolve("success");
+});
+
+console.log("after new Promise");
+
+p.then(function(value){
+  console.log(value);
+});
+```
+
+```console
+"create a promise"
+"after new Promise"
+"success"
+```
+
+Promise对象表示未来某个将要发生的事件，在创建(new)Promise时，作为Promise参数传入的函数会被立即执行，其中执行的代码可以是异步操作。
+
+2.三种状态
+
+```js
+var p1 = new Promise(function(resolve,reject){
+  resolve(1);
+});
+var p2 = new Promise(function(resolve,reject){
+  setTimeout(function(){
+    resolve(2);  
+  }, 500);
+});
+var p3 = new Promise(function(resolve,reject){
+  setTimeout(function(){
+    reject(3);  
+  }, 500);
+});
+
+console.log(p1);
+console.log(p2);
+console.log(p3);
+setTimeout(function(){
+  console.log(p2);
+}, 1000);
+setTimeout(function(){
+  console.log(p3);
+}, 1000);
+
+p1.then(function(value){
+  console.log(value);
+});
+p2.then(function(value){
+  console.log(value);
+});
+p3.catch(function(err){
+  console.log(err);
+});
+```
+
+```console
+Promise {[[PromiseStatus]]: "resolved", [[PromiseValue]]: 1}
+Promise {[[PromiseStatus]]: "pending", [[PromiseValue]]: undefined}
+Promise {[[PromiseStatus]]: "pending", [[PromiseValue]]: undefined}
+1
+2
+3
+Promise {[[PromiseStatus]]: "resolved", [[PromiseValue]]: 2}
+Promise {[[PromiseStatus]]: "rejected", [[PromiseValue]]: 3}
+```
+
+3.Promise状态的不可逆性
+
+```js
+var p1 = new Promise(function(resolve, reject){
+  resolve("success1");
+  resolve("success2");
+});
+
+var p2 = new Promise(function(resolve, reject){
+  resolve("success");
+  reject("reject");
+});
+
+p1.then(function(value){
+  console.log(value);
+});
+
+p2.then(function(value){
+  console.log(value);
+});
+```
+
+```console
+"success1"
+"success"
+```
+
+Promise状态一旦变成`resolved`或`rejected`，Promise的状态和值就固定下来，不论后续怎么调用`resolved`或`rejected`都不能改变其状态和值。
+
+4.链式调用
+
+```js
+var p = new Promise(function(resolve, reject){
+  resolve(1);
+});
+p.then(function(value){               //第一个then
+  console.log(value);
+  return value*2;
+}).then(function(value){              //第二个then
+  console.log(value);
+}).then(function(value){              //第三个then
+  console.log(value);
+  return Promise.resolve('resolve'); 
+}).then(function(value){              //第四个then
+  console.log(value);
+  return Promise.reject('reject');
+}).then(function(value){              //第五个then
+  console.log('resolve: '+ value);
+}, function(err){
+  console.log('reject: ' + err);
+})
+```
+
+```console
+1
+2
+undefined
+"resolve"
+"reject: reject"
+```
+
+Promise对象的`then`方法返回一个新的Promise对象，因此可以通过链式调用`then`方法。`then`方法接收两个函数作为参数，第一个参数是Promise执行成功时的回调，第二个参数是Promise执行失败时的回调。两个函数只会有一个被调用，函数的返回值将被用作创建`then`返回的Promise对象。这两个参数的返回值可以是以下三种情况中的一种：
+
++ `return`一个同步的值 ，或者`undefined`（当没有返回一个有效值时，默认返回`undefined`），`then`方法将返回一个`resolved`状态的Promise对象，Promise对象的值就是这个返回值。
++ `return`另一个Promise，`then`方法将根据这个Promise的状态和值创建一个新的Promise对象返回。
++ `throw`一个同步异常，`then`方法将返回一个`rejected`状态的Promise, 值是该异常。
+
+5.`Promise.then()`回调异步性
+
+```js
+var p = new Promise(function(resolve, reject){
+  resolve("success");
+});
+
+p.then(function(value){
+  console.log(value);
+});
+
+console.log("which one is called first ?");
+```
+
+```console
+"which one is called first ?"
+"success"
+```
+
+Promise接受的函数参数是同步执行的，但`then`方法中的回调执行则是异步的。
+
+6.Promise的中的异常
+
+```js
+var p1 = new Promise( function(resolve,reject){
+  foo.bar();
+  resolve( 1 );
+});
+
+p1.then(
+  function(value){
+    console.log('p1 then value: ' + value);
+  },
+  function(err){
+    console.log('p1 then err: ' + err);
+  }
+).then(
+  function(value){
+    console.log('p1 then then value: '+value);
+  },
+  function(err){
+    console.log('p1 then then err: ' + err);
+  }
+);
+
+var p2 = new Promise(function(resolve,reject){
+  resolve( 2 );
+});
+
+p2.then(
+  function(value){
+    console.log('p2 then value: ' + value);
+    foo.bar();
+  }, 
+  function(err){
+    console.log('p2 then err: ' + err);
+  }
+).then(
+  function(value){
+    console.log('p2 then then value: ' + value);
+  },
+  function(err){
+    console.log('p2 then then err: ' + err);
+    return 1;
+  }
+).then(
+  function(value){
+    console.log('p2 then then then value: ' + value);
+  },
+  function(err){
+    console.log('p2 then then then err: ' + err);
+  }
+);
+```
+
+```console
+p1 then err: ReferenceError: foo is not defined
+p2 then value: 2
+p1 then then value: undefined
+p2 then then err: ReferenceError: foo is not defined
+p2 then then then value: 1
+```
+
+Promise中的异常由`then`参数中的第二个回调处理，异常信息将作为Promise的值。异常一旦得到处理，`then`返回的后续Promise对象将恢复正常。
+
+7.`Promise.resolve()`
+
+```js
+var p1 = Promise.resolve( 1 );
+var p2 = Promise.resolve( p1 );
+var p3 = new Promise(function(resolve, reject){
+  resolve(1);
+});
+var p4 = new Promise(function(resolve, reject){
+  resolve(p1);
+});
+
+console.log(p1 === p2); 
+console.log(p1 === p3);
+console.log(p1 === p4);
+console.log(p3 === p4);
+
+p4.then(function(value){
+  console.log('p4=' + value);
+});
+
+p2.then(function(value){
+  console.log('p2=' + value);
+})
+
+p1.then(function(value){
+  console.log('p1=' + value);
+})
+```
+
+```console
+true
+false
+false
+false
+p2=1
+p1=1
+p4=1
+```
+
+`Promise.resolve(...)`可以接受一个值或或者是一个Promise对象。当参数是普通值时，返回一个`resolved`状态的Promise对象，对象的值就是这个参数。当参数是一个Promise对象时，直接返回这个Promise参数。通过`new`方式创建的Promise都是一个新的对象，因此比较结果都是`false`。p4的`resolve`中接收的是一个Promise，`resolve`会对p1"拆箱"，获取p1的状态和值，这个过程是异步的。
+
+8.`resolve`和`reject`
+
+```js
+var p1 = new Promise(function(resolve, reject){
+  resolve(Promise.resolve('resolve'));
+});
+
+var p2 = new Promise(function(resolve, reject){
+  resolve(Promise.reject('reject'));
+});
+
+var p3 = new Promise(function(resolve, reject){
+  reject(Promise.resolve('resolve'));
+});
+
+p1.then(
+  function fulfilled(value){
+    console.log('fulfilled: ' + value);
+  },
+  function rejected(err){
+    console.log('rejected: ' + err);
+  }
+);
+
+p2.then(
+  function fulfilled(value){
+    console.log('fulfilled: ' + value);
+  },
+  function rejected(err){
+    console.log('rejected: ' + err);
+  }
+);
+
+p3.then(
+  function fulfilled(value){
+    console.log('fulfilled: ' + value);
+  },
+  function rejected(err){
+    console.log('rejected: ' + err);
+  }
+);
+```
+
+```js
+p3 rejected: [object Promise]
+p1 fulfilled: resolve
+p2 rejected: reject
+```
+
+Promise回调中的第一个参数`resolve`，会对Promise执行"拆箱"动作，当`resolve`参数是一个Promise对象，`resolve`会"拆箱"获取这个Promise对象的状态和值，这个过程是异步的。由于"拆箱"的结果是`resolved`，`fulfilled`回调被执行。`reject`不具备"拆箱"能力，将参数直接传给`then`方法中`reject`回调。
 
 ### Node 中的异步
 
