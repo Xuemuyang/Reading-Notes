@@ -4464,7 +4464,7 @@ function throttle(fn, time = 500){
   let timer;
   return function(...args){
     if(timer == null){
-      fn.apply(this,  args);
+      fn.apply(this, args);
       timer = setTimeout(() => {
         timer = null;
       }, time)
