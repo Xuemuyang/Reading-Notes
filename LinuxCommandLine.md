@@ -229,3 +229,16 @@ BACKUP.[0-9][0-9][0-9]|以"BACKUP."开头，并紧接着3个数字的文件
 [[:upper:]]*|以大写字母开头的文件
 [![:digit:]]*|不以数字开头的文件
 *[[:lower:]123]|文件名以小写字母结尾，或以"1"，"2"，或"3"结尾的文件
+
+## 7. 重定向(I/O重定向)
+
++ cat - Concatenate files
++ sort - Sortlines of text
++ uniq - Report or omit repeated lines
++ grep - Print lines matching a pattern
++ wc - Print newline, word, and byte counts for each file
++ head - Output the first part of a file
++ tail - Output the last part of a file
++ tee - Read from standard input and write to standard ouput and files
+
+### 重定向标准输出
