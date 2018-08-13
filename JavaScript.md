@@ -3420,9 +3420,40 @@ myDiv.style.backgroundColor = "red";
 - 客户区大小(client dimension)
 - 滚动大小(scroll dimension)
 
+#### 偏移量
+
+偏移量包括元素在屏幕上占用的所有可见的空间。元素的可见大小由其高度、宽度决定，包括所有内边距、滚动条和边框大小(不包括外边距)。
+
+4个属性可以取得元素的偏移量:
+
+- `offsetHeight`: 元素在垂直方向上占用的空间大小，以像素计。包括元素的高度、(可见的)滚动条高度、上边框高度和下边框高度
+- `offsetWidth`
+- `offsetLeft`
+- `offsetTop`
+
 #### 客户区大小
 
 `clientWidth`与`clientHeight`是元素`padding-box`的宽高。
+
+客户区大小就是元素内部的空间大小，滚动条占用的空间不计算在内
+
+#### 滚动大小
+
+4个与滚动大小相关的属性:
+
+- scrollHeight: 在没有滚动条的情况下，元素内容的总高度
+- scrollWidth: 在没有滚动条的情况下，元素内容的总宽度
+- scrollLeft: 被隐藏在内容区左侧的像素数。通过设置这个属性可以改变元素的滚动位置
+- scrollTop: 被隐藏在内容区上方的像素数。通过设置这个属性可以改变元素的滚动位置
+
+两种获取页面滚动条距离页面顶部写法
+
+```js
+var top = document.documentElement.scrollTop || document.body.scrollTop;
+var top = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop;
+```
+
+document.documentElement是整个文档节点树的根节点，在网页中即html标签
 
 ### Image 对象
 
