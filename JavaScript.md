@@ -5085,7 +5085,7 @@ p.then(function(value){               //第一个then
   console.log(value);
 }).then(function(value){              //第三个then
   console.log(value);
-  return Promise.resolve('resolve'); 
+  return Promise.resolve('resolve');
 }).then(function(value){              //第四个then
   console.log(value);
   return Promise.reject('reject');
