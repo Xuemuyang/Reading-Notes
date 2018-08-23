@@ -49,8 +49,8 @@ let word: string = "how";
 数组有两种定义方式
 
 ```ts
-let list: number[] = [1, 2, 3];
-let list: Array<number> = [1, 2, 3]; // 数组泛型
+let list: number[] = [1, 2, 3]; // 类型[]
+let list: Array<number> = [1, 2, 3]; // 数组泛型(Array Generic)
 ```
 
 #### 元组 Tuple
@@ -109,15 +109,15 @@ let strLength: number = (someValue as string).length;
 
 ### 类型推论
 
-如果没有明确的指定类型，TypeScript会依照类型推论(Type Inference)的规则推断出一个类型。
+如果没有明确的指定类型，TypeScript 会依照类型推论(Type Inference)的规则推断出一个类型。
 
 ```ts
-let myFavoriteNumber = 'seven';
+let myFavoriteNumber = "seven";
 myFavoriteNumber = 7;
 
 // 等价于
 
-let myFavoriteNumber: string = 'seven';
+let myFavoriteNumber: string = "seven";
 myFavoriteNumber = 7;
 
 // 都会报错
@@ -151,7 +151,7 @@ function getLength(something: string | number): number {
 
 ```ts
 let myFavoriteNumber: string | number;
-myFavoriteNumber = 'seven';
+myFavoriteNumber = "seven";
 console.log(myFavoriteNumber.length); // 5
 myFavoriteNumber = 7;
 console.log(myFavoriteNumber.length); // 编译时报错
@@ -163,6 +163,8 @@ console.log(myFavoriteNumber.length); // 编译时报错
 
 接口的作用就是去描述结构的形态。
 
+可以用接口来定义对象的类型。
+
 ### 属性修饰符
 
 - `readonly`
@@ -171,7 +173,7 @@ console.log(myFavoriteNumber.length); // 编译时报错
 - `public` 默认
 - `?`
 
-`readonly`只读属性，不能被修改，初始化的时候必须要赋值。
+`readonly`只读属性，不能被修改，初始化的时候必须要赋值。即在对象创建的时候被赋值。
 
 ```ts
 interface Person {
@@ -213,38 +215,56 @@ interface Person {
 }
 ```
 
-### 描述函数
+### 任意属性
+
+一旦定义了任意属性，那么确定属性和可选属性都必须是它的子属性
 
 ```ts
-interface Db {
-  host: string;
-  port: number;
+interface Person {
+  name: string;
+  age?: number;
+  [propName: string]: any;
 }
 
-interface InitFunc {
-  (options: Db): string;
-}
-
-let myfunc: InitFunc = function(opts: Db) {
-  return "";
+let tom: Person = {
+  name: "Tom",
+  gender: "male"
 };
 ```
 
-InitFunc 接口规定，它的函数调用需要传递一个 Db 合同、约束的 options 对象，返回一个 string 类型的值。
-
 ## 函数
 
-```ts
-let add1 = function(x: number, y: number): number {
-  return x + y;
-};
+### 函数声明
 
+TypeScript 将函数的输入输出都考虑到
+
+```ts
 function add2(x: number, y: number): number {
   return x + y;
 }
 ```
 
-函数参数的类型，返回值的类型
+传参数的个数不对过不了编译
+
+### 函数表达式
+
+```ts
+let mySum = function (x: number, y: number): number {
+  return x + y;
+};
+```
+
+这样可以过编译，但是没有对等号左边的类型定义，而是通过赋值操作进行类型推论推断出来的。
+
+```ts
+let mySum: (x: number, y: number) => number = function (x: number, y: number): number {
+  return x + y;
+};
+```
+
+在TypeScript的类型定义中，`=>`用来表示函数的定义，左边是输入类型，需要用括号括起来，右边是输出类型。
+
+这与ES6中的`=>`差别很大
 
 ### 可选参数
 
