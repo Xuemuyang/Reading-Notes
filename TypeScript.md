@@ -40,7 +40,7 @@ let word: string = "how";
 - string
 - 某类型数组 -> 元素类型[] Array<元素类型>
 - boolean
-- 元组Tuple
+- 元组 Tuple
 - any
 - void
 
@@ -53,26 +53,30 @@ let list: number[] = [1, 2, 3];
 let list: Array<number> = [1, 2, 3]; // 数组泛型
 ```
 
-#### 元组Tuple
+#### 元组 Tuple
 
 元组类型允许表示一个已知元素数量和类型的数组，各元素的类型不必相同。
 
 ```ts
 let x: [string, number];
-x = ['hello', 10];
+x = ["hello", 10];
 ```
 
 #### 枚举
 
 使用枚举类型的一个便利是可以由枚举的值得到它的名字。
 
-默认情况下从0开始为元素编号，可以手动指定成员的数值。
+默认情况下从 0 开始为元素编号，可以手动指定成员的数值。
 
 ```ts
-enum Color {Red = 1, Green, Blue}
+enum Color {
+  Red = 1,
+  Green,
+  Blue
+}
 let colorName: string = Color[2];
 
-alert(colorName);  // 显示'Green'因为上面代码里它的值是2
+alert(colorName); // 显示'Green'因为上面代码里它的值是2
 ```
 
 方法也是如此
@@ -103,11 +107,57 @@ let someValue: any = "this is a string";
 let strLength: number = (someValue as string).length;
 ```
 
+### 类型推论
+
+如果没有明确的指定类型，TypeScript会依照类型推论(Type Inference)的规则推断出一个类型。
+
+```ts
+let myFavoriteNumber = 'seven';
+myFavoriteNumber = 7;
+
+// 等价于
+
+let myFavoriteNumber: string = 'seven';
+myFavoriteNumber = 7;
+
+// 都会报错
+// index.ts(2,1): error TS2322: Type 'number' is not assignable to type 'string'.
+```
+
+如果定义的时候没有赋值，不管之后有没有赋值，都会被推断成`any`类型而完全不被类型检查。
+
 ### 变量声明
 
 `const`是对`let`的一个增强，能够阻止对一个变量再次赋值。
 
 除了计划去修改的变量都应该使用`const`去声明。
+
+### 联合类型(Union Types)
+
+表示取值可以为多种类型中的一种。
+
+当 TypeScript 不确定一个联合类型的变量到底是哪个类型的时候，我们只能访问此联合类型的所有类型里共有的属性或方法：
+
+```ts
+function getLength(something: string | number): number {
+  return something.length;
+}
+
+// index.ts(2,22): error TS2339: Property 'length' does not exist on type 'string | number'.
+//   Property 'length' does not exist on type 'number'.
+```
+
+联合类型的变量在被赋值的时候，会根据类型推论的规则推断出一个类型：
+
+```ts
+let myFavoriteNumber: string | number;
+myFavoriteNumber = 'seven';
+console.log(myFavoriteNumber.length); // 5
+myFavoriteNumber = 7;
+console.log(myFavoriteNumber.length); // 编译时报错
+
+// index.ts(5,30): error TS2339: Property 'length' does not exist on type 'number'.
+```
 
 ## 接口与类
 
@@ -195,3 +245,16 @@ function add2(x: number, y: number): number {
 ```
 
 函数参数的类型，返回值的类型
+
+### 可选参数
+
+```ts
+function buildName(firstName: string, lastName?: string) {
+  if (lastName) return firstName + " " + lastName;
+  else return firstName;
+}
+
+let result1 = buildName("Bob"); // works correctly now
+let result2 = buildName("Bob", "Adams", "Sr."); // error, too many parameters
+let result3 = buildName("Bob", "Adams"); // ah, just right
+```
