@@ -38,10 +38,42 @@ let word: string = "how";
 
 - number
 - string
-- 某类型数组 -> 某类型[] Array<某类型>
+- 某类型数组 -> 元素类型[] Array<元素类型>
 - boolean
-- 元组
+- 元组Tuple
 - any
+- void
+
+#### 数组
+
+数组有两种定义方式
+
+```ts
+let list: number[] = [1, 2, 3];
+let list: Array<number> = [1, 2, 3]; // 数组泛型
+```
+
+#### 元组Tuple
+
+元组类型允许表示一个已知元素数量和类型的数组，各元素的类型不必相同。
+
+```ts
+let x: [string, number];
+x = ['hello', 10];
+```
+
+#### 枚举
+
+使用枚举类型的一个便利是可以由枚举的值得到它的名字。
+
+默认情况下从0开始为元素编号，可以手动指定成员的数值。
+
+```ts
+enum Color {Red = 1, Green, Blue}
+let colorName: string = Color[2];
+
+alert(colorName);  // 显示'Green'因为上面代码里它的值是2
+```
 
 方法也是如此
 
@@ -51,15 +83,31 @@ hello() : void{
 }
 ```
 
-### 类型转换
+### 类型转换(断言)
 
 两种写法
 
-```ts
-<string>hehe.type;
+第一种是"尖括号"写法
 
-hehe.type as string;
+```ts
+let someValue: any = "this is a string";
+
+let strLength: number = (<string>someValue).length;
 ```
+
+另一个是`as`语法
+
+```ts
+let someValue: any = "this is a string";
+
+let strLength: number = (someValue as string).length;
+```
+
+### 变量声明
+
+`const`是对`let`的一个增强，能够阻止对一个变量再次赋值。
+
+除了计划去修改的变量都应该使用`const`去声明。
 
 ## 接口与类
 
@@ -104,7 +152,7 @@ let person: Person = { IdCard: "43xxxxxxxxx" };
 > `class`代表着一个家族成员，`extend`表示血缘关系，就像上面的父亲与儿子。
 > `private`是属于家族成员的私有物品，私人空间，别人是不能看到的，除非自己告诉别人，通过方法返回。
 > `protected`表示家族资产，比如姓氏，某一宝物，古董。
-> public 表示共有资产，谁想拿，去问class的示例拿就好了。
+> public 表示共有资产，谁想拿，去问 class 的示例拿就好了。
 
 `?`代表可选属性，可传可不传
 
@@ -114,3 +162,36 @@ interface Person {
   gender?: string;
 }
 ```
+
+### 描述函数
+
+```ts
+interface Db {
+  host: string;
+  port: number;
+}
+
+interface InitFunc {
+  (options: Db): string;
+}
+
+let myfunc: InitFunc = function(opts: Db) {
+  return "";
+};
+```
+
+InitFunc 接口规定，它的函数调用需要传递一个 Db 合同、约束的 options 对象，返回一个 string 类型的值。
+
+## 函数
+
+```ts
+let add1 = function(x: number, y: number): number {
+  return x + y;
+};
+
+function add2(x: number, y: number): number {
+  return x + y;
+}
+```
+
+函数参数的类型，返回值的类型
