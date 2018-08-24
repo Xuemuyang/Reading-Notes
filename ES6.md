@@ -2016,6 +2016,85 @@ const asyncReadFile = async function () {
 
 ### 基本用法
 
+## Class
+
+### 属性和方法
+
+使用 class 定义类，使用 constructor 定义构造函数。
+
+通过 new 生成新实例的时候，会自动调用构造函数。
+
+```js
+class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+  sayHi() {
+    return `My name is ${this.name}`;
+  }
+}
+
+let a = new Animal('Jack');
+console.log(a.sayHi()); // My name is Jack
+```
+
+### 类的继承
+
+使用 extends 关键字实现继承，子类中使用 super 关键字来调用父类的构造函数和方法。
+
+```js
+class Cat extends Animal {
+  constructor(name) {
+    super(name); // 调用父类的 constructor(name)
+    console.log(this.name);
+  }
+  sayHi() {
+    return 'Meow, ' + super.sayHi(); // 调用父类的 sayHi()
+  }
+}
+
+let c = new Cat('Tom'); // Tom
+console.log(c.sayHi()); // Meow, My name is Tom
+```
+
+### 存取器
+
+使用`getter`和`setter`可以改变属性的赋值和读取行为:
+
+```js
+class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+  get name() {
+    return 'Jack';
+  }
+  set name(value) {
+    console.log('setter: ' + value);
+  }
+}
+
+let a = new Animal('Kitty'); // setter: Kitty
+a.name = 'Tom'; // setter: Tom
+console.log(a.name); // Jack
+```
+
+### 静态方法
+
+使用static修饰符修饰的方法称为静态方法，不需要实例化，而是直接通过类来调用:
+
+```js
+class Animal {
+  static isAnimal(a) {
+    return a instanceof Animal;
+  }
+}
+
+let a = new Animal('Jack');
+Animal.isAnimal(a); // true
+a.isAnimal(a); // TypeError: a.isAnimal is not a function
+```
+
 ## Module
 
 使用`export default`命令，为模块指定默认输出，这样就不需要知道所要加载模块的变量名，通过`export`方式导出，在导入时要加`{ }`，`export default`则不需要。
