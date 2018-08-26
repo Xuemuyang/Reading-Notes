@@ -1,5 +1,11 @@
 # React
 
+常用命令
+
+```sh
+create-reacr-app name // 使用create-react-app初始化项目
+```
+
 ## JSX 简介
 
 `JSX`是`JavaScript`扩展语法，`React`推荐使用`JSX`来描述用户界面。
