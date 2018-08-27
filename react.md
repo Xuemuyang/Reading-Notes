@@ -3,7 +3,7 @@
 常用命令
 
 ```sh
-create-reacr-app name // 使用create-react-app初始化项目
+create-react-app name // 使用create-react-app初始化项目
 ```
 
 ## JSX 简介
