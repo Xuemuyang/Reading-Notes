@@ -1091,7 +1091,6 @@ new Vue({
 
 在组件script中的用法
 
-
 ## Vue-router
 
 ### Getting Start
@@ -1311,6 +1310,23 @@ router.beforeEach((to, from, next) => {
   }
 })
 ```
+
+### 总结一下钩子的执行顺序
+
+1. beforeRouteLeave(组件): 路由组件的组件离开路由前钩子，可取消路由离开。
+1. beforeEach(全局): 路由全局前置守卫，可用于登录验证、全局路由loading等。
+1. beforeRouteUpdate(组件): 在重用的组件里调用。
+1. beforeEnter(路由配置): 路由独享守卫。
+1. beforeRouteEnter(组件): 路由组件的组件进入路由前钩子。
+1. beforeResolve(全局): 路由全局解析守卫。
+1. afterEach(全局): 路由全局后置钩子，如果定义了scrollBehavior，会在afterEach之后执行
+1. beforeCreate(组件生命周期): 不能访问this。
+1. created(组件生命周期): 可以访问this，不能访问dom。
+1. beforeMount(组件生命周期)
+1. deactivated(组件生命周期): 离开缓存组件a，或者触发a的beforeDestroy和destroyed组件销毁钩子。
+1. mounted(组件生命周期):访问/操作dom。
+1. activated(组件生命周期):进入缓存组件，进入a的嵌套子组件(如果有的话)。
+1. 执行beforeRouteEnter回调函数next。
 
 ### Data Fetching
 
