@@ -1,4 +1,4 @@
-# CSS3
+# CSS
 
 ---
 这里用来记录一些有趣的小例子
@@ -767,3 +767,26 @@ Block Element Modifier
 ### Modifier
 
 一个“修饰符”可以理解为一个块的特定状态，标识着它持有一个特定的属性。
+
+## position
+
+position有四个常用的值
+
++ static，非定位，默认值
++ relative，相对定位(相对自己)
++ absolute，绝对定位，相对非static祖先元素定位(这里的祖先元素可以是父元素，父元素的父元素...)
++ fixed，相对于视口绝对定位
+
+relative
+
++ 常规流
++ 相对于自己本应该在的位置进行偏移
++ 使用top、left、bottom、right设置偏移长度
++ 流内其他元素当它没有偏移一样布局
+
+absolute
+
++ 脱离常规流
++ 相对于最近的非static祖先的padding box定位
++ 不会对流内元素布局造成影响
++ 可以有margin，但不会折叠
