@@ -207,17 +207,15 @@ border-image:url(/i/border.png) 30 30 stretch;
 ## @font-face
 
 ```css
-<style>
-    @font-face {
-        font-family: myFirstFont;
-        src: url('Sansation_Light.ttf'),
-            url('Sansation_Light.eot'); /* IE9+ */
-    }
+@font-face {
+    font-family: myFirstFont;
+    src: url('Sansation_Light.ttf'),
+        url('Sansation_Light.eot'); /* IE9+ */
+}
 
-    div {
-        font-family:myFirstFont;
-    }
-</style>
+div {
+    font-family:myFirstFont;
+}
 ```
 
 通过@font-face可以从服务器引入字体
