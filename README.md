@@ -15,3 +15,4 @@
 + Linux Command Line
 + 大型网站技术架构核心原理与案例分析
 + 锋利的jQuery
++ JavaScript设计模式与开发实践
