@@ -193,3 +193,6 @@ alert(div.id);
 
 2.Function.prototype.bind
 3.借用其他对象的方法
+
+### 第3章 闭包和高阶函数
+
