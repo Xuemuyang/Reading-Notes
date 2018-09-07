@@ -132,3 +132,64 @@ JavaScript个对象提供了一个名为`__proto__`的隐藏属性，某个对�
 var a = new Object();
 console.log(a.__proto__ === Object.prototype);
 ```
+
+### 第2章 this、call和apply
+
+#### this
+
+`this`的指向大致分为以下四种:
+
++ 作为对象的方法调用
++ 作为普通函数调用
++ 构造器调用
++ Function.prototype.call或Function.prototype.apply调用
+
+当函数作为对象的方法被调用时，`this`指向该对象
+
+函数不作为对象的属性被调用时，`this`总是指向全局对象
+
+当用`new`运算符调用函数时，该函数总会返回一个对象，通常情况下，构造器里的`this`就指向返回的这个对象:
+
+```js
+let MyClass = function() {
+  this.name = 'hehe';
+};
+
+let obj = new MyClass();
+alert(obj.name); // output: hehe
+```
+
+如果构造器显式返回了一个object类型的对象，那么此次运算结果最终会返回这个对象，而不是之前期待的`this`。
+
+```js
+let MyClass = function() {
+  this.name = 'hehe';
+  return {
+    name: 'haha'
+  }
+};
+var obj = new MyClass();
+alert ( obj.name ); // 输出:haha
+```
+
+#### call和apply
+
+能够熟练使用`call`和`apply`是真正成为JavaScript程序员的重要一步。
+
+##### call和apply的用途
+
+1.改变`this`指向
+
+```js
+document.getElementById = (function(func){
+  return function() {
+    return func.apply(document, arguments);
+  }
+})(document.getElementById);
+var getId = document.getElementById;
+var div = getId('div');
+alert(div.id);
+```
+
+2.Function.prototype.bind
+3.借用其他对象的方法
