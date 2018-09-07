@@ -98,3 +98,37 @@ const renderMap = map => {
 renderMap(googleMap)
 renderMap(baiduMap)
 ```
+
+#### 封装
+
+#### 原型模式和基于原型继承的JavaScript对象系统
+
+原型模式的实现关键，是语言本身是否提供了`clone`的方法。
+
+```js
+Object.create = Object.create || function( obj ){
+  var F = function(){};
+  F.prototype = obj;
+  return new F();
+}
+```
+
+基于原型链的委托机制就是原型继承的本质。
+
+原型编程范型至少包括以下基本规则:
+
++ 所有的数据都是对象
++ 要得到一个对象，不是通过实例化类，而是找到一个对象作为原型并克隆它
++ 对象会记住它的原型
++ 如果对象无法响应某个请求，它会把这个请求委托给它自己的原型
+
+##### JavaScript中的原型继承
+
+要得到一个对象，不是通过实例化类，而是找到一个对象作为原型并克隆它。
+
+JavaScript个对象提供了一个名为`__proto__`的隐藏属性，某个对象的`__proto__`属性默认会指向它的构造器的原型对象，即{Construcrot}.prototype。在一些浏览器上`__proto__`属性被公开出来。
+
+```js
+var a = new Object();
+console.log(a.__proto__ === Object.prototype);
+```

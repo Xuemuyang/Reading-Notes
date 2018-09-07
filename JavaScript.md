@@ -64,8 +64,15 @@ var message = "hi",
 
 #### typeof 操作符
 
-typeof 操作符可能返回下列字符串
-undefined,boolean,string,number,object,function
+typeof 操作符可能返回下列字符串，要注意函数和null的返回，还有ES6中的symbol
+
++ undefined
++ boolean
++ string
++ number
++ object
++ function
++ symbol
 
 ```javascript
 var message = "some string";
