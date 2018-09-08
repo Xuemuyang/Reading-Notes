@@ -287,3 +287,189 @@ const mult = () => {
 ```
 
 #### 高阶函数
+
+高阶函数式指至少满足下列条件之一的函数
+
++ 函数可以作为参数传递
++ 函数可以作为返回值输出
+
+函数作为参数传递，代表可以抽离一部分容易变化的业务逻辑，将这部分业务逻辑放在函数参数中，回调函数就是一个重要的应用场景。
+
+##### 函数作为参数传递
+
+1.回调函数
+
+直接看🌰
+
+在页面中创建100个div节点，然后将这些节点设置为隐藏
+
+```js
+const appendDiv = function() {
+  for(let i = 0; i < 100; i++) {
+    const div = document.createElement('div')
+    div.innerHTML = i
+    document.body.appendChild(div)
+    div.style.display = 'none'
+  }
+}
+
+appendDiv()
+```
+
+将`div.style.display = 'none'`放在函数中是不合理的，这个函数过于"个性化"，难以复用，这样改造:
+
+```js
+const appendDiv = function(callback) {
+  for (let i = 0; i < 100; i++) {
+    const div = document.createElement('div')
+    div.innerHTML = i
+    document.body.appendChild(div)
+    if (typeof callback === 'function') {
+      callback(div)
+    }
+  }
+}
+
+appendDiv(node => {
+  node.style.display = 'none'
+})
+```
+
+2.Array.prototype.sort
+
+接受一个函数作为参数，这个函数里封装了数组元素的排序规则
+
+##### 函数作为返回值输出
+
+这是一个单例模式的🌰
+
+```js
+const getSingle = function(fn) {
+  let ret
+  return function(...args) {
+    return ret || (ret = fn.apply(this, args))
+  }
+}
+```
+
+##### 高阶函数实现AOP
+
+AOP(面向切面编程)的主要作用是把一些跟核心业务逻辑无关的功能抽离出来，通常包括日志同级、安全控制、异常处理。这样做的好处是保持业务逻辑模块的纯净和高内聚性。
+
+在JavaScript中实现AOP，通常是把一个函数"动态织入"到另外一个函数之中。
+
+```js
+Function.prototype.before = function(beforefn) {
+  const __self = this // 保存原函数的引用
+  return function(...args) {
+    beforefn.apply(this, args)
+    return __self.apply(this, args)
+  }
+}
+
+Function.prototype.after = function(afterfn) {
+  const __self = this
+  return function(...args) {
+    let ret = __self.apply(this, args)
+    afterfn.apply(this, args)
+    return ret
+  }
+}
+
+const func = function() {
+  console.log(2)
+}
+
+const funcAOP = func.before(function() {
+  console.log(1)
+}).after(function() {
+  console.log(3)
+})
+
+funcAOP()
+```
+
+这是装饰者模式实现。
+
+##### 高阶函数的其他应用
+
+1.currying
+
+`currying`又称部分求值。一个`currying`的函数首先会接收一些参数，接收这些参数之后，该函数不会立即求值，而是继续返回另外一个函数，刚才传入的参数在函数形成的闭包中被保存起来。待到函数真正需要求值的时候，之前传入的所有参数都会被一次性用于求值。
+
+2.uncurrying
+
+3.函数节流
+
+下列场景
+
++ window.onsize事件
++ mousemove事件
++ 上传进度
+
+4.分时函数
+
+场景:在WebQQ好友列表中，可能一次性往页面中添加千数量级的节点。
+
+`timeChunk`函数让创建节点的工作分批进行，比如一秒创建1000个改为每隔200毫秒创建200个。
+
+```js
+const timeChunk = function(array, fn, count) {
+  const start = function() {
+    for(let i = 0; i < Math.min(count || 1, array.length); i++) {
+      let obj = array.shift()
+      fn(obj)
+    }
+  }
+
+  return function() {
+    let t = setInterval(() => {
+      if (array.length === 0) {
+        return clearInterval(t)
+      }
+      start()
+    }, 200)
+  }
+}
+```
+
+5.惰性加载函数
+
+避免每次都让程序执行判断过程
+
+```js
+const addEvent = (() => {
+  if (window.addEventListener) {
+    return function(elem, type, handler) {
+      elem.addEventListener(type, handler, flase)
+    }
+  }
+  if (window.attachEvent) {
+    return function(elem, type, handler) {
+      elem.attachEvent(`on${type}`, handler)
+    }
+  }
+})()
+```
+
+对于这个场景还有这种解决，即在调用过程中改写函数，这样的好处是减少初始化开销
+
+```js
+let addEvent = function(elem, type, handler) {
+  if (window.addEventListener) {
+    addEvent = function(elem, type, handler) {
+      elem.addEventListener(type, handler, flase)
+    }
+  } else if (window.attachEvent) {
+    addEvent = function(elem, type, handler) {
+      elem.attachEvent(`on${type}`, handler)
+    }
+  }
+
+  addEvent(elem, type, handler)
+}
+```
+
+## 第二部分 设计模式
+
+### 第4章 单例模式
