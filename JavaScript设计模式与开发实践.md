@@ -107,9 +107,9 @@ renderMap(baiduMap)
 
 ```js
 Object.create = Object.create || function( obj ){
-  var F = function(){};
-  F.prototype = obj;
-  return new F();
+  const F = function(){}
+  F.prototype = obj
+  return new F()
 }
 ```
 
@@ -129,8 +129,8 @@ Object.create = Object.create || function( obj ){
 JavaScript个对象提供了一个名为`__proto__`的隐藏属性，某个对象的`__proto__`属性默认会指向它的构造器的原型对象，即{Construcrot}.prototype。在一些浏览器上`__proto__`属性被公开出来。
 
 ```js
-var a = new Object();
-console.log(a.__proto__ === Object.prototype);
+const a = new Object()
+console.log(a.__proto__ === Object.prototype)
 ```
 
 ### 第2章 this、call和apply
@@ -152,24 +152,24 @@ console.log(a.__proto__ === Object.prototype);
 
 ```js
 let MyClass = function() {
-  this.name = 'hehe';
-};
+  this.name = 'hehe'
+}
 
-let obj = new MyClass();
-alert(obj.name); // output: hehe
+let obj = new MyClass()
+alert(obj.name) // output: hehe
 ```
 
 如果构造器显式返回了一个object类型的对象，那么此次运算结果最终会返回这个对象，而不是之前期待的`this`。
 
 ```js
 let MyClass = function() {
-  this.name = 'hehe';
+  this.name = 'hehe'
   return {
     name: 'haha'
   }
-};
-var obj = new MyClass();
-alert ( obj.name ); // 输出:haha
+}
+var obj = new MyClass()
+alert ( obj.name ) // 输出:haha
 ```
 
 #### call和apply
@@ -183,12 +183,12 @@ alert ( obj.name ); // 输出:haha
 ```js
 document.getElementById = (function(func){
   return function() {
-    return func.apply(document, arguments);
+    return func.apply(document, arguments)
   }
-})(document.getElementById);
-var getId = document.getElementById;
-var div = getId('div');
-alert(div.id);
+})(document.getElementById)
+var getId = document.getElementById
+var div = getId('div')
+alert(div.id)
 ```
 
 2.Function.prototype.bind
@@ -196,3 +196,94 @@ alert(div.id);
 
 ### 第3章 闭包和高阶函数
 
+#### 闭包
+
+一个🌰
+
+```js
+const Type = {};
+
+for (let i = 0, type; type = ['String', 'Array', 'Number'][i++];) {
+  Type['is' + type] = obj => {
+    return Object.prototype.toString.call(obj) === `[object ${type}]`
+  }
+};
+
+Type.isArray([])
+Type.isString('str')
+```
+
+##### 封装变量
+
+闭包可以将一些不需要暴露在全局的变量封装成"私有变量"。
+
+```js
+const mult = (...args) => {
+  let val  = 1
+  for (let i = 0; i < args.length; i++) {
+    val *= args[i]
+  }
+  return val
+}
+```
+
+加入缓存来提高这个函数的性能
+
+```js
+const cache = {}
+
+const mult = (...args) => {
+  let key = args.join(',')
+  if (cache[key]) {
+    return cache[key]
+  }
+  let val = 1
+  for (let i = 0; i < args.length; i++) {
+    val *= args[i]
+  }
+  return cache[key] = val
+}
+```
+
+`cache`这个变量仅仅在`mult`函数中被使用，将其封闭在`mult`函数内部。
+
+```js
+const mult = () => {
+  const cache = {}
+  return function (...args) {
+    let key = args.join(',')
+    if (key in cache) {
+      return cache[key]
+    }
+    let val = 1
+    for (let i = 0; i < args.length; i++) {
+      val *= args[i]
+    }
+    return cache[key] = val
+  }
+}
+```
+
+提炼函数是代码重构中的常见技巧，如果在一个大函数中有一些代码块能够独立出来，常常把这些代码块封装在独立的小函数里面。独立出来的小函数有助于代码复用，如果这些小函数有一个良好的命名，它们本身也起到了注释的作用。
+
+```js
+const mult = () => {
+  const cache = {}
+  const calculate = (...args) => {
+    let val = 1
+    for (let i = 0; i < args.length; i++) {
+      val *= args[i]
+    }
+    return val
+  }
+  return function (...args) {
+    let key = args.join(',')
+    if (key in cache) {
+      return cache[key]
+    }
+    return cache[key] = calculate.apply(null, args)
+  }
+}
+```
+
+#### 高阶函数
