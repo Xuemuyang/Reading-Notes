@@ -64,15 +64,15 @@ var message = "hi",
 
 #### typeof 操作符
 
-typeof 操作符可能返回下列字符串，要注意函数和null的返回，还有ES6中的symbol
+typeof 操作符可能返回下列字符串，要注意函数和 null 的返回，还有 ES6 中的 symbol
 
-+ undefined
-+ boolean
-+ string
-+ number
-+ object
-+ function
-+ symbol
+- undefined
+- boolean
+- string
+- number
+- object
+- function
+- symbol
 
 ```javascript
 var message = "some string";
@@ -424,8 +424,8 @@ alert(message); // "The sum of 5 and 10 is 510"
 var result1 = 5 - true; // 4
 var result2 = NaN - 1; // NaN
 var result3 = 5 - 3; // 2
-var result4 = 5 - ''; // 5
-var result5 = 5 - '2'; // 3
+var result4 = 5 - ""; // 5
+var result5 = 5 - "2"; // 3
 var result6 = 5 - null; // 5
 ```
 
@@ -475,7 +475,7 @@ console.log("hehe" == true);
 
 ### 语句
 
-语句通常按照从上到下的顺序被执行。JavaScript可以通过条件语句(`if`和`switch`)、循环语句(`while`、`for`、和`do`)、强制跳转语句(`break`、`return`和`throw`)和函数调用来改变执行序列。
+语句通常按照从上到下的顺序被执行。JavaScript 可以通过条件语句(`if`和`switch`)、循环语句(`while`、`for`、和`do`)、强制跳转语句(`break`、`return`和`throw`)和函数调用来改变执行序列。
 
 `return`语句会导致从函数中提前返回。它可以指定要被返回的值。如果没有指定返回表达式,那么返回值是`undefined`。
 
@@ -551,7 +551,7 @@ JavaScript 提供两种注释形式,一种是用`/* */`包围的块注释,另一
 */
 ```
 
-上面的注释导致了一个语法错误,JS语言精粹中提倡使用`//`注释
+上面的注释导致了一个语法错误,JS 语言精粹中提倡使用`//`注释
 
 ### 函数
 
@@ -675,7 +675,7 @@ alert(getColor()); //"red"
 
 #### 引用计数(reference counting)
 
-跟踪每个记录每个值被引用的次数。当声明了一个变量并将一个引用类型值赋给该变量时，这个值的引用次数就是1。如果同一个值又被赋给另一个变量，则该值引用次数+1，相反，包含对这个值引用的变量取得了另外一个值，则这个值的引用次数-1。
+跟踪每个记录每个值被引用的次数。当声明了一个变量并将一个引用类型值赋给该变量时，这个值的引用次数就是 1。如果同一个值又被赋给另一个变量，则该值引用次数+1，相反，包含对这个值引用的变量取得了另外一个值，则这个值的引用次数-1。
 
 ### 内存泄露
 
@@ -683,13 +683,13 @@ alert(getColor()); //"red"
 
 #### 识别方法
 
-使用浏览器开发工具检测内存泄露，performance中勾选memory，点击录制，模拟用户操作，点击stop，查看面板的内存占用情况，如果内存占用平稳，接近水平，说明不存在内存泄露。
+使用浏览器开发工具检测内存泄露，performance 中勾选 memory，点击录制，模拟用户操作，点击 stop，查看面板的内存占用情况，如果内存占用平稳，接近水平，说明不存在内存泄露。
 
-在Node中可以使用提供的`process.memoryUsage`方法查看。
+在 Node 中可以使用提供的`process.memoryUsage`方法查看。
 
 ### WeakMap
 
-ES6中两种新的数据结构WeakSet和WeakMap对于值的引用是不计入垃圾回收机制的。
+ES6 中两种新的数据结构 WeakSet 和 WeakMap 对于值的引用是不计入垃圾回收机制的。
 
 ## chap5.引用类型
 
@@ -1050,15 +1050,15 @@ date.getTime(); // 返回表示日期的毫秒数
 
 预定义类
 
-| .          | 任意字符（除换行符以外：\n,\r,\u2028 or \u2029）  | /.../.test('1a@')';       |
-| ---------- | ------------------------------------------------- | ------------------------- |
-| \d         | 数字 0-9                                          | /\d\d\d/.test('123');     |
+| .          | 任意字符（除换行符以外：\n,\r,\u2028 or \u2029） | /.../.test('1a@')';       |
+| ---------- | ------------------------------------------------ | ------------------------- |
+| \d         | 数字 0-9                                         | /\d\d\d/.test('123');     |
 | \D         | 非\d,即不是数字 0-9 的字符                       | /\D\D\D/.test('ab!');     |
-| \w         | 数字 0-9,或字母 a-z 及 A-Z（大小写）,或下划线） | /\w\w\w\w/.test('aB9\_'); |
-| \W         | 非\w                                              | /\W\W\W/.test('@!#');     |
-| \s         | 空格符、TAB、换页符、换行符                       | /\sabc/.test(' abc');     |
-| \s         | 非\s                                              |
-| \t\r\n\v\f | tab 回车 换行 垂直制表符 换页符                   |
+| \w         | 数字 0-9,或字母 a-z 及 A-Z（大小写）,或下划线）  | /\w\w\w\w/.test('aB9\_'); |
+| \W         | 非\w                                             | /\W\W\W/.test('@!#');     |
+| \s         | 空格符、TAB、换页符、换行符                      | /\sabc/.test(' abc');     |
+| \s         | 非\s                                             |
+| \t\r\n\v\f | tab 回车 换行 垂直制表符 换页符                  |
 
 ##### 范围符号
 
@@ -1086,12 +1086,12 @@ date.getTime(); // 返回表示日期的毫秒数
 
 ##### 重复
 
-| x\* x+          | 重复次数>=0 重复次数>0 贪婪算法             | 正则表达式：abc\*将匹配 ab、abc/abccccc 正则表达式：abc+将匹配 abc、abcccc、却不匹配 ab |
-| --------------- | ------------------------------------------- | --------------------------------------------------------------------------------------- |
-| x\*? x+?        | 同 x\*,x+,非贪婪算法(往少了匹配)            | 正则表达式：abc\*?在字符串 abcccccc 中将匹配 ab,abc+？则匹配 abc。                     |
-| x?              | 出现 0 或 1 次                              |
-| x\|y            | x 或者 y                                    | x\|y 匹配 x,也匹配 y 再比如：ab\|cd\|ef 匹配 ab 或 cd 或 ef                            |
-| x{n}x{n,}x{n,m} | 重复 n 次,重复>=n 次,重复次数满足 n<=x<=m | x{5}匹配 xxxxx,不匹配 xxo,x{1,3}匹配 x,xx,xxx                                      |
+| x\* x+          | 重复次数>=0 重复次数>0 贪婪算法           | 正则表达式：abc\*将匹配 ab、abc/abccccc 正则表达式：abc+将匹配 abc、abcccc、却不匹配 ab |
+| --------------- | ----------------------------------------- | --------------------------------------------------------------------------------------- |
+| x\*? x+?        | 同 x\*,x+,非贪婪算法(往少了匹配)          | 正则表达式：abc\*?在字符串 abcccccc 中将匹配 ab,abc+？则匹配 abc。                      |
+| x?              | 出现 0 或 1 次                            |
+| x\|y            | x 或者 y                                  | x\|y 匹配 x,也匹配 y 再比如：ab\|cd\|ef 匹配 ab 或 cd 或 ef                             |
+| x{n}x{n,}x{n,m} | 重复 n 次,重复>=n 次,重复次数满足 n<=x<=m | x{5}匹配 xxxxx,不匹配 xxo,x{1,3}匹配 x,xx,xxx                                           |
 
 ##### 反向引用
 
@@ -1140,11 +1140,11 @@ var pattern2 = new RegExp("[bc]at", "i");
 
 由于`RegExp`构造函数的模式参数是字符串,某些情况需要双重转义
 
-字面量模式|等价的字符串
----|---
-/\\[bc\\]at/|'\\\\[bc\\\\]at'
-/\\.at/|'\\\\.at'
-/name\\/age/|'name\\\\/age'
+| 字面量模式   | 等价的字符串     |
+| ------------ | ---------------- |
+| /\\[bc\\]at/ | '\\\\[bc\\\\]at' |
+| /\\.at/      | '\\\\.at'        |
+| /name\\/age/ | 'name\\\\/age'   |
 
 ##### 关于正则匹配的 API 小结
 
@@ -1851,7 +1851,7 @@ var global = (function() {
 
 | 属性           | 说明                                |
 | -------------- | ----------------------------------- |
-| `Math.E`       | 自然对数的底数,即常量 e 的值       |
+| `Math.E`       | 自然对数的底数,即常量 e 的值        |
 | `Math.LN10`    | 10 的自然对数                       |
 | `Math.LN2`     | 2 的自然对数                        |
 | `Math.LOG2E`   | 以 2 为底 e 的对数                  |
@@ -2067,14 +2067,14 @@ Object.defineProperties(book, {
 `||`运算符可以用来填充默认值:
 
 ```js
-var middle = sttle['middle-name'] || 'none';
-var status = flight.status || 'unknown';
+var middle = sttle["middle-name"] || "none";
+var status = flight.status || "unknown";
 ```
 
 通过`&&`运算符来避免取值为空的错误
 
 ```js
-flight.equipment && flight.equipment.model
+flight.equipment && flight.equipment.model;
 ```
 
 ### 创建对象
@@ -2703,7 +2703,7 @@ SubType.ptototype.sayAge = funciton() {
 
 ## chap7.函数
 
-JavaScript中的函数就是对象,函数对象(Function Objects)。
+JavaScript 中的函数就是对象,函数对象(Function Objects)。
 
 - 函数表达式的特征
 - 使用函数实现递归
@@ -2746,7 +2746,7 @@ function factorial(num) {
 
 **闭包**是指有权访问另一个函数作用域中的变量的函数。
 
-通过函数字面量创建的函数对象包含一个连到外部上下文的连接。这被称为闭包,它是JavaScript强大表现力的来源。
+通过函数字面量创建的函数对象包含一个连到外部上下文的连接。这被称为闭包,它是 JavaScript 强大表现力的来源。
 
 ```javascript
 function createComparisonFunction(propertyName) {
@@ -2961,12 +2961,14 @@ JavaScript 将`function`关键字当做一个函数声明的开始,而函数声�
 var i = (function() {
   return 10;
 })(); // undefined
-1 && (function() {
-  return true;
-})(); // true
-1, (function() {
-  alert("iifksp");
-})(); // undefined
+1 &&
+  (function() {
+    return true;
+  })(); // true
+1,
+  (function() {
+    alert("iifksp");
+  })(); // undefined
 ```
 
 任何消除函数声明和函数表达式间歧义的方法,都可以被解析器正确识别。
@@ -2975,13 +2977,13 @@ var i = (function() {
 !(function() {
   alert("iifksp");
 })(); // true
-+ (function() {
++(function() {
   alert("iifksp");
 })(); // NaN
-- (function() {
+-(function() {
   alert("iifksp");
 })(); // NaN
-~ (function() {
+~(function() {
   alert("iifksp");
 })(); // -1
 ```
@@ -3334,7 +3336,7 @@ DOM 是针对 HTML 和 XML 文档的一个 API,DOM 描绘了一个层次化的�
 
 NodeList 对象有 length 属性,但它并不是 Array 的实例,NodeList 对象实际上是基于 DOM 结构动态执行查询的结果,DOM 结构的变化能够自动反映在 NodeList 对象中。
 
-所有的 NodeList 对象都是在访问 DOM 文档时实时运行查询。下面这个例子会导致无限循环
+所有的 NodeList 对象都是在访问 DOM 文档时实时运行查询 。下面这个例子会导致无限循环
 
 ```js
 var divs = document.getElementsByTagName("div"),
@@ -3392,7 +3394,7 @@ HTML 元素的标准特性
 - `setAttribute()`
 - `removeAttribute()`
 
-理解 DOM 的关键,就是理解 DOM 对性能的影响。DOM 操作往往是 JavaScript 程序是中开销最大的部分,NodeList 对象是"动态的",意味着每次访问"NodeList"对象,都会运行一次查询。最好的办法就是尽量减少DOM操作。
+理解 DOM 的关键,就是理解 DOM 对性能的影响。DOM 操作往往是 JavaScript 程序是中开销最大的部分,NodeList 对象是"动态的",意味着每次访问"NodeList"对象,都会运行一次查询。最好的办法就是尽量减少 DOM 操作。
 
 ## chap11.DOM 扩展
 
@@ -3458,7 +3460,7 @@ myDiv.style.backgroundColor = "red";
 
 偏移量包括元素在屏幕上占用的所有可见的空间。元素的可见大小由其高度、宽度决定,包括所有内边距、滚动条和边框大小(不包括外边距)。
 
-4个属性可以取得元素的偏移量:
+4 个属性可以取得元素的偏移量:
 
 - `offsetHeight`: 元素在垂直方向上占用的空间大小,以像素计。包括元素的高度、(可见的)滚动条高度、上边框高度和下边框高度
 - `offsetWidth`
@@ -3473,7 +3475,7 @@ myDiv.style.backgroundColor = "red";
 
 #### 滚动大小
 
-4个与滚动大小相关的属性:
+4 个与滚动大小相关的属性:
 
 - scrollHeight: 在没有滚动条的情况下,元素内容的总高度
 - scrollWidth: 在没有滚动条的情况下,元素内容的总宽度
@@ -3484,10 +3486,12 @@ myDiv.style.backgroundColor = "red";
 
 ```js
 var top = document.documentElement.scrollTop || document.body.scrollTop;
-var top = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop;
+var top = document.documentElement.scrollTop
+  ? document.documentElement.scrollTop
+  : document.body.scrollTop;
 ```
 
-document.documentElement是整个文档节点树的根节点,在网页中即html标签
+document.documentElement 是整个文档节点树的根节点,在网页中即 html 标签
 
 ### Image 对象
 
@@ -3681,15 +3685,15 @@ btn.addEventListener(
 
 event 对象简要属性/方法
 
-| 属性/方法         | 类型     | 说明                                                                       |
-| ----------------- | -------- | -------------------------------------------------------------------------- |
-| cancelable        | Boolean  | 表明是否可以取消事件的默认行为                                             |
-| currentTarget     | Boolean  | 其事件处理程序正在处理事件的那个元素                                       |
+| 属性/方法         | 类型     | 说明                                                                     |
+| ----------------- | -------- | ------------------------------------------------------------------------ |
+| cancelable        | Boolean  | 表明是否可以取消事件的默认行为                                           |
+| currentTarget     | Boolean  | 其事件处理程序正在处理事件的那个元素                                     |
 | eventPhase        | Integer  | 调用事件处理程序的阶段：1 表示捕获阶段,2 表示“处于目标”,3 表示“冒泡阶段” |
-| preventDefault()  | Function | 取消事件的默认行为                                                         |
-| stopPropagation() | Funciton | 取消事件的进一步捕获或冒泡                                                 |
-| target            | Element  | 事件的目标                                                                 |
-| type              | String   | 被触发事件的类型                                                           |
+| preventDefault()  | Function | 取消事件的默认行为                                                       |
+| stopPropagation() | Funciton | 取消事件的进一步捕获或冒泡                                               |
+| target            | Element  | 事件的目标                                                               |
+| type              | String   | 被触发事件的类型                                                         |
 
 在事件处理程序内部,对象`this`的值式中等于`currentTarget`的值,而`target`则只包含事件的实际目标。
 
@@ -4404,17 +4408,17 @@ close 事件的`event`对象有额外的信息,`wasClean`,`code`,和`reason`。
 高阶函数: 接受一个函数为参数,返回另一个函数
 
 ```js
-function once(fn){
-  return function(...args){
-    if(fn){
+function once(fn) {
+  return function(...args) {
+    if (fn) {
       let ret = fn.apply(this, args);
       fn = null;
       return ret;
     }
-  }
+  };
 }
 
-function foo(idx){
+function foo(idx) {
   console.log(`I'm called:${idx}`);
 }
 
@@ -4522,69 +4526,69 @@ function handle() {
 window.addEventListener("scroll", throttle(handle, 1000));
 ```
 
-75团版本
+75 团版本
 
 ```js
-function throttle(fn, time = 500){
+function throttle(fn, time = 500) {
   let timer;
-  return function(...args){
-    if(timer == null){
+  return function(...args) {
+    if (timer == null) {
       fn.apply(this, args);
       timer = setTimeout(() => {
         timer = null;
-      }, time)
+      }, time);
     }
-  }
+  };
 }
 ```
 
 ```js
-function debounce(fn, dur){
+function debounce(fn, dur) {
   dur = dur || 100;
   var timer;
-  return function(){
+  return function() {
     clearTimeout(timer);
     timer = setTimeout(() => {
       fn.apply(this, arguments);
     }, dur);
-  }
+  };
 }
 ```
 
 ```js
-function debounce(fn){
-  let timer = null
-  return function(...args){
-    if(timer != null) {
-      clearTimeout(timer)
+function debounce(fn) {
+  let timer = null;
+  return function(...args) {
+    if (timer != null) {
+      clearTimeout(timer);
     }
     timer = setTimeout(() => {
-      fn.apply(this, args)
-      timer = null
-    }, 300)
-  }
+      fn.apply(this, args);
+      timer = null;
+    }, 300);
+  };
 }
 ```
 
-还有consumer函数用于将操作累计滞后触发事件
+还有 consumer 函数用于将操作累计滞后触发事件
 
 ```js
-function consumer(fn, time){
+function consumer(fn, time) {
   let tasks = [],
-      timer;
-  
-  return function(...args){
+    timer;
+
+  return function(...args) {
     tasks.push(fn.bind(this, ...args));
-    if(timer == null){
+    if (timer == null) {
       timer = setInterval(() => {
-        tasks.shift().call(this)
-        if(tasks.length <= 0){
+        tasks.shift().call(this);
+        if (tasks.length <= 0) {
           clearInterval(timer);
           timer = null;
         }
-      }, time)
+      }, time);
     }
-  }
+  };
 }
 ```
 
@@ -4614,58 +4618,58 @@ alert(curriedAdd(3)); //8
 
 ### 函数式编程
 
-Declarative声明式 What to do
-Imperative指令式 How to do
+Declarative 声明式 What to do
+Imperative 指令式 How to do
 
 看一个相加的例子
 
 ```js
-function add(x, y){
+function add(x, y) {
   return x + y;
 }
 
-function sub(x, y){
+function sub(x, y) {
   return x - y;
 }
 
-console.log(add(add(add(1,2),3),4));  //不好！！
+console.log(add(add(add(1, 2), 3), 4)); //不好！！
 console.log([1, 2, 3, 4].reduce(add));
 console.log([1, 2, 3, 4].reduce(sub));
 ```
 
 ```js
-function add(x, y){
+function add(x, y) {
   return x + y;
 }
 
-function sub(x, y){
+function sub(x, y) {
   return x - y;
 }
 
-function addMany(...args){
+function addMany(...args) {
   return args.reduce(add);
 }
 
-function subMany(...args){
+function subMany(...args) {
   return args.reduce(sub);
 }
 
-console.log(addMany(1,2,3,4));
-console.log(subMany(1,2,3,4));
+console.log(addMany(1, 2, 3, 4));
+console.log(subMany(1, 2, 3, 4));
 ```
 
 ```js
-function iterative(fn){
-  return function(...args){
+function iterative(fn) {
+  return function(...args) {
     return args.reduce(fn.bind(this));
-  }
+  };
 }
 
 const add = iterative((x, y) => x + y);
 const sub = iterative((x, y) => x - y);
 
-console.log(add(1,2,3,4));
-console.log(sub(1,2,3,4));
+console.log(add(1, 2, 3, 4));
+console.log(sub(1, 2, 3, 4));
 ```
 
 再看一个切换状态的例子
@@ -4673,55 +4677,55 @@ console.log(sub(1,2,3,4));
 指令式
 
 ```js
-switcher.onclick = function(evt){
-  if(evt.target.className === 'on'){
-    evt.target.className = 'off';
-  }else{
-    evt.target.className = 'on';
+switcher.onclick = function(evt) {
+  if (evt.target.className === "on") {
+    evt.target.className = "off";
+  } else {
+    evt.target.className = "on";
   }
-}
+};
 ```
 
 声明式
 
 ```js
-function toggle(...actions){
-  return function(...args){
+function toggle(...actions) {
+  return function(...args) {
     let action = actions.shift();
     actions.push(action);
     return action.apply(this, args);
-  }
+  };
 }
 
 switcher.onclick = toggle(
-  evt => evt.target.className = 'off',
-  evt => evt.target.className = 'on'
+  evt => (evt.target.className = "off"),
+  evt => (evt.target.className = "on")
 );
 ```
 
 使用生成器
 
 ```js
-function * loop(list, max = Infinity){
+function* loop(list, max = Infinity) {
   let i = 0;
-  
+
   //noprotect
-  while(i < max){
+  while (i < max) {
     yield list[i++ % list.length];
   }
 }
 
-function toggle(...actions){
+function toggle(...actions) {
   let action = loop(actions);
-  return function(...args){
+  return function(...args) {
     return action.next().value.apply(this, args);
-  }
+  };
 }
 
 switcher.onclick = toggle(
-  evt => evt.target.className = 'warn',
-  evt => evt.target.className = 'off',
-  evt => evt.target.className = 'on'
+  evt => (evt.target.className = "warn"),
+  evt => (evt.target.className = "off"),
+  evt => (evt.target.className = "on")
 );
 ```
 
@@ -5003,19 +5007,19 @@ export default function jsonp(url, data, option) {
 
 [promise/A+](http://www.ituring.com.cn/article/66566)规范,一个开放、健全且通用的`JavaScript Promise`标准。由开发者制定,供开发者参考。
 
-#### 几个Promise的例子
+#### 几个 Promise 的例子
 
 1.立即执行性
 
 ```js
-var p = new Promise(function(resolve, reject){
+var p = new Promise(function(resolve, reject) {
   console.log("create a promise");
   resolve("success");
 });
 
 console.log("after new Promise");
 
-p.then(function(value){
+p.then(function(value) {
   console.log(value);
 });
 ```
@@ -5026,42 +5030,42 @@ p.then(function(value){
 "success"
 ```
 
-Promise对象表示未来某个将要发生的事件,在创建(new)Promise时,作为Promise参数传入的函数会被立即执行,其中执行的代码可以是异步操作。
+Promise 对象表示未来某个将要发生的事件,在创建(new)Promise 时,作为 Promise 参数传入的函数会被立即执行,其中执行的代码可以是异步操作。
 
 2.三种状态
 
 ```js
-var p1 = new Promise(function(resolve,reject){
+var p1 = new Promise(function(resolve, reject) {
   resolve(1);
 });
-var p2 = new Promise(function(resolve,reject){
-  setTimeout(function(){
-    resolve(2);  
+var p2 = new Promise(function(resolve, reject) {
+  setTimeout(function() {
+    resolve(2);
   }, 500);
 });
-var p3 = new Promise(function(resolve,reject){
-  setTimeout(function(){
-    reject(3);  
+var p3 = new Promise(function(resolve, reject) {
+  setTimeout(function() {
+    reject(3);
   }, 500);
 });
 
 console.log(p1);
 console.log(p2);
 console.log(p3);
-setTimeout(function(){
+setTimeout(function() {
   console.log(p2);
 }, 1000);
-setTimeout(function(){
+setTimeout(function() {
   console.log(p3);
 }, 1000);
 
-p1.then(function(value){
+p1.then(function(value) {
   console.log(value);
 });
-p2.then(function(value){
+p2.then(function(value) {
   console.log(value);
 });
-p3.catch(function(err){
+p3.catch(function(err) {
   console.log(err);
 });
 ```
@@ -5077,24 +5081,24 @@ Promise {[[PromiseStatus]]: "resolved", [[PromiseValue]]: 2}
 Promise {[[PromiseStatus]]: "rejected", [[PromiseValue]]: 3}
 ```
 
-3.Promise状态的不可逆性
+3.Promise 状态的不可逆性
 
 ```js
-var p1 = new Promise(function(resolve, reject){
+var p1 = new Promise(function(resolve, reject) {
   resolve("success1");
   resolve("success2");
 });
 
-var p2 = new Promise(function(resolve, reject){
+var p2 = new Promise(function(resolve, reject) {
   resolve("success");
   reject("reject");
 });
 
-p1.then(function(value){
+p1.then(function(value) {
   console.log(value);
 });
 
-p2.then(function(value){
+p2.then(function(value) {
   console.log(value);
 });
 ```
@@ -5104,30 +5108,42 @@ p2.then(function(value){
 "success"
 ```
 
-Promise状态一旦变成`resolved`或`rejected`,Promise的状态和值就固定下来,不论后续怎么调用`resolved`或`rejected`都不能改变其状态和值。
+Promise 状态一旦变成`resolved`或`rejected`,Promise 的状态和值就固定下来,不论后续怎么调用`resolved`或`rejected`都不能改变其状态和值。
 
 4.链式调用
 
 ```js
-var p = new Promise(function(resolve, reject){
+var p = new Promise(function(resolve, reject) {
   resolve(1);
 });
-p.then(function(value){               //第一个then
+p.then(function(value) {
+  //第一个then
   console.log(value);
-  return value*2;
-}).then(function(value){              //第二个then
-  console.log(value);
-}).then(function(value){              //第三个then
-  console.log(value);
-  return Promise.resolve('resolve');
-}).then(function(value){              //第四个then
-  console.log(value);
-  return Promise.reject('reject');
-}).then(function(value){              //第五个then
-  console.log('resolve: '+ value);
-}, function(err){
-  console.log('reject: ' + err);
+  return value * 2;
 })
+.then(function(value) {
+    //第二个then
+    console.log(value);
+})
+.then(function(value) {
+  //第三个then
+  console.log(value);
+  return Promise.resolve("resolve");
+})
+.then(function(value) {
+  //第四个then
+  console.log(value);
+  return Promise.reject("reject");
+})
+.then(
+  function(value) {
+    //第五个then
+    console.log("resolve: " + value);
+  },
+  function(err) {
+    console.log("reject: " + err);
+  }
+);
 ```
 
 ```console
@@ -5138,20 +5154,20 @@ undefined
 "reject: reject"
 ```
 
-Promise对象的`then`方法返回一个新的Promise对象,因此可以通过链式调用`then`方法。`then`方法接收两个函数作为参数,第一个参数是Promise执行成功时的回调,第二个参数是Promise执行失败时的回调。两个函数只会有一个被调用,函数的返回值将被用作创建`then`返回的Promise对象。这两个参数的返回值可以是以下三种情况中的一种：
+Promise 对象的`then`方法返回一个新的 Promise 对象,因此可以通过链式调用`then`方法。`then`方法接收两个函数作为参数,第一个参数是 Promise 执行成功时的回调,第二个参数是 Promise 执行失败时的回调。两个函数只会有一个被调用,函数的返回值将被用作创建`then`返回的 Promise 对象。这两个参数的返回值可以是以下三种情况中的一种：
 
-- `return`一个同步的值 ,或者`undefined`（当没有返回一个有效值时,默认返回`undefined`）,`then`方法将返回一个`resolved`状态的Promise对象,Promise对象的值就是这个返回值。
-- `return`另一个Promise,`then`方法将根据这个Promise的状态和值创建一个新的Promise对象返回。
-- `throw`一个同步异常,`then`方法将返回一个`rejected`状态的Promise, 值是该异常。
+- `return`一个同步的值 ,或者`undefined`（当没有返回一个有效值时,默认返回`undefined`）,`then`方法将返回一个`resolved`状态的 Promise 对象,Promise 对象的值就是这个返回值。
+- `return`另一个 Promise,`then`方法将根据这个 Promise 的状态和值创建一个新的 Promise 对象返回。
+- `throw`一个同步异常,`then`方法将返回一个`rejected`状态的 Promise, 值是该异常。
 
-5.`Promise.then()`回调异步性
+  5.`Promise.then()`回调异步性
 
 ```js
-var p = new Promise(function(resolve, reject){
+var p = new Promise(function(resolve, reject) {
   resolve("success");
 });
 
-p.then(function(value){
+p.then(function(value) {
   console.log(value);
 });
 
@@ -5163,60 +5179,62 @@ console.log("which one is called first ?");
 "success"
 ```
 
-Promise接受的函数参数是同步执行的,但`then`方法中的回调执行则是异步的。
+Promise 接受的函数参数是同步执行的,但`then`方法中的回调执行则是异步的。
 
-6.Promise的中的异常
+6.Promise 的中的异常
 
 ```js
-var p1 = new Promise( function(resolve,reject){
+var p1 = new Promise(function(resolve, reject) {
   foo.bar();
-  resolve( 1 );
+  resolve(1);
 });
 
 p1.then(
-  function(value){
-    console.log('p1 then value: ' + value);
+  function(value) {
+    console.log("p1 then value: " + value);
   },
-  function(err){
-    console.log('p1 then err: ' + err);
+  function(err) {
+    console.log("p1 then err: " + err);
   }
 ).then(
-  function(value){
-    console.log('p1 then then value: '+value);
+  function(value) {
+    console.log("p1 then then value: " + value);
   },
-  function(err){
-    console.log('p1 then then err: ' + err);
+  function(err) {
+    console.log("p1 then then err: " + err);
   }
 );
 
-var p2 = new Promise(function(resolve,reject){
-  resolve( 2 );
+var p2 = new Promise(function(resolve, reject) {
+  resolve(2);
 });
 
 p2.then(
-  function(value){
-    console.log('p2 then value: ' + value);
+  function(value) {
+    console.log("p2 then value: " + value);
     foo.bar();
-  }, 
-  function(err){
-    console.log('p2 then err: ' + err);
-  }
-).then(
-  function(value){
-    console.log('p2 then then value: ' + value);
   },
-  function(err){
-    console.log('p2 then then err: ' + err);
-    return 1;
+  function(err) {
+    console.log("p2 then err: " + err);
   }
-).then(
-  function(value){
-    console.log('p2 then then then value: ' + value);
-  },
-  function(err){
-    console.log('p2 then then then err: ' + err);
-  }
-);
+)
+  .then(
+    function(value) {
+      console.log("p2 then then value: " + value);
+    },
+    function(err) {
+      console.log("p2 then then err: " + err);
+      return 1;
+    }
+  )
+  .then(
+    function(value) {
+      console.log("p2 then then then value: " + value);
+    },
+    function(err) {
+      console.log("p2 then then then err: " + err);
+    }
+  );
 ```
 
 ```console
@@ -5227,36 +5245,36 @@ p2 then then err: ReferenceError: foo is not defined
 p2 then then then value: 1
 ```
 
-Promise中的异常由`then`参数中的第二个回调处理,异常信息将作为Promise的值。异常一旦得到处理,`then`返回的后续Promise对象将恢复正常。
+Promise 中的异常由`then`参数中的第二个回调处理,异常信息将作为 Promise 的值。异常一旦得到处理,`then`返回的后续 Promise 对象将恢复正常。
 
 7.`Promise.resolve()`
 
 ```js
-var p1 = Promise.resolve( 1 );
-var p2 = Promise.resolve( p1 );
-var p3 = new Promise(function(resolve, reject){
+var p1 = Promise.resolve(1);
+var p2 = Promise.resolve(p1);
+var p3 = new Promise(function(resolve, reject) {
   resolve(1);
 });
-var p4 = new Promise(function(resolve, reject){
+var p4 = new Promise(function(resolve, reject) {
   resolve(p1);
 });
 
-console.log(p1 === p2); 
+console.log(p1 === p2);
 console.log(p1 === p3);
 console.log(p1 === p4);
 console.log(p3 === p4);
 
-p4.then(function(value){
-  console.log('p4=' + value);
+p4.then(function(value) {
+  console.log("p4=" + value);
 });
 
-p2.then(function(value){
-  console.log('p2=' + value);
-})
+p2.then(function(value) {
+  console.log("p2=" + value);
+});
 
-p1.then(function(value){
-  console.log('p1=' + value);
-})
+p1.then(function(value) {
+  console.log("p1=" + value);
+});
 ```
 
 ```console
@@ -5269,47 +5287,47 @@ p1=1
 p4=1
 ```
 
-`Promise.resolve(...)`可以接受一个值或或者是一个Promise对象。当参数是普通值时,返回一个`resolved`状态的Promise对象,对象的值就是这个参数。当参数是一个Promise对象时,直接返回这个Promise参数。通过`new`方式创建的Promise都是一个新的对象,因此比较结果都是`false`。p4的`resolve`中接收的是一个Promise,`resolve`会对p1"拆箱",获取p1的状态和值,这个过程是异步的。
+`Promise.resolve(...)`可以接受一个值或或者是一个 Promise 对象。当参数是普通值时,返回一个`resolved`状态的 Promise 对象,对象的值就是这个参数。当参数是一个 Promise 对象时,直接返回这个 Promise 参数。通过`new`方式创建的 Promise 都是一个新的对象,因此比较结果都是`false`。p4 的`resolve`中接收的是一个 Promise,`resolve`会对 p1"拆箱",获取 p1 的状态和值,这个过程是异步的。
 
 8.`resolve`和`reject`
 
 ```js
-var p1 = new Promise(function(resolve, reject){
-  resolve(Promise.resolve('resolve'));
+var p1 = new Promise(function(resolve, reject) {
+  resolve(Promise.resolve("resolve"));
 });
 
-var p2 = new Promise(function(resolve, reject){
-  resolve(Promise.reject('reject'));
+var p2 = new Promise(function(resolve, reject) {
+  resolve(Promise.reject("reject"));
 });
 
-var p3 = new Promise(function(resolve, reject){
-  reject(Promise.resolve('resolve'));
+var p3 = new Promise(function(resolve, reject) {
+  reject(Promise.resolve("resolve"));
 });
 
 p1.then(
-  function fulfilled(value){
-    console.log('fulfilled: ' + value);
+  function fulfilled(value) {
+    console.log("fulfilled: " + value);
   },
-  function rejected(err){
-    console.log('rejected: ' + err);
+  function rejected(err) {
+    console.log("rejected: " + err);
   }
 );
 
 p2.then(
-  function fulfilled(value){
-    console.log('fulfilled: ' + value);
+  function fulfilled(value) {
+    console.log("fulfilled: " + value);
   },
-  function rejected(err){
-    console.log('rejected: ' + err);
+  function rejected(err) {
+    console.log("rejected: " + err);
   }
 );
 
 p3.then(
-  function fulfilled(value){
-    console.log('fulfilled: ' + value);
+  function fulfilled(value) {
+    console.log("fulfilled: " + value);
   },
-  function rejected(err){
-    console.log('rejected: ' + err);
+  function rejected(err) {
+    console.log("rejected: " + err);
   }
 );
 ```
@@ -5320,7 +5338,7 @@ p1 fulfilled: resolve
 p2 rejected: reject
 ```
 
-Promise回调中的第一个参数`resolve`,会对Promise执行"拆箱"动作,当`resolve`参数是一个Promise对象,`resolve`会"拆箱"获取这个Promise对象的状态和值,这个过程是异步的。由于"拆箱"的结果是`resolved`,`fulfilled`回调被执行。`reject`不具备"拆箱"能力,将参数直接传给`then`方法中`reject`回调。
+Promise 回调中的第一个参数`resolve`,会对 Promise 执行"拆箱"动作,当`resolve`参数是一个 Promise 对象,`resolve`会"拆箱"获取这个 Promise 对象的状态和值,这个过程是异步的。由于"拆箱"的结果是`resolved`,`fulfilled`回调被执行。`reject`不具备"拆箱"能力,将参数直接传给`then`方法中`reject`回调。
 
 ### Node 中的异步
 
@@ -5398,12 +5416,12 @@ async function logFetch(url) {
 
 ```js
 async getBooksAndAuthor(authorId) {
-    const books = await bookModel.fetchAll();
-    const author = await authorModel.fetch(authorId);
-    return {
-        author,
-        books: books.filter(book => book.authorId === authorId),
-    };
+  const books = await bookModel.fetchAll();
+  const author = await authorModel.fetch(authorId);
+  return {
+      author,
+      books: books.filter(book => book.authorId === authorId),
+  };
 }
 ```
 
@@ -5411,13 +5429,13 @@ async getBooksAndAuthor(authorId) {
 
 ```js
 async getBooksAndAuthor(authorId) {
-    const bookPromise = bookModel.fetchAll();
-    const authorPromise = authorModel.fetch(authorId);
-    const book = await bookPromise;
-    const author = await authorPromise;
-    return {
-      author,
-      books: books.filter(book => book.authorId === authorId),
-    };
+  const bookPromise = bookModel.fetchAll();
+  const authorPromise = authorModel.fetch(authorId);
+  const book = await bookPromise;
+  const author = await authorPromise;
+  return {
+    author,
+    books: books.filter(book => book.authorId === authorId),
+  };
 }
 ```
