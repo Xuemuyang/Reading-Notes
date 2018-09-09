@@ -473,3 +473,5 @@ let addEvent = function(elem, type, handler) {
 ## 第二部分 设计模式
 
 ### 第4章 单例模式
+
+保证一个类仅有一个实例
