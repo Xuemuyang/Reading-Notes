@@ -478,6 +478,99 @@ let addEvent = function(elem, type, handler) {
 
 单例模式是一种常用的模式，有些对象往往只需要一个。比如Toast。
 
+#### 实现单例模式
+
+使用一个变量来标志当前是否已经为某个类创建过对象，如果是，则在下一次获取该类的实例时，直接返回之前创建的对象。
+
+```js
+const Singleton = function(name) {
+  this.name = name
+  this.instance = null
+}
+
+Singleton.prototype.getName = function() {
+  console.log(this.name)
+}
+
+Singleton.getInstance = function(name) {
+  if(!this.instance) {
+    this.instance = new Singleton(name)
+  }
+  return this.instance
+}
+```
+
+或者
+
+```js
+const Singleton = function(name) {
+  this.name = name
+}
+
+Singleton.prototype.getName = function() {
+  console.log(this.name)
+}
+
+Singleton.getInstance = (function(name) {
+  let instance = null
+  return function() {
+    if (!this.instance) {
+      instance = new Singleton(name)
+    }
+    return instance
+  }
+})()
+```
+
+以上两种方式中，使用`Singleton.getInstance`来获取`Singleton`类的唯一对象，但是增加了这个类的"不透明性"。
+
+#### 透明的单例模式
+
+```js
+const CreateDiv = (function() {
+  let instance
+
+  const CreateDiv = function(html) {
+    if (instance) {
+      return instance
+    }
+    this.html = html
+    this.init()
+    return instance = this
+  }
+
+  CreateDiv.prototype.init = function() {
+    let div = document.createElement('div')
+    div.innerHTML = this.html
+    document.body.appendChild(div)
+  }
+
+  return CreateDiv
+})()
+
+let a = new CreateDiv('1')
+let b = new CreateDiv('2')
+
+console.log(a === b)
+```
+
+使用了闭包保存单例，立即执行函数返回真正的构造方法。
+
+现在的构造函数实际上负责了两件事情。第一是创建对象和执行初始化init方法，第二是保证只有一个对象
+
+```js
+const CreateDiv = function(html) {
+  if (instance) {
+    return instance
+  }
+  this.html = html
+  this.init()
+  return instance = this
+}
+```
+
+#### 用代理实现单例模式
+
 ### 第5章 策略模式
 
 > 定义一系列的算法，把它们一个个封装起来，并且使它们可以相互替换。
