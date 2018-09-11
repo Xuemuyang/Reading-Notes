@@ -37,9 +37,9 @@ props是专门用来暴露组件的属性接口的
 
 ```html
 <style type="text/css">
-    [v-cloak] {
-        display: none;
-    }
+  [v-cloak] {
+    display: none;
+  }
 </style>
 ```
 
