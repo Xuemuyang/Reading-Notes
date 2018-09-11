@@ -248,6 +248,8 @@ background: linear-gradient(#fb3, #58a);
 background: linear-gradient(#fb3 20%, #58a 80%);
 ```
 
+![](./images/CSS-secret/50.png)
+
 > 如果多个色标具有相同的位置，他们会产生一个无限小的过渡区域，过渡的起止色分别是第一个和最后一个指定值。从效果上看，颜色会在那个位置突然变化，而不是一个平滑的渐变过程。
 
 ![](./images/CSS-secret/4.png)
@@ -291,6 +293,10 @@ background-size: 100% 45px;
 background: linear-gradient(to right, /* 或 90deg */ #fb3 50%, #58a 0);
 background-size: 30px 100%;
 ```
+
+默认是`to bottom`，从上往下。
+
+角度是坐标系绕原点顺时针旋转，沿y方向变化。
 
 #### 斜向条纹
 
