@@ -1,1 +1,51 @@
 # 微信小程序相关
+
+## 概述
+
+本质上是一套Hybrid解决方案
+
+## 开发基础知识
+
++ 在IOS上，小程序的JavaScript运行在JavaScriptCore中
++ 在Android上，小程序的JavaScript代码通过X5内核来解析
++ 在开发工具上，小程序的JavaScript代码运行在NW.js(Chromium内核)中
+
+### 项目配置
+
++ `project.config.json`:这个是配置项目工具相关的，开发者工具的编译设置等
++ `app.json`:小程序的全局配置，包括所有页面路径、界面表现、网络超时时间、底部tab、插件等。常用配置是`window`和`pages`。
++ `page.json`:是相对于`app.json`更细粒度的单页面配置。
+
+### 组件和插件
+
+根据实现的不同，分为Web组件和Native组件。
+
+插件可以理解为npm包，供大家使用。
+
+### 开发基础
+
+与react相似，小程序内对页面的数据修改只能通过`setData`方法，不能使用直接赋值的方式。
+
+> 修改页面的数据，只能使用`this.setData`修改！
+
+#### 事件绑定
+
+相对于HTML5中的触摸事件外，新增`tap`类的事件
+
+事件名称|说明
+---|---
+tap|手指触摸马上离开
+longpress|手指触摸后，超过350ms再离开，如果指定了callback并触发了事件，tap不再触发
+longtap|手指触摸后，超过350ms再离开(推荐使用longpress事件代替)
+
+#### 事件捕获
+
+小程序内，触摸类事件支持捕获阶段，捕获先于冒泡触发，绑定捕获事件，可以使用`capture-bind`、`capture-catch`,后者将中断捕获阶段和取消冒泡阶段。
+
+## 小程序特点
+
+小程序没有`window`、`document`，更像是一个Node.js宿主环境，小程序内不能使用`document.querySeletor`这类DOM选择器，也不支持`XMLHttpRequest`、`location`、`localStorage`等浏览器提供的API。
+
+小程序并非通过URL访问，而是通过信道服务进行通信和会话管理，不支持Cookie存储，同时访问资源使用`wx.request`，不存在跨域问题。
+
+微信小程序由逻辑层和视图层两个不同的线程进行交互而形成，而视图层是通过将`WXML`转换成JS，最终由JS 生成HTML片段放在WebView中显示的。
