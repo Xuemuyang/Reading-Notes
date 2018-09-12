@@ -476,7 +476,7 @@ computed: {
 <div v-bind:class="[activeClass, errorClass]"></div>
 ```
 
-```javascript
+```js
 data: {
   activeClass: 'active',
   errorClass: 'text-danger'
