@@ -257,7 +257,10 @@ class Clock extends React.Component {
     return (
       <div>
         <h1>Hello, world!</h1>
-        <h2>It is{this.props.date.toLocaleTimeString()}.</h2>
+        <h2>
+          It is
+          {this.props.date.toLocaleTimeString()}.
+        </h2>
       </div>
     );
   }
@@ -623,7 +626,6 @@ class LoggingButton extends React.Component {
 
 ## 条件渲染
 
-
 ## the-road-to-learn-react
 
 ### Introduction
@@ -716,27 +718,27 @@ class Developer {
   }
 
   getName() {
-    return `${this.firstname} ${this.lastname}`
+    return `${this.firstname} ${this.lastname}`;
   }
 }
 ```
 
 ```js
-const robin = new Developer('Robin', 'Wieruch');
+const robin = new Developer("Robin", "Wieruch");
 console.log(robin.getName());
 // output: Robin Wieruch
 ```
 
 ### Basics in React
 
-每当我们改变了组件的state，`render()`方法都会执行
+每当我们改变了组件的 state，`render()`方法都会执行
 
 ```js
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hehe: 'hehe'
+      hehe: "hehe"
     };
   }
 }
@@ -767,9 +769,9 @@ class App extends Component {
 }
 ```
 
-使用类方法`setState()`来更新组件state
+使用类方法`setState()`来更新组件 state
 
-binding操作是必要的，方法不会自动绑定到类的实例上
+binding 操作是必要的，方法不会自动绑定到类的实例上
 
 构造函数的目的只是实例化一个类以及所有属性，业务逻辑应该写在构造函数之外，这就是为什么需要`this.onDismiss = this.onDismiss.bind(this)`
 
@@ -780,17 +782,14 @@ binding操作是必要的，方法不会自动绑定到类的实例上
 传递参数时需要涉及到高阶函数(higher-order functions)，使用一个函数返回另一个函数
 
 ```jsx
-<button
-  onClick={() => this.onDismiss(item.objectId)}
-  type="button"
->
+<button onClick={() => this.onDismiss(item.objectId)} type="button">
   Dismiss
 </button>
 ```
 
 传给事件处理器的一定是一个函数
 
-像下面这样的写法，testMethod函数会在浏览器打开程序的时候立即执行
+像下面这样的写法，testMethod 函数会在浏览器打开程序的时候立即执行
 
 ```js
 render() {
@@ -824,45 +823,43 @@ render() {
 
 #### Controlled Components(受控组件)
 
-比如表单元素`<input>`，它的值可以通过value元素来改变，在React中这被称为不受控组件。
+比如表单元素`<input>`，它的值可以通过 value 元素来改变，在 React 中这被称为不受控组件。
 
 ```jsx
-<input
-type="text" value={searchTerm} onChange={this.onSearchChange}
-/>
+<input type="text" value={searchTerm} onChange={this.onSearchChange} />
 ```
 
 这样处理之后，就形成了自包含的单向数据流
 
 #### Functional Stateless Components(函数式无状态组件)
 
-这类组件可以可以理解为函数，输入props，输出JSX组件实例，这类组件中没有`this.state`和`this.setState()`因为他们没有`this`对象，也没有生命周期方法，但是可以有`constructor()`和`render()`
+这类组件可以可以理解为函数，输入 props，输出 JSX 组件实例，这类组件中没有`this.state`和`this.setState()`因为他们没有`this`对象，也没有生命周期方法，但是可以有`constructor()`和`render()`
 
 ### Lifecycle
 
 在挂载过程中有四个生命周期方法，调用顺序如下
 
-+ `constructor()`
-+ `componentWillMount()`
-+ `render()`
-+ `componentDidMount()`
+- `constructor()`
+- `componentWillMount()`
+- `render()`
+- `componentDidMount()`
 
-当组件状态或属性改变有五个生命周期用于组件更新
+当组件状态或属性改变有五个  生命周期用于组件更新
 
-+ `componentWillReceiveProps()`
-+ `shouldComponentUpdate()`
-+ `componentWillUpdate()`
-+ `render()`
-+ `componentDidUpdate()`
+- `componentWillReceiveProps()`
+- `shouldComponentUpdate()`
+- `componentWillUpdate()`
+- `render()`
+- `componentDidUpdate()`
 
 组件卸载
 
-+ `componentWillUnmount()`
+- `componentWillUnmount()`
 
-React允许组件通过返回`null`来不渲染任何东西
+React 允许组件通过返回`null`来不渲染任何东西
 
-React拥护不可变的数据结构，相比直接改变对象的属性，更好的做法是创建一个新的对象
+React 拥护不可变的数据结构，相比直接改变对象的属性，更好的做法是创建一个新的对象
 
 对象的扩展运算符可以用来替代`Object.assign()`
 
-使用PropTypes来进行参数类型检查
+使用 PropTypes 来进行参数类型检查
