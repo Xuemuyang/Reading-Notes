@@ -2902,18 +2902,18 @@ foo(22);
 
 ```javascript
 fooExecutionContext = {
-    scopeChain: { ... },
-    variableObject: {
-        arguments: {
-            0: 22,
-            length: 1
-        },
-        i: 22,
-        c: pointer to function c()
-        a: undefined,
-        b: undefined
-    },
-    this: { ... }
+  scopeChain: { ... },
+  variableObject: {
+      arguments: {
+          0: 22,
+          length: 1
+      },
+      i: 22,
+      c: pointer to function c()
+      a: undefined,
+      b: undefined
+  },
+  this: { ... }
 }
 ```
 
@@ -2921,18 +2921,18 @@ fooExecutionContext = {
 
 ```javascript
 fooExecutionContext = {
-    scopeChain: { ... },
-    variableObject: {
-        arguments: {
-            0: 22,
-            length: 1
-        },
-        i: 22,
-        c: pointer to function c()
-        a: 'hello',
-        b: pointer to function privateB()
-    },
-    this: { ... }
+  scopeChain: { ... },
+  variableObject: {
+      arguments: {
+          0: 22,
+          length: 1
+      },
+      i: 22,
+      c: pointer to function c()
+      a: 'hello',
+      b: pointer to function privateB()
+  },
+  this: { ... }
 }
 ```
 

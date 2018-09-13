@@ -1,17 +1,17 @@
-# JS面试题
+# JS 面试题
 
 1.输出是什么
 
 ```javascript
 function Foo() {
-    var i = 0;
-    return function() {
-        console.log(i++);
-    }
+  var i = 0;
+  return function() {
+    console.log(i++);
+  };
 }
 
 var f1 = Foo(),
-    f2 = Foo();
+  f2 = Foo();
 
 f1();
 f1();
@@ -25,17 +25,17 @@ f2();
 
 ```javascript
 var myObject = {
-    foo: "bar",
-    func: function() {
-        var self = this;
-        console.log(this.foo);
-        console.log(self.foo);
+  foo: "bar",
+  func: function() {
+    var self = this;
+    console.log(this.foo);
+    console.log(self.foo);
 
-        (function() {
-            console.log(this.foo);
-            console.log(self.foo);
-        }());
-    }
+    (function() {
+      console.log(this.foo);
+      console.log(self.foo);
+    })();
+  }
 };
 myObject.func(); // bar bar undefined bar
 ```
@@ -47,17 +47,17 @@ myObject.func(); // bar bar undefined bar
 
 ```javascript
 function test() {
-    var n = 4399;
+  var n = 4399;
 
-    function add() {
-        n++;
-        console.log(n);
-    }
+  function add() {
+    n++;
+    console.log(n);
+  }
 
-    return {
-        n: n,
-        add: add
-    }
+  return {
+    n: n,
+    add: add
+  };
 }
 var result = test();
 var result2 = test();
@@ -78,17 +78,17 @@ result2.add();
 样例输入
 
 ```js
-'携程C2t0r1i8p2020校招'
+"携程C2t0r1i8p2020校招";
 ```
 
 样例输出
 
 ```js
-'2018Ctrip'
+"2018Ctrip";
 ```
 
 ```js
-[...new Set([...str.match(/\d/g),...str.match(/[a-zA-Z]/g)])].join('')
+[...new Set([...str.match(/\d/g), ...str.match(/[a-zA-Z]/g)])].join("");
 ```
 
 5.小算法题
@@ -98,19 +98,19 @@ result2.add();
 样例输入
 
 ```js
-[1,2,3],[1,2,3]
+[1, 2, 3], [1, 2, 3];
 ```
 
 样例输出
 
 ```js
-10
+10;
 ```
 
 ```js
 module.exports = (arr1, arr2) => {
-    arr1 = arr1.sort((a, b) => a - b)
-    arr2 = arr2.sort((a, b) => b - a)
-    return arr1.reduce((sum, value, i) => sum + value * arr2[i], 0)
-}
+  arr1 = arr1.sort((a, b) => a - b);
+  arr2 = arr2.sort((a, b) => b - a);
+  return arr1.reduce((sum, value, i) => sum + value * arr2[i], 0);
+};
 ```

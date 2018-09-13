@@ -15,7 +15,7 @@
 将词法单元流转化弄成一个结构树。抽象语法树(Abstract Syntax Tree，AST)
 
 3.代码生成
-将AST转化为一组机器指令
+将 AST 转化为一组机器指令
 
 ### 1.2 理解作用域
 
@@ -41,10 +41,10 @@
 
 > 总结:变量的赋值操作会执行两个动作，首先编译器会在当前作用域中声明一个变量(如果之前没有声明过)，然后在运行时引擎会在作用域中查找该变量，如果能够找到就会对它赋值。
 
-#### LHS和RHS查询
+#### LHS 和 RHS 查询
 
-+ LHS-Left Hand Side
-+ RHS-Right Hand Side
+- LHS-Left Hand Side
+- RHS-Right Hand Side
 
 当变量出现在赋值操作的左侧时进行`LHS`查询，出现在右侧时进行`RHS`查询。`RHS`查询与简单地查找某个变量的值别无二致，而`LHS`查询则是试图找到变量的容器本身，从而可以对其赋值。
 
@@ -53,18 +53,18 @@
 下面的程序既有`LHS`引用也有`RHS`引用
 
 ```javascript
-function foo(a) { 
-    console.log( a ); // 2
+function foo(a) {
+  console.log(a); // 2
 }
-foo( 2 );
+foo(2);
 ```
 
 > 代码中隐式的`a=2`操作可能很容易被你忽略掉。这个操作发生在`2`被当作参数传递给`foo(..)`函数时，`2` 会被分配给参数`a`。为了给参数`a`(隐式地)分配值，需要进行一次`LHS`查询。
 
 ```javascript
 function foo(a) {
-    var b = a;
-    return a + b;
+  var b = a;
+  return a + b;
 }
 
 var c = foo(2);
@@ -72,15 +72,15 @@ var c = foo(2);
 
 三处`LHS`查询,四处`RHS`查询
 
-查询|类别
----|---
-`foo(2)`|RHS
-`a=2`|LHS
-`a`|RHS
-`b`|LHS
-`a`|RHS
-`b`|RHS
-`c`|LHS
+| 查询     | 类别 |
+| -------- | ---- |
+| `foo(2)` | RHS  |
+| `a=2`    | LHS  |
+| `a`      | RHS  |
+| `b`      | LHS  |
+| `a`      | RHS  |
+| `b`      | RHS  |
+| `c`      | LHS  |
 
 ### 1.3 作用域嵌套
 
@@ -88,10 +88,10 @@ var c = foo(2);
 
 ```javascript
 function foo(a) {
-    console.log(a + b);
-    b = a;
+  console.log(a + b);
+  b = a;
 }
-foo( 2 );
+foo(2);
 ```
 
 第一次对`b`进行`RHS`查询时是无法找到该变量的。也就是说，这是一个“未声明”的变量，因为在任何相关的作用域中都无法找到它。
@@ -104,8 +104,8 @@ foo( 2 );
 
 ### 总结一下
 
-+ 变量（标识符）
-+ 如果查找的目的是对变量进行赋值，那么就会使用`LHS`查询;如果目的是获取变量的值，就会使用`RHS`查询。
+- 变量（标识符）
+- 如果查找的目的是对变量进行赋值，那么就会使用`LHS`查询;如果目的是获取变量的值，就会使用`RHS`查询。
 
 ## chap 2.词法作用域
 
@@ -121,20 +121,20 @@ foo( 2 );
 
 ```javascript
 function foo(str, a) {
-    eval( str ); // 欺骗!
-    console.log( a, b );
+  eval(str); // 欺骗!
+  console.log(a, b);
 }
 var b = 2;
-foo( "var b = 3;", 1 ); // 1, 3
+foo("var b = 3;", 1); // 1, 3
 ```
 
 #### `with`
 
 ```javascript
 var obj = {
-    a: 1,
-    b: 2,
-    c: 3
+  a: 1,
+  b: 2,
+  c: 3
 };
 // 单调乏味的重复 "obj"
 obj.a = 2;
@@ -142,9 +142,9 @@ obj.b = 3;
 obj.c = 4;
 // 简单的快捷方式
 with (obj) {
-    a = 3;
-    b = 4;
-    c = 5;
+  a = 3;
+  b = 4;
+  c = 5;
 }
 ```
 
@@ -158,45 +158,46 @@ with (obj) {
 
 ## chap4. 提升
 
-VO按照如下顺序填充：
+VO 按照如下顺序填充：
 
 1. 函数参数
 1. 函数声明
 1. 变量声明
 
 > 我们习惯将`var a = 2;`看作一个声明，而实际上`JavaScript`引擎并不这么认为。它将`var a`
-和`a = 2`当作两个单独的声明，第一个是编译阶段的任务，而第二个则是执行阶段的任务。
+> 和`a = 2`当作两个单独的声明，第一个是编译阶段的任务，而第二个则是执行阶段的任务。
 
 ## chap5. 作用域闭包
 
-> 本质上无论何时何地，如果将函数(访问它们各自的词法作用域)当作第一级的值类型并到处传递，你就会看到闭包在这些函数中的应用。在定时器、事件监听器、 Ajax请求、跨窗口通信、Web Workers或者任何其他的异步(或者同步)任务中，只要使用了回调函数，实际上就是在使用闭包!
+> 本质上无论何时何地，如果将函数(访问它们各自的词法作用域)当作第一级的值类型并到处传递，你就会看到闭包在这些函数中的应用。在定时器、事件监听器、 Ajax 请求、跨窗口通信、Web Workers 或者任何其他的异步(或者同步)任务中，只要使用了回调函数，实际上就是在使用闭包!
 
 ```javascript
-for (var i=1; i<=5; i++) {
-    (function(j) {setTimeout(function timer() {
-        console.log( j );
-        }, j*1000 );
-    })(i);
+for (var i = 1; i <= 5; i++) {
+  (function(j) {
+    setTimeout(function timer() {
+      console.log(j);
+    }, j * 1000);
+  })(i);
 }
 ```
 
-在这个经典的闭包例子中，使用IIFE的目的是为了创建一个"块级"作用域，用来保存i。
+在这个经典的闭包例子中，使用 IIFE 的目的是为了创建一个"块级"作用域，用来保存 i。
 
-## 附录A 动态作用域
+## 附录 A 动态作用域
 
 ```javascript
 function foo() {
-    console.log( a ); // 2
+  console.log(a); // 2
 }
 function bar() {
-    var a = 3;
-    foo();
+  var a = 3;
+  foo();
 }
 var a = 2;
 bar();
 ```
 
-词法作用域让`foo()`中的`a`通过`RHS`引用到了全局作用域中的`a`，因此会输出2。
+词法作用域让`foo()`中的`a`通过`RHS`引用到了全局作用域中的`a`，因此会输出 2。
 
 动态作用域并不关心函数和作用域是如何声明以及在何处声明的，只关心它们从何处调用。换句话说，作用域链是基于调用栈的，而不是代码中的作用域嵌套。
 
@@ -204,7 +205,7 @@ bar();
 
 需要明确的是，事实上`JavaScript`并不具有动态作用域。它只有词法作用域，简单明了。但是`this`机制某种程度上很像动态作用域。
 
-## 附录C `this`词法
+## 附录 C `this`词法
 
 ## `this`和对象原型
 
@@ -226,21 +227,21 @@ bar();
 
 ```javascript
 function baz() {
-    // 当前调用栈是:baz
-    // 因此，当前调用位置是全局作用域
-    console.log( "baz" );
-    bar(); // <-- bar的调用位置
+  // 当前调用栈是:baz
+  // 因此，当前调用位置是全局作用域
+  console.log("baz");
+  bar(); // <-- bar的调用位置
 }
 function bar() {
-    // 当前调用栈是 baz -> bar
-    // 因此，当前调用位置在 baz 中
-    console.log( "bar" );
-    foo(); // <-- foo的调用位置
+  // 当前调用栈是 baz -> bar
+  // 因此，当前调用位置在 baz 中
+  console.log("bar");
+  foo(); // <-- foo的调用位置
 }
 function foo() {
-    // 当前调用栈是 baz -> bar -> foo
-    // 因此，当前调用位置在 bar 中
-    console.log( "foo" );
+  // 当前调用栈是 baz -> bar -> foo
+  // 因此，当前调用位置在 bar 中
+  console.log("foo");
 }
 baz(); // <-- baz的调用位置
 ```
@@ -253,7 +254,7 @@ baz(); // <-- baz的调用位置
 
 ```javascript
 function foo() {
-    console.log(this.a);
+  console.log(this.a);
 }
 var a = 2;
 foo(); //2
@@ -265,12 +266,12 @@ foo(); //2
 
 ```javascript
 function foo() {
-    console.log(this.a);
+  console.log(this.a);
 }
 
 var obj = {
-    a: 2,
-    foo: foo
+  a: 2,
+  foo: foo
 };
 
 obj.foo(); //2
@@ -282,17 +283,17 @@ obj.foo(); //2
 
 ```javascript
 function foo() {
-    console.log(this.a);
+  console.log(this.a);
 }
 
 var obj2 = {
-    a: 42,
-    foo: foo
+  a: 42,
+  foo: foo
 };
 
 var obj1 = {
-    a: 2,
-    obj2: obj2
+  a: 2,
+  obj2: obj2
 };
 
 obj1.obj2.foo(); //42
@@ -302,12 +303,12 @@ obj1.obj2.foo(); //42
 
 ```javascript
 function foo() {
-    console.log(this.a);
+  console.log(this.a);
 }
 
 var obj = {
-    a: 2,
-    foo: foo
+  a: 2,
+  foo: foo
 };
 
 var bar = obj.foo; //函数别名
@@ -321,17 +322,17 @@ bar(); //"oops, global"
 
 ```javascript
 function foo() {
-    console.log(this.a);
+  console.log(this.a);
 }
 
 function doFoo(fn) {
-    // fn其实引用的是foo
-    fn(); //<--调用位置
+  // fn其实引用的是foo
+  fn(); //<--调用位置
 }
 
 var obj = {
-    a: 2,
-    foo: foo
+  a: 2,
+  foo: foo
 };
 
 var a = "oops, global"; //a是全局对象的属性
@@ -343,11 +344,11 @@ doFoo(obj.foo); //"oops, global"
 
 3.显式绑定
 
-+ `call`
-+ `apply`
-+ `bind`
+- `call`
+- `apply`
+- `bind`
 
-4.`new`绑定
+  4.`new`绑定
 
 使用`new`操作符会执行下面的操作
 
@@ -364,7 +365,7 @@ doFoo(obj.foo); //"oops, global"
 
 ```js
 function foo() {
-    console.log(this.a);
+  console.log(this.a);
 }
 
 var a = 2;
@@ -377,27 +378,27 @@ o.foo(); //3
 
 赋值表达式`p.foo = o.foo`返回值是目标函数的引用，因此这里会应用默认绑定。
 
-#### ES6箭头函数
+#### ES6 箭头函数
 
 ```js
 function foo() {
-    //返回一个箭头函数
-    return (a) => {
-        //this继承自foo()
-        console.log( this.a );
-    };
+  //返回一个箭头函数
+  return a => {
+    //this继承自foo()
+    console.log(this.a);
+  };
 }
 
 var obj1 = {
-    a:2
+  a: 2
 };
 
 var obj2 = {
-    a:3
+  a: 3
 };
 
-var bar = foo.call( obj1 );
-bar.call( obj2 ); //2，不是 3!!!
+var bar = foo.call(obj1);
+bar.call(obj2); //2，不是 3!!!
 ```
 
 箭头函数的绑定无法被修改
@@ -422,8 +423,8 @@ bar.call( obj2 ); //2，不是 3!!!
 
 ```js
 var myObj = {
-    key: value
-    // ...
+  key: value
+  // ...
 };
 ```
 
@@ -438,7 +439,7 @@ myObj.key = value;
 
 ### 3.2 类型
 
-JS中有六种主要类型
+JS 中有六种主要类型
 
 1. `string`
 1. `number`
@@ -447,7 +448,7 @@ JS中有六种主要类型
 1. `undefined`
 1. `object`
 
-`null`会被当做对象是语言本身的一个bug,`typeof null`会返回字符串`"object"`。
+`null`会被当做对象是语言本身的一个 bug,`typeof null`会返回字符串`"object"`。
 
 #### 内置对象
 
@@ -485,7 +486,7 @@ strObject instanceof String; // true
 
 ```js
 var myObject = {
-    a: 2
+  a: 2
 };
 
 myObject.a; // 2
@@ -505,14 +506,14 @@ myObject["a"]; // 2
 
 #### 3.3.1 可计算属性名
 
-ES6增加了可计算属性名，可以在文字形式中使用`[]`包裹一个表达式来当做属性名：
+ES6 增加了可计算属性名，可以在文字形式中使用`[]`包裹一个表达式来当做属性名：
 
 ```js
 var prefix = "foo";
 
 var myObject = {
-    [prefix + "bar"]: "hello",
-    [prefix + "baz"]: "world",
+  [prefix + "bar"]: "hello",
+  [prefix + "baz"]: "world"
 };
 
 myObject["foobar"]; // hello
@@ -529,9 +530,9 @@ myObject["foobaz"]; // world
 
 ```js
 var myObject = {
-    foo: function() {
-        console.log( "foo" );
-    }
+  foo: function() {
+    console.log("foo");
+  }
 };
 
 var someFoo = myObject.foo;
@@ -547,22 +548,22 @@ myObject.foo; // function foo(){..}
 
 > 浅复制是对对象地址的复制，并没有开辟新的栈，也就是复制的结果是两个对象指向同一个地址，修改其中一个对象的属性，则另一个对象的属性也会改变，而深复制则是开辟新的栈，两个对象对应两个不同的地址，修改一个对象的属性，不会改变另一个对象的属性。
 
-对于JSON安全的对象来说，有一种巧妙的复制方法：
+对于 JSON 安全的对象来说，有一种巧妙的复制方法：
 
 ```js
-var newObj = JSON.parse( JSON.stringify( someObj ) );
+var newObj = JSON.parse(JSON.stringify(someObj));
 ```
 
 #### 3.3.5 属性描述符
 
-ES5开始，所有的属性都具备了属性描述符
+ES5 开始，所有的属性都具备了属性描述符
 
 ```js
 var myObject = {
-    a:2
+  a: 2
 };
 
-Object.getOwnPropertyDescriptor( myObject, "a" );
+Object.getOwnPropertyDescriptor(myObject, "a");
 //{
 //  value: 2,
 //  writable: true,
@@ -576,11 +577,11 @@ Object.getOwnPropertyDescriptor( myObject, "a" );
 ```js
 var myObject = {};
 
-Object.defineProperty( myObject, "a", {
-    value: 2,
-    writable: true,
-    configurable: true,
-    enumerable: true
+Object.defineProperty(myObject, "a", {
+  value: 2,
+  writable: true,
+  configurable: true,
+  enumerable: true
 });
 
 myObject.a; // 2
@@ -616,11 +617,11 @@ myObject.a; // 2
 ```js
 var myObject = {};
 
-Object.defineProperty( myObject, "FAVORITE_NUMBER", {
-    value: 42,
-    writeble: false,
-    configurable: false
-} );
+Object.defineProperty(myObject, "FAVORITE_NUMBER", {
+  value: 42,
+  writeble: false,
+  configurable: false
+});
 ```
 
 2.禁止扩展
@@ -629,10 +630,10 @@ Object.defineProperty( myObject, "FAVORITE_NUMBER", {
 
 ```js
 var myObject = {
-    a:2
+  a: 2
 };
 
-Object.preventExtensions( myObject );
+Object.preventExtensions(myObject);
 
 myObject.b = 3;
 myObject.b; // undefined
@@ -652,7 +653,7 @@ myObject.b; // undefined
 
 ```js
 var myObject = {
-    a: 2
+  a: 2
 };
 
 myObject.a; // 2
@@ -668,7 +669,7 @@ myObject.a; // 2
 
 ```js
 var myObject = {
-    a: 2
+  a: 2
 };
 
 myObject.b; // undefined
@@ -682,29 +683,29 @@ myObject.b; // undefined
 
 如果对象中已经存在这个属性，`[[Put]]`算法大致检查下面这些内容。
 
-1. 属性是否是访问描述符(参见3.3.9节)?如果是并且存在`setter`就调用`setter`。
+1. 属性是否是访问描述符(参见 3.3.9 节)?如果是并且存在`setter`就调用`setter`。
 1. 属性的数据描述符中`writable`是否是`false`?如果是，在非严格模式下静默失败，在严格模式下抛出`TypeError`异常。
 1. 如果都不是，将该值设置为属性的值。
 
 如果对象中不存在这个属性，[[Put]]操作更加复杂
 
-#### 3.3.9 Getter和Setter
+#### 3.3.9 Getter 和 Setter
 
-当给一个属性定义`getter`、`setter`或者两者都有时，这个属性会被定义为“访问描述符”（和“数据描述符”相对）。对于访问描述符来说，JS会忽略他们的`value`和`writeble`特性，取而代之的是关心`set`和`get`（还有`configurable`和`enumerable`）特性。
+当给一个属性定义`getter`、`setter`或者两者都有时，这个属性会被定义为“访问描述符”（和“数据描述符”相对）。对于访问描述符来说，JS 会忽略他们的`value`和`writeble`特性，取而代之的是关心`set`和`get`（还有`configurable`和`enumerable`）特性。
 
 通常来说`getter`和`setter`是成对出现的。
 
 ```js
 var myObject = {
-    // 给a定义一个getter
-    get a() {
-        return this._a_;
-    },
+  // 给a定义一个getter
+  get a() {
+    return this._a_;
+  },
 
-    // 给a定义一个setter
-    set a(val) {
-        this._a_ = val * 2;
-    }
+  // 给a定义一个setter
+  set a(val) {
+    this._a_ = val * 2;
+  }
 };
 
 myObject.a = 2;
@@ -717,14 +718,14 @@ myObject.a; // 4
 
 ```js
 var myObject = {
-    a:2
+  a: 2
 };
 
-("a" in myObject); // true
-("b" in myObject); // false
+"a" in myObject; // true
+"b" in myObject; // false
 
-myObject.hasOwnProperty( "a" ); // true
-myObject.hasOwnProperty( "b" ); // false
+myObject.hasOwnProperty("a"); // true
+myObject.hasOwnProperty("b"); // false
 ```
 
 `in`操作符会检查属性是否在对象及其[[Prototype]]原型链中，`hasOwnProperty(..)`只会检查属性是否在`myObject`对象中，不会检查[[Prototype]]链。
@@ -732,27 +733,27 @@ myObject.hasOwnProperty( "b" ); // false
 > 在数组上应用`for ..in`循环有时会产生出人意料的结果，最好只在对象上应用`for ..in`循环，如果要遍历数组就使用传统的`for`循环来遍历数组索引。
 
 ```js
-var myObject = { };
+var myObject = {};
 
 Object.defineProperty(
-    myObject,
-    "a",
-    // 让a像普通属性一样可以枚举
-    { enumerable: true, value: 2 }
+  myObject,
+  "a",
+  // 让a像普通属性一样可以枚举
+  { enumerable: true, value: 2 }
 );
 
 Object.defineProperty(
-    myObject,
-    "b",
-    // 让b不可枚举
-    { enumerable: false, value: 3 }
+  myObject,
+  "b",
+  // 让b不可枚举
+  { enumerable: false, value: 3 }
 );
 
-myObject.propertyIsEnumerable( "a" ); // true
-myObject.propertyIsEnumerable( "b" ); // false
+myObject.propertyIsEnumerable("a"); // true
+myObject.propertyIsEnumerable("b"); // false
 
-Object.keys( myObject ); // ["a"]
-Object.getOwnPropertyNames( myObject ); // ["a", "b"]
+Object.keys(myObject); // ["a"]
+Object.getOwnPropertyNames(myObject); // ["a", "b"]
 ```
 
 `propertyIsEnumerable(..)`会检查给定的属性名是否直接存在于对象中(而不是在原型链上)并且满足`enumerable:true`。
@@ -765,13 +766,13 @@ Object.getOwnPropertyNames( myObject ); // ["a", "b"]
 
 > 遍历对象属性时的顺序是不确定的，不同`JavaScript`引擎可能不一样。
 
-ES6增加的`for ..of`循环语法直接遍历数组的值（如果对象本身定义了迭代器的话也可以遍历对象）：
+ES6 增加的`for ..of`循环语法直接遍历数组的值（如果对象本身定义了迭代器的话也可以遍历对象）：
 
 ```js
 var myArray = [1, 2, 3];
 
 for (var v of myArray) {
-    console.log( v );
+  console.log(v);
 }
 // 1
 // 2
@@ -786,7 +787,7 @@ JavaScript 中的对象有字面形式(比如`var a = { .. }`)和构造形式(�
 
 属性不一定包含值——它们可能是具备`getter/setter`的“访问描述符”。此外，属性可以是可枚举或者不可枚举的，这决定了它们是否会出现在`for..in`循环中。
 
-你可以使用ES6的`for..of`语法来遍历数据结构(数组、对象，等等)中的值，`for..of`会寻找内置或者自定义的`@@iterator`对象并调用它的`next()`方法来遍历数据值。
+你可以使用 ES6 的`for..of`语法来遍历数据结构(数组、对象，等等)中的值，`for..of`会寻找内置或者自定义的`@@iterator`对象并调用它的`next()`方法来遍历数据值。
 
 ## Chap4. 混合对象“类”
 
@@ -808,7 +809,7 @@ JavaScript 中的对象有字面形式(比如`var a = { .. }`)和构造形式(�
 
 定义`Car`时，只要声明它继承（或者扩展）了`Vehicle`的基础定义即可。`Car`的定义就是对通用`Vehicle`定义的特殊化。
 
-虽然`Vehicle`和`Car`会定义相同的方法，但是实例中的数据可能是不同的，比如每辆车独一无二的VIN(Vehicle Identification Number)。
+虽然`Vehicle`和`Car`会定义相同的方法，但是实例中的数据可能是不同的，比如每辆车独一无二的 VIN(Vehicle Identification Number)。
 
 这便是类、继承和实例化。
 
@@ -820,7 +821,7 @@ JavaScript 中的对象有字面形式(比如`var a = { .. }`)和构造形式(�
 
 还有过程化编程和函数式编程。
 
-#### 4.1.2 JavaScript中的类
+#### 4.1.2 JavaScript 中的类
 
 简单来说`JavaScript`中没有真正意义上的“类”。`JavaScript`提供了一些近似类的语法满足对于类设计模式的最普通需求。
 
@@ -893,7 +894,7 @@ class SpeedBoat inherits Vehicle {
 
 本例中语言引擎会使用`SpeedBoat`的`ignition()`，如果直接实例化`Vehicle类`然后调用它的`drive()`，那么语言引擎就会使用`Vehicle`中的`ignition()`方法。
 
-> 从概念上说，子类可以通过相对多态引用(或者说super)来访问父类中的行为。子类得到的仅仅是继承自父类行为的一份副本。子类对继承到的一个方法进行“重写”，不会影响父类中的方法，这两个方法互不影响，因此才能使用相对多态引用访问父类中的方法(如果重写会影响父类的方法，那重写之后父类中的原始方法就不存在了，自然也无法引用)。
+> 从概念上说，子类可以通过相对多态引用(或者说 super)来访问父类中的行为。子类得到的仅仅是继承自父类行为的一份副本。子类对继承到的一个方法进行“重写”，不会影响父类中的方法，这两个方法互不影响，因此才能使用相对多态引用访问父类中的方法(如果重写会影响父类的方法，那重写之后父类中的原始方法就不存在了，自然也无法引用)。
 
 多态并不表示子类和父类有关联，子类的到的是父类的一份副本。类的继承其实就是复制。
 
@@ -919,31 +920,31 @@ class SpeedBoat inherits Vehicle {
 
 ```js
 // 非常简单的 mixin(..) 例子 :
-function mixin( sourceObj, targetObj ) {
-    for (var key in sourceObj) {
+function mixin(sourceObj, targetObj) {
+  for (var key in sourceObj) {
     // 只会在不存在的情况下复制
-        if (!(key in targetObj)) {
-            targetObj[key] = sourceObj[key];
-        }
+    if (!(key in targetObj)) {
+      targetObj[key] = sourceObj[key];
     }
-    return targetObj;
+  }
+  return targetObj;
 }
 var Vehicle = {
-    engines: 1,
-    ignition: function() {
-        console.log( "Turning on my engine." );
-    },
-    drive: function() {
-        this.ignition();
-        console.log( "Steering and moving forward!" );
-    }
+  engines: 1,
+  ignition: function() {
+    console.log("Turning on my engine.");
+  },
+  drive: function() {
+    this.ignition();
+    console.log("Steering and moving forward!");
+  }
 };
 var Car = mixin(Vehicle, {
-    wheels: 4,
-    drive: function() {
-        Vehicle.drive.call( this );
-        console.log("Rolling on all " + this.wheels + " wheels!");
-    }
+  wheels: 4,
+  drive: function() {
+    Vehicle.drive.call(this);
+    console.log("Rolling on all " + this.wheels + " wheels!");
+  }
 });
 ```
 
@@ -955,31 +956,35 @@ var Car = mixin(Vehicle, {
 
 ```js
 // 另一种混入函数，可能有重写风险
-function mixin( sourceObj, targetObj ) {
-    for (var key in sourceObj) {
-        targetObj[key] = sourceObj[key];
-    }
-    return targetObj;
+function mixin(sourceObj, targetObj) {
+  for (var key in sourceObj) {
+    targetObj[key] = sourceObj[key];
+  }
+  return targetObj;
 }
 
-var Vehicle = { // ...
+var Vehicle = {
+  // ...
 };
 
 // 首先创建一个空对象并把 Vehicle 的内容复制进去
-var Car = mixin( Vehicle, { } );
+var Car = mixin(Vehicle, {});
 
 // 然后把新内容复制到 Car 中
-mixin( {
+mixin(
+  {
     wheels: 4,
     drive: function() {
-        // ...
+      // ...
     }
-}, Car );
+  },
+  Car
+);
 ```
 
 复制完成之后`Car`和`Vehicle`就分离了，但是两者要是引用同一个对象还是会相互影响对方。
 
-还有寄生继承和隐式混入，详见p138
+还有寄生继承和隐式混入，详见 p138
 
 ### 4.5 小结
 
@@ -999,11 +1004,11 @@ mixin( {
 
 ```js
 var anotherObject = {
-    a:2
+  a: 2
 };
 
 //创建一个关联到anotherObject的对象
-var myObject = Object.create( anotherObject );
+var myObject = Object.create(anotherObject);
 
 myObject.a; // 2
 ```
@@ -1040,32 +1045,32 @@ myObject.foo = "bar";
 
 如果希望在第二种和第三种情况下屏蔽`foo`，那就不能使用`=`操作符来赋值，而是使用`Object.defineProperty(..)`来向`myObject`添加`foo`。
 
-> 第二种情况可能是最令人意外的，只读属性会阻止`[[Prototype]]`链下层隐式创建(屏蔽)同名属性。这样做主要是为了模拟类属性的继承。你可以把原型链上层的`foo`看作是父类中的属性，它会被`myObject`继承(复制)，这样一来`myObject`中的`foo`属性也是只读，所以无法创建。但是一定要注意，实际上并不会发生类似的继承复制(参见第4章和第5章)。这看起来有点奇怪，`myObject`对象竟然会因为其他对象中有一个只读`foo`就不能包含`foo`属性。更奇怪的是，这个限制只存在于`=`赋值中，使用`Object.defineProperty(..)`并不会受到影响。第二种情况可能是最令人意外的，只读属性会阻止`[[Prototype]]`链下层隐式创建(屏蔽)同名属性。这样做主要是为了模拟类属性的继承。你可以把原型链上层的`foo`看作是父类中的属性，它会被`myObject`继承(复制)，这样一来`myObject`中的`foo`属性也是只读，所以无法创建。但是一定要注意，实际上并不会发生类似的继承复制(参见第4章和第5章)。这看起来有点奇怪，`myObject`对象竟然会因为其他对象中有一个只读`foo`就不能包含`foo`属性。更奇怪的是，这个限制只存在于`=`赋值中，使用`Object.defineProperty(..)`并不会受到影响。
+> 第二种情况可能是最令人意外的，只读属性会阻止`[[Prototype]]`链下层隐式创建(屏蔽)同名属性。这样做主要是为了模拟类属性的继承。你可以把原型链上层的`foo`看作是父类中的属性，它会被`myObject`继承(复制)，这样一来`myObject`中的`foo`属性也是只读，所以无法创建。但是一定要注意，实际上并不会发生类似的继承复制(参见第 4 章和第 5 章)。这看起来有点奇怪，`myObject`对象竟然会因为其他对象中有一个只读`foo`就不能包含`foo`属性。更奇怪的是，这个限制只存在于`=`赋值中，使用`Object.defineProperty(..)`并不会受到影响。第二种情况可能是最令人意外的，只读属性会阻止`[[Prototype]]`链下层隐式创建(屏蔽)同名属性。这样做主要是为了模拟类属性的继承。你可以把原型链上层的`foo`看作是父类中的属性，它会被`myObject`继承(复制)，这样一来`myObject`中的`foo`属性也是只读，所以无法创建。但是一定要注意，实际上并不会发生类似的继承复制(参见第 4 章和第 5 章)。这看起来有点奇怪，`myObject`对象竟然会因为其他对象中有一个只读`foo`就不能包含`foo`属性。更奇怪的是，这个限制只存在于`=`赋值中，使用`Object.defineProperty(..)`并不会受到影响。
 
 下面代码会发生隐式屏蔽
 
 ```js
 var anotherObject = {
-    a:2
+  a: 2
 };
 
-var myObject = Object.create( anotherObject );
+var myObject = Object.create(anotherObject);
 
 another.a; // 2
 myObject.a; // 2
 
-anotherObject.hasOwnProperty( "a" ); // true
-myObject.hasOwnProperty( "a" ); // false
+anotherObject.hasOwnProperty("a"); // true
+myObject.hasOwnProperty("a"); // false
 
 myObject.a++; // 隐式屏蔽！
 
 anotherObject.a; // 2
 myObject.a; // 3
 
-myObject.hasOwnProperty( "a" ); // true
+myObject.hasOwnProperty("a"); // true
 ```
 
-`++`操作符相当于`myObject.a = myObject.a + 1`。`++`操作符首先会通过`[[Protitype]]`查找属性`a`并从`anotherObject.a`获取当前属性值2，然后给这个值加1，接着用`[[Put]]`将值3赋给`myObject`中新建的屏蔽属性`a`。
+`++`操作符相当于`myObject.a = myObject.a + 1`。`++`操作符首先会通过`[[Protitype]]`查找属性`a`并从`anotherObject.a`获取当前属性值 2，然后给这个值加 1，接着用`[[Put]]`将值 3 赋给`myObject`中新建的屏蔽属性`a`。
 
 ### 5.2 “类”
 
@@ -1079,7 +1084,7 @@ myObject.hasOwnProperty( "a" ); // true
 
 ```js
 function Foo() {
-    // ...
+  // ...
 }
 
 Foo.prototype; // { }
@@ -1091,12 +1096,12 @@ Foo.prototype; // { }
 
 ```js
 function Foo() {
-    // ...
+  // ...
 }
 
 var a = new Foo();
 
-Object.getPrototypeOf( a ) === Foo.prototype; // true
+Object.getPrototypeOf(a) === Foo.prototype; // true
 ```
 
 回顾一下`new`操作：
@@ -1106,7 +1111,7 @@ Object.getPrototypeOf( a ) === Foo.prototype; // true
 1. 这个新对象会绑定到函数调用的`this`。
 1. 如果函数没有返回其他对象，那么`new`表达式中的函数调用会自动返回这个新对象。
 
-调用`new Foo()`时会创建a，其中的一步就是给a一个内部的`[[Prototype]]`链接，关联到`Foo.prototype`指向的那个对象。
+调用`new Foo()`时会创建 a，其中的一步就是给 a 一个内部的`[[Prototype]]`链接，关联到`Foo.prototype`指向的那个对象。
 
 面向类的语言中，实例化（或者继承）一个类就意味着“把类的行为复制到物理对象中”，对于每一个新实例来说都会重复这个过程。
 
@@ -1120,7 +1125,7 @@ Object.getPrototypeOf( a ) === Foo.prototype; // true
 
 这个机制通常被称为原型继承，它常常被视为动态语言版本的类继承。
 
-继承意味着复制操作，`JavaScript`(默认)并不会复制对象属性。相反，`JavaScript`会在两个对象之间创建一个关联，这样一个对象就可以通过委托访问另一个对象的属性和函数。委托(参见第6章)这个术语可以更加准确地描述`JavaScript`中对象的关联机制。
+继承意味着复制操作，`JavaScript`(默认)并不会复制对象属性。相反，`JavaScript`会在两个对象之间创建一个关联，这样一个对象就可以通过委托访问另一个对象的属性和函数。委托(参见第 6 章)这个术语可以更加准确地描述`JavaScript`中对象的关联机制。
 
 #### “构造函数”
 
@@ -1128,19 +1133,19 @@ Object.getPrototypeOf( a ) === Foo.prototype; // true
 
 ### 类型
 
-ES5.1规范中的运算法则所操纵的值均有相应的类型。
+ES5.1 规范中的运算法则所操纵的值均有相应的类型。
 
 我们这样来定义“类型”(与规范类似):对语言引擎和开发人员来说，类型是值的内部特征，它定义了值的行为，以使其区别于其他值。
 
 #### 内置类型
 
-+ 空值(null)
-+ 未定义(undefined)
-+ 布尔值(boolean)
-+ 数字(number)
-+ 字符串(string)
-+ 对象(object)
-+ 符号(symbol，ES6中新增)
+- 空值(null)
+- 未定义(undefined)
+- 布尔值(boolean)
+- 数字(number)
+- 字符串(string)
+- 对象(object)
+- 符号(symbol，ES6 中新增)
 
 ```js
 typeof null === "object"; // true
@@ -1152,11 +1157,13 @@ typeof null === "object"; // true
 
 ```js
 var a = null;
-(!a && typeof a === "object"); // true
+!a && typeof a === "object"; // true
 ```
 
 ```js
-typeof function a(){ /* .. */ } === "function"; // true
+typeof function a() {
+  /* .. */
+} === "function"; // true
 ```
 
 函数实际上是`object`的一个"子类型"，具体来说，函数是可调用的对象，有一个内部属性`[[Call]]`，该属性使其可以被调用。
@@ -1165,7 +1172,7 @@ typeof function a(){ /* .. */ } === "function"; // true
 
 ```js
 function a(b, c) {
-    /* .. */
+  /* .. */
 }
 
 a.length; // 2
@@ -1214,20 +1221,20 @@ typeof b; // "undefined"
 数组通过数字进行索引，但有趣的是它们也是对象，所以也可以包含字符串键值和属性 (但这些并不计算在数组长度内):
 
 ```js
-var a = [ ];
+var a = [];
 
 a[0] = 1;
 a["foobar"] = 2;
 
-a.length;       // 1
-a["foobar"];    // 2
-a.foobar;       // 2
+a.length; // 1
+a["foobar"]; // 2
+a.foobar; // 2
 ```
 
 这里有个问题需要特别注意，如果字符串键值能够被强制类型转换为十进制数字的话，它就会被当作数字索引来处理。
 
 ```js
-var a = [ ];
+var a = [];
 a["13"] = 42;
 a.length; // 14
 ```
@@ -1241,29 +1248,31 @@ a.length; // 14
 ```js
 c = a.toUpperCase();
 a === c; // false
-a;       // "foo"
-c;       // "FOO"
+a; // "foo"
+c; // "FOO"
 
-b.push( "!" );
-b;       // ["f","O","o","!"]
+b.push("!");
+b; // ["f","O","o","!"]
 ```
 
 许多数组函数用来处理字符串很方便。虽然字符串没有这些函数，但可以通过“借用”数组的非变更方法来处理字符串:
 
 ```js
-a.join;         // undefined
-a.map;          // undefined
-var c = Array.prototype.join.call( a, "-" );
-var d = Array.prototype.map.call( a, function(v){
-return v.toUpperCase() + ".";
-} ).join( "" );
-c;              // "f-o-o"
-d;              // "F.O.O."
+a.join; // undefined
+a.map; // undefined
+var c = Array.prototype.join.call(a, "-");
+var d = Array.prototype.map
+  .call(a, function(v) {
+    return v.toUpperCase() + ".";
+  })
+  .join("");
+c; // "f-o-o"
+d; // "F.O.O."
 ```
 
 #### 数字
 
-大部分现代编程语言中的数字类型都是基于`IEEE 754`标准来实现的，该标准通常被称为"浮点数"。`JavaScript`使用的是"双精度"格式(即64位二进制)。
+大部分现代编程语言中的数字类型都是基于`IEEE 754`标准来实现的，该标准通常被称为"浮点数"。`JavaScript`使用的是"双精度"格式(即 64 位二进制)。
 
 `JavaScript`中的数字常量一般用十进制表示。例如:
 
@@ -1276,14 +1285,14 @@ var b = 42.3;
 
 ```js
 var a = 0.42;
-var b = .42;
+var b = 0.42;
 ```
 
 小数点后小数部分最后面的`0`也可以省略:
 
 ```js
 var a = 42.0;
-var b = 42.;
+var b = 42;
 ```
 
 > `42.`这种写法没问题，只是不常见，但从代码的可读性考虑，不建议这样写。
@@ -1291,31 +1300,31 @@ var b = 42.;
 特别大和特别小的数字默认用指数格式显示，与`toExponential()`函数的输出结果相同。
 
 ```js
-var a = 5E10;
-a;                  // 50000000000
-a.toExponential();  // "5e+10"
+var a = 5e10;
+a; // 50000000000
+a.toExponential(); // "5e+10"
 var b = a * a;
-b;                  // 2.5e+21
+b; // 2.5e+21
 var c = 1 / a;
-c;                  // 2e-11
+c; // 2e-11
 ```
 
 `tofixed(..)`方法可指定小数部分的显示位数,`toPrecision(..)`方法用来指定有效数字的位数，他们返回的都是字符串。
 
 ```js
 var a = 42.59;
-a.toFixed( 0 ); // "43"
-a.toFixed( 1 ); // "42.6"
-a.toFixed( 2 ); // "42.59"
-a.toFixed( 3 ); // "42.590"
-a.toFixed( 4 ); // "42.5900"
+a.toFixed(0); // "43"
+a.toFixed(1); // "42.6"
+a.toFixed(2); // "42.59"
+a.toFixed(3); // "42.590"
+a.toFixed(4); // "42.5900"
 
-a.toPrecision( 1 ); // "4e+1"
-a.toPrecision( 2 ); // "43"
-a.toPrecision( 3 ); // "42.6"
-a.toPrecision( 4 ); // "42.59"
-a.toPrecision( 5 ); // "42.590"
-a.toPrecision( 6 ); // "42.5900"
+a.toPrecision(1); // "4e+1"
+a.toPrecision(2); // "43"
+a.toPrecision(3); // "42.6"
+a.toPrecision(4); // "42.59"
+a.toPrecision(5); // "42.590"
+a.toPrecision(6); // "42.5900"
 ```
 
 > `.`运算符需要特别注意，因为它是一个有效的数字字符，会被优先识别为数字常量的一部分，然后才是对象属性访问运算符。
@@ -1336,7 +1345,7 @@ a.toPrecision( 6 ); // "42.5900"
 
 ```js
 if (!Number.EPSILON) {
-    Number.EPSILON = MATH.pow(2,-52);
+  Number.EPSILON = MATH.pow(2, -52);
 }
 ```
 
@@ -1344,13 +1353,13 @@ if (!Number.EPSILON) {
 
 ```js
 function numberCloseEnoughToEqual(n1, n2) {
-    return Math.abs(n1 - n2) < Number.EPSION;
+  return Math.abs(n1 - n2) < Number.EPSION;
 }
 
 var a = 0.1 + 0.2;
 var b = 0.3;
-numbersCloseEnoughToEqual( a, b );  // true
-numbersCloseEnoughToEqual( 0.0000001, 0.0000002 );  // false
+numbersCloseEnoughToEqual(a, b); // true
+numbersCloseEnoughToEqual(0.0000001, 0.0000002); // false
 ```
 
 能够被"安全"呈现的最大整数是`2^53 - 1`，即`9007199254740991`，在`ES6`中被定义为`Number.MAX_SAFE_INTEGER`，最小整数是`-9007199254740991`，在`ES6`中被定义为`Number.MIN_SAFE_INTEGER`。
@@ -1361,13 +1370,13 @@ numbersCloseEnoughToEqual( 0.0000001, 0.0000002 );  // false
 
 `undefined`和`null`常被用来表示“空的”值或“不是值”的值。二者之间有一些细微的差别。例如:
 
-+ null指空值(empty value)
-+ undefined指没有值(missing value)
+- null 指空值(empty value)
+- undefined 指没有值(missing value)
 
 或者:
 
-+ undefined指从未赋值
-+ null指曾赋过值，但是目前没有值
+- undefined 指从未赋值
+- null 指曾赋过值，但是目前没有值
 
 `null`是一个特殊关键字，不是标识符，我们不能将其当作变量来使用和赋值。然而`undefined`却是一个标识符，可以被当作变量来使用和赋值。
 
@@ -1377,7 +1386,7 @@ numbersCloseEnoughToEqual( 0.0000001, 0.0000002 );  // false
 
 ```js
 var a = 42;
-console.log( void a, a ); // undefined 42
+console.log(void a, a); // undefined 42
 ```
 
 #### NaN
@@ -1388,9 +1397,10 @@ console.log( void a, a ); // undefined 42
 var a = 2 / "foo";
 var b = "foo";
 a; // NaN
-b; "foo"
-window.isNaN( a ); // true
-window.isNaN( b ); // true——晕!
+b;
+("foo");
+window.isNaN(a); // true
+window.isNaN(b); // true——晕!
 ```
 
 很明显`"foo"`不是一个数字，但是它也不是`NaN`。这个`bug`自`JavaScript`问世以来就一直存在，至今已超过`19`年。
@@ -1399,33 +1409,31 @@ window.isNaN( b ); // true——晕!
 
 ```js
 if (!Number.isNaN) {
-    Number.isNaN = function(n) {
-        return (
-            typeof n === "number" && window.isNaN(n)
-        );
-    };
+  Number.isNaN = function(n) {
+    return typeof n === "number" && window.isNaN(n);
+  };
 }
 
 var a = 2 / "foo";
 var b = "foo";
-Number.isNaN( a ); // true
-Number.isNaN( b ); // false——好!
+Number.isNaN(a); // true
+Number.isNaN(b); // false——好!
 ```
 
 还有一个更简单的方法，利用`NaN`不等于自身这个特点。`NaN`是`JavaScript`中唯一一个不等于自身的值。
 
 ```js
 if (!Number.isNaN) {
-    Number.isNaN = function(n) {
-        return n !== n;
-    };
+  Number.isNaN = function(n) {
+    return n !== n;
+  };
 }
 ```
 
 #### 无穷数
 
 ```js
-var a = 1 / 0;  // Infinity即(Number.POSITIVE_INFINITY)
+var a = 1 / 0; // Infinity即(Number.POSITIVE_INFINITY)
 var b = -1 / 0; // -Infinity即(Number.NEGATIVE_INFINITY)
 ```
 
@@ -1443,10 +1451,10 @@ var b = -1 / 0; // -Infinity即(Number.NEGATIVE_INFINITY)
 var a = 2 / "foo";
 var b = -3 * 0;
 
-Object.is( a, NaN );    // true
-Object.is( b, -0 );     // true
+Object.is(a, NaN); // true
+Object.is(b, -0); // true
 
-Object.is( b, 0 );      // false
+Object.is(b, 0); // false
 ```
 
 ### 值和引用
@@ -1463,7 +1471,7 @@ var b = a; // b是a的值的一个副本 b++;
 a; // 2
 b; // 3
 
-var c = [1,2,3];
+var c = [1, 2, 3];
 var d = c; // d是[1,2,3]的一个引用 d.push( 4 );
 c; // [1,2,3,4]
 d; // [1,2,3,4]
@@ -1475,22 +1483,22 @@ d; // [1,2,3,4]
 
 上例中`2`是一个标量基本类型值，所以变量`a`持有该值的一个副本，`b`持有它的另一个副本。`b`更改时，`a`的值保持不变。
 
-> ECMAScript中所有函数的参数都是按值传递的。
+> ECMAScript 中所有函数的参数都是按值传递的。
 
 ```js
 function foo(x) {
-    x.push( 4 );
-    x; // [1,2,3,4]
+  x.push(4);
+  x; // [1,2,3,4]
 
-    // 然后
-    x = [4,5,6];
-    x.push( 7 );
-    x; // [4,5,6,7]
+  // 然后
+  x = [4, 5, 6];
+  x.push(7);
+  x; // [4,5,6,7]
 }
 
-var a = [1,2,3];
+var a = [1, 2, 3];
 
-foo( a );
+foo(a);
 
 a; // 是[1,2,3,4]，不是[4,5,6,7]
 ```
@@ -1502,20 +1510,20 @@ a; // 是[1,2,3,4]，不是[4,5,6,7]
 如果通过值复制的方式来传递复合值(如数组)，就需要为其创建一个副本，这样传递的就不再是原始值。例如:
 
 ```js
-foo( a.slice() );
+foo(a.slice());
 ```
 
 `slice(..)`不带参数会返回当前数组的一个浅副本`(shallow copy)`。由于传递给函数的是指向该副本的引用，所以`foo(..)`中的操作不会影响`a`指向的数组。相反，如果要将标量基本类型值传递到函数内并进行更改，就需要将该值封装到一个复合值(对象、数组等)中，然后通过引用复制的方式传递。
 
 ```js
 function foo(wrapper) {
-    wrapper.a = 42;
+  wrapper.a = 42;
 }
 var obj = {
-    a: 2
+  a: 2
 };
 
-foo( obj );
+foo(obj);
 
 obj.a; // 42
 ```
@@ -1530,27 +1538,27 @@ obj.a; // 42
 
 常用的原生函数有:
 
-+ `String()`
-+ `Number()`
-+ `Boolean()`
-+ `Array()`
-+ `Object()`
-+ `Function()`
-+ `RegExp()`
-+ `Date()`
-+ `Error()`
-+ `Symbol()`---ES6中新加入!
+- `String()`
+- `Number()`
+- `Boolean()`
+- `Array()`
+- `Object()`
+- `Function()`
+- `RegExp()`
+- `Date()`
+- `Error()`
+- `Symbol()`---ES6 中新加入!
 
 原生函数可以被当做构造函数来使用，但其构造出来的对象可能会和我们设想的有所出入:
 
 ```js
-var a = new String('abc');
+var a = new String("abc");
 
-typeof a;               // 是"object",不是"String"
+typeof a; // 是"object",不是"String"
 
-a instanceof String;    // true
+a instanceof String; // true
 
-Object.prototype.toString.call(a);  //"[object String]"
+Object.prototype.toString.call(a); //"[object String]"
 ```
 
 #### 内部属性`[[Class]]`
@@ -1558,31 +1566,31 @@ Object.prototype.toString.call(a);  //"[object String]"
 所有`typeof`返回值为`"object"`的对象(如数组)都包含一个内部属性`[[Class]]`(我们可以把它看作一个内部的分类，而非传统的面向对象意义上的类)。这个属性无法直接访问，一般通过`Object.prototype.toString(..)`来查看。
 
 ```js
-Object.prototype.toString.call( [1,2,3] );
+Object.prototype.toString.call([1, 2, 3]);
 // "[object Array]"
 
-Object.prototype.toString.call( /regex-literal/i );
+Object.prototype.toString.call(/regex-literal/i);
 // "[object RegExp]"
 
-Object.prototype.toString.call( null );
+Object.prototype.toString.call(null);
 // "[object Null]"
 
-Object.prototype.toString.call( undefined );
+Object.prototype.toString.call(undefined);
 // "[object Undefined]"
 
-Object.prototype.toString.call( "abc" );
+Object.prototype.toString.call("abc");
 // "[object String]"
 
-Object.prototype.toString.call( 42 );
+Object.prototype.toString.call(42);
 // "[object Number]"
 
-Object.prototype.toString.call( true );
+Object.prototype.toString.call(true);
 // "[object Boolean]"
 ```
 
 ### 封装对象包装
 
-封装对象(object wrapper)扮演着十分重要的角色。由于基本类型值没有`.length`和`.toString()`这样的属性和方法，需要通过封装对象才能访问，此时`JavaScript`会自动为基本类型值包装(box或者wrap)一个封装对象:
+封装对象(object wrapper)扮演着十分重要的角色。由于基本类型值没有`.length`和`.toString()`这样的属性和方法，需要通过封装对象才能访问，此时`JavaScript`会自动为基本类型值包装(box 或者 wrap)一个封装对象:
 
 ```js
 var a = "abc";
@@ -1596,13 +1604,13 @@ a.toUpperCase(); // "ABC"
 想要得到拆封对象中的基本类型值，可以使用`valueOf()`函数:
 
 ```js
-var a = new String('abc');
+var a = new String("abc");
 var b = new Number(42);
 var c = new Boolean(true);
 
-a.valueOf();    // "abc"
-b.valueOf();    // 42
-c.valueOf();    // true
+a.valueOf(); // "abc"
+b.valueOf(); // 42
+c.valueOf(); // true
 ```
 
 ### 将原生函数作为构造函数
@@ -1612,7 +1620,7 @@ c.valueOf();    // true
 > 将包含至少一个"空单元"的数组称为"稀疏数组"。
 
 ```js
-var a = Array.apply( null, { length: 3 } );
+var a = Array.apply(null, { length: 3 });
 a; // [ undefined, undefined, undefined ]
 ```
 
@@ -1624,9 +1632,9 @@ a; // [ undefined, undefined, undefined ]
 
 ```js
 if (!Date.now) {
-    Date.now = function() {
-        return (new Date()).getTime();
-    };
+  Date.now = function() {
+    return new Date().getTime();
+  };
 }
 ```
 
@@ -1647,7 +1655,7 @@ if (!Date.now) {
 ```js
 var a = 42;
 var b = a + ""; // 隐式强制类型转换
-var c = String( a ); // 显式强制类型转换
+var c = String(a); // 显式强制类型转换
 ```
 
 #### 抽象值操作
@@ -1656,21 +1664,21 @@ var c = String( a ); // 显式强制类型转换
 
 基本类型值的转换规则:
 
-+ `null` --> `"null"`
-+ `undefined` --> `"undefined"`
-+ `true` --> `"true"`
+- `null` --> `"null"`
+- `undefined` --> `"undefined"`
+- `true` --> `"true"`
 
 对于普通对象来说，除非自行定义，否则`toString()`或者`Object.prototype.toString()`返回内部属性`[[Class]]`的值，如`"[object Object]"`。
 
-##### JSON字符串转化
+##### JSON 字符串转化
 
 大多数简单值，`JSON`字符串化和`toString()`效果基本相同。
 
 ```js
-JSON.stringify( 42 ); // "42"
-JSON.stringify( "42" ); // ""42""(含有双引号的字符串)
-JSON.stringify( null ); // "null"
-JSON.stringify( true ); // "true"
+JSON.stringify(42); // "42"
+JSON.stringify("42"); // ""42""(含有双引号的字符串)
+JSON.stringify(null); // "null"
+JSON.stringify(true); // "true"
 ```
 
 所有安全的`JSON`值(`JSON-safe`)都可以使用`JSON.stringify(..)`字符串化。安全的`JSON`值是指能够呈现为有效`JSON`格式的值。
@@ -1680,25 +1688,21 @@ JSON.stringify( true ); // "true"
 `JSON.stringify(..)`在对象中遇到`undefined`、`function`和`symbol`时会自动将其忽略，在数组中则会返回`null`(以保证单元位置不变)。
 
 ```js
-JSON.stringify( undefined );    // undefined
-JSON.stringify( function(){} ); // undefined
-JSON.stringify(
-    [1,undefined,function(){},4]
-);                              // "[1,null,null,4]"
-JSON.stringify(
-    { a:2, b:function(){} }
-);                              // "{"a":2}"
+JSON.stringify(undefined); // undefined
+JSON.stringify(function() {}); // undefined
+JSON.stringify([1, undefined, function() {}, 4]); // "[1,null,null,4]"
+JSON.stringify({ a: 2, b: function() {} }); // "{"a":2}"
 ```
 
 如果对象中定义了`toJSON()`方法，`JSON`字符串化时会首先调用该方法，然后用它的返回值来进行序列化。
 
 ```js
-var o = { };
+var o = {};
 
 var a = {
-    b: 42,
-    c: o,
-    d: function(){}
+  b: 42,
+  c: o,
+  d: function() {}
 };
 
 // 在a中创建一个循环引用
@@ -1709,11 +1713,11 @@ o.e = a;
 
 // 自定义的JSON序列化
 a.toJSON = function() {
-    // 序列化仅包含b
-    return { b: this.b };
+  // 序列化仅包含b
+  return { b: this.b };
 };
 
-JSON.stringify( a ); // "{"b":42}"
+JSON.stringify(a); // "{"b":42}"
 ```
 
 `toJSON()`应该"返回一个能够被字符串化的安全的`JSON`值"，而不是"返回一个`JSON`字符串"。
@@ -1725,12 +1729,14 @@ JSON.stringify( a ); // "{"b":42}"
 如果`replacer`是一个函数，它会对对象本身调用一次，然后对对象中的每个属性各调用一次，每次传递两个参数，键和值。如果要忽略某个键就返回`undefined`，否则返回指定的值。
 
 ```js
-var a = { b: 42,
-c: "42",
-d: [1,2,3] };
-JSON.stringify( a, ["b","c"] ); // "{"b":42,"c":"42"}"
-JSON.stringify( a, function(k,v){
-    if (k !== "c") return v;
+var a = {
+  b: 42,
+  c: "42",
+  d: [1, 2, 3]
+};
+JSON.stringify(a, ["b", "c"]); // "{"b":42,"c":"42"}"
+JSON.stringify(a, function(k, v) {
+  if (k !== "c") return v;
 });
 // "{"b":42,"d":[1,2,3]}"
 ```
@@ -1739,15 +1745,15 @@ JSON.stringify( a, function(k,v){
 
 ```js
 JSON.stringify(a, null, 3);
-JSON.stringify(a, null, '-----');
+JSON.stringify(a, null, "-----");
 ```
 
 #### toNumber
 
-+ `true` --> `1`
-+ `false` --> `0`
-+ `undefined` --> `NaN`
-+ `null` --> `0`
+- `true` --> `1`
+- `false` --> `0`
+- `undefined` --> `NaN`
+- `null` --> `0`
 
 对象(包括数组)会首先被转换为相应的基本类型值，如果返回的是非数字的基本类型值，则在遵循以上规则将其转换为数字。
 
@@ -1757,48 +1763,48 @@ JSON.stringify(a, null, '-----');
 
 ```js
 var a = {
-    valueOf: function(){
-        return "42";
-    }
+  valueOf: function() {
+    return "42";
+  }
 };
 
 var b = {
-    toString: function(){
-        return "42";
-    }
+  toString: function() {
+    return "42";
+  }
 };
 
-var c = [4,2];
-c.toString = function(){
-    return this.join( "" ); // "42"
+var c = [4, 2];
+c.toString = function() {
+  return this.join(""); // "42"
 };
 
-Number( a );                // 42
-Number( b );                // 42
-Number( c );                // 42
-Number( "" );               // 0
-Number( [] );               // 0
-Number( [ "abc" ] );        // NaN
+Number(a); // 42
+Number(b); // 42
+Number(c); // 42
+Number(""); // 0
+Number([]); // 0
+Number(["abc"]); // NaN
 ```
 
 #### toBoolean
 
 ##### falsy value
 
-+ `undefined`
-+ `null`
-+ `false`
-+ +0、-0和NaN
-+ ""
+- `undefined`
+- `null`
+- `false`
+- +0、-0 和 NaN
+- ""
 
 除了`falsy value`其余都是`truthy value`
 
 ```js
-var a = new Boolean( false );
-var b = new Number( 0 );
-var a = new String( "" );
+var a = new Boolean(false);
+var b = new Number(0);
+var a = new String("");
 
-var d = Boolean( a && b && c );
+var d = Boolean(a && b && c);
 d; // true
 ```
 
@@ -1816,17 +1822,21 @@ d; // 3.14
 
 ```js
 var a = "Hello World";
-if (a.indexOf( "lo" ) >= 0) { // true
-    // 找到匹配!
+if (a.indexOf("lo") >= 0) {
+  // true
+  // 找到匹配!
 }
-if (a.indexOf( "lo" ) != -1) { // true
-    // 找到匹配!
+if (a.indexOf("lo") != -1) {
+  // true
+  // 找到匹配!
 }
-if (a.indexOf( "ol" ) < 0) { // true
-    // 没有找到匹配!
+if (a.indexOf("ol") < 0) {
+  // true
+  // 没有找到匹配!
 }
-if (a.indexOf( "ol" ) == -1) { // true
-    // 没有找到匹配!
+if (a.indexOf("ol") == -1) {
+  // true
+  // 没有找到匹配!
 }
 ```
 
@@ -1837,17 +1847,19 @@ if (a.indexOf( "ol" ) == -1) { // true
 ```js
 var a = "Hello World";
 
-~a.indexOf( "lo" );     // -4 <-- 真值!
+~a.indexOf("lo"); // -4 <-- 真值!
 
-if (~a.indexOf( "lo" )) { // true
-    // 找到匹配!
+if (~a.indexOf("lo")) {
+  // true
+  // 找到匹配!
 }
 
-~a.indexOf( "ol" ); // 0 <-- 假值!
-!~a.indexOf( "ol" ); // true
+~a.indexOf("ol"); // 0 <-- 假值!
+!~a.indexOf("ol"); // true
 
-if (!~a.indexOf( "ol" )) { // true
-    // 没有找到匹配!
+if (!~a.indexOf("ol")) {
+  // true
+  // 没有找到匹配!
 }
 ```
 
@@ -1856,22 +1868,26 @@ if (!~a.indexOf( "ol" )) { // true
 ### 隐式强制类型转换
 
 ```js
-var a = [1,2];
-var b = [3,4];
+var a = [1, 2];
+var b = [3, 4];
 a + b; // "1,23,4"
 ```
 
-如果某个操作数是字符串或者能够通过以下步骤转换为字符串的话，`+`将进行拼接操作。如果其中一个操作数是对象(包括数组)，则首先对其调用`ToPrimitive`抽象操作(规范9.1节)，该抽象操作再调用`[[DefaultValue]]`(规范8.12.8节)，以数字作为上下文。
+如果某个操作数是字符串或者能够通过以下步骤转换为字符串的话，`+`将进行拼接操作。如果其中一个操作数是对象(包括数组)，则首先对其调用`ToPrimitive`抽象操作(规范 9.1 节)，该抽象操作再调用`[[DefaultValue]]`(规范 8.12.8 节)，以数字作为上下文。
 
 简单来说就是，如果`+`的其中一个操作数是字符串(或者通过以上步骤可以得到字符串)，则执行字符串拼接;否则执行数字加法。
 
 ```js
 var a = {
-    valueOf: function() { return 42; },
-    toString: function() { return 4; }
+  valueOf: function() {
+    return 42;
+  },
+  toString: function() {
+    return 4;
+  }
 };
-a + "";         // "42"
-String( a );    // "4"
+a + ""; // "42"
+String(a); // "4"
 ```
 
 下面的情况会发生 布尔值隐式强制类型转换。
@@ -1898,8 +1914,8 @@ a ? b : a;
 
 几个非常规的情况:
 
-+ `NaN`不等于`NaN`
-+ `+0`等于`-0`
+- `NaN`不等于`NaN`
+- `+0`等于`-0`
 
 对象(包括数组和函数)的宽松相等`==`，两个对象指向同一个值即视为相等，不发生强制类型转换。比较对象的时候，`==`和`===`的工作原理相同。
 
@@ -1907,10 +1923,10 @@ a ? b : a;
 
 ```js
 var a = 42;
-var b = '42';
+var b = "42";
 
-a === b;    // false
-a == b;     // true
+a === b; // false
+a == b; // true
 ```
 
 规范规定:
@@ -1923,7 +1939,7 @@ a == b;     // true
 ##### 其他类型和布尔类型之间的相等比较
 
 ```js
-var a = '42';
+var a = "42";
 var b = true;
 
 a == b; // false
@@ -1962,10 +1978,10 @@ a == b; // true
 
 ```js
 var a = "abc";
-var b = Object(a);      // 和new String(a)一样
+var b = Object(a); // 和new String(a)一样
 
-a === b;                // false
-a == b;                 // true
+a === b; // false
+a == b; // true
 ```
 
 `Object`构造函数为给定值创建一个对象包装器。如果给定值是`null`或`undefined`，将会创建并返回一个空对象，否则，将返回一个与给定值对应类型的对象。
@@ -1973,18 +1989,18 @@ a == b;                 // true
 ```js
 var a = null;
 var b = Object(a);
-a == b;     // false
+a == b; // false
 
 var a = undefined;
 var b = Object(a);
-a == b;     // false
+a == b; // false
 ```
 
 #### 比较少见的情况
 
 ```js
 Number.prototype.valueOf = function() {
-    return 3;
+  return 3;
 };
 
 new Number(2) == 3; // true
@@ -1993,41 +2009,40 @@ new Number(2) == 3; // true
 ##### 假值的相等比较
 
 ```js
-"0" == null;        // false
-"0" == undefined;   // false
-"0" == false;       // true
-"0" == NaN;         // false
-"0" == 0;           // true
-"0" == "";          // false
+"0" == null; // false
+"0" == undefined; // false
+"0" == false; // true
+"0" == NaN; // false
+"0" == 0; // true
+"0" == ""; // false
 
-false == null;      // false
+false == null; // false
 false == undefined; // false
-false == NaN;       // false
-false == 0;         // true
-false == "";        // true
-false == [];        // true
-false == {};        // false
+false == NaN; // false
+false == 0; // true
+false == ""; // true
+false == []; // true
+false == {}; // false
 
-"" == null;         // false
-"" == undefined;    // false
-"" == NaN;          // false
-"" == 0;            // true
-"" == [];           // true
-"" == {};           // false
+"" == null; // false
+"" == undefined; // false
+"" == NaN; // false
+"" == 0; // true
+"" == []; // true
+"" == {}; // false
 
-0 == null;          // false
-0 == undefined;     // false
-0 == NaN;           // false
-0 == [];            // true
-0 == {};            // false
+0 == null; // false
+0 == undefined; // false
+0 == NaN; // false
+0 == []; // true
+0 == {}; // false
 ```
 
 ```js
-[] == ![]       // true
-2 == [2];       // true
-"" == [null];   // true
-0 == "\n";      // true
-
+[] == ![]; // true
+2 == [2]; // true
+"" == [null]; // true
+0 == "\n"; // true
 ```
 
 根据`ToBoolean`规则，会对`[]`进行显式强制类型转换(同时反转奇偶位校验位)，变成`[] == false`。
@@ -2039,11 +2054,11 @@ false == {};        // false
 比较双方首先调用`ToPrimitive`，如果结果出现非字符串，就根据`ToNumber`规则将双方强制类型转换为数字来进行比较。
 
 ```js
-var a = [ 42 ];
-var b = [ "43" ];
+var a = [42];
+var b = ["43"];
 
-a < b;  // true
-b < a;  // false
+a < b; // true
+b < a; // false
 ```
 
 如果双方都是字符串，则按字母顺序来进行比较:
@@ -2052,15 +2067,15 @@ b < a;  // false
 var a = ["42"];
 var b = ["043"];
 
-a < b;  // false
+a < b; // false
 ```
 
 ```js
 var a = { b: 42 };
 var b = { b: 43 };
-a < b;  // false
+a < b; // false
 a == b; // false
-a > b;  // false
+a > b; // false
 a <= b; // true
 a >= b; // true
 ```
@@ -2085,7 +2100,7 @@ b;
 
 ##### 语句的结果值
 
-语句都有一个结果值(statement completion value, undefined也算)。
+语句都有一个结果值(statement completion value, undefined 也算)。
 
 规范定义`var`的结果值是`undefined`。在控制台中输入`var a = 42`会得到结果值`undefined`。
 
@@ -2094,7 +2109,7 @@ b;
 ```js
 var b;
 if (true) {
-    b = 4 + 38;
+  b = 4 + 38;
 }
 ```
 
@@ -2116,7 +2131,7 @@ a = if (true) {
 
 ```js
 {
-    foo: bar()
+  foo: bar();
 }
 ```
 
@@ -2124,7 +2139,9 @@ a = if (true) {
 
 ```js
 [] + {}; // "[object Object]"
-{} + []; // 0
+{
+}
++[]; // 0
 ```
 
 第一行代码中，`{}`出现在`+`运算符表达式中，会被当做一个空对象来处理。
@@ -2135,13 +2152,11 @@ a = if (true) {
 
 ```js
 if (a) {
-    // ..
-}
-else if (b) {
-    // ..
-}
-else {
-    // ..
+  // ..
+} else if (b) {
+  // ..
+} else {
+  // ..
 }
 ```
 
@@ -2155,15 +2170,13 @@ if (a) doSomething(a);
 
 ```js
 if (a) {
+  // ..
+} else {
+  if (b) {
     // ..
-}
-else {
-    if (b) {
-        // ..
-    }
-    else {
-        // ..
-    }
+  } else {
+    // ..
+  }
 }
 ```
 
@@ -2189,10 +2202,10 @@ else {
 
 ```js
 var a = {
-    index: 1
+  index: 1
 };
 
-console.log( a );
+console.log(a);
 
 a.index++;
 ```
@@ -2218,31 +2231,31 @@ a.index++;
 ```js
 var a, b;
 function foo(x) {
-    a = x * 2;
-    if (a && b) {
-        baz();
-    }
+  a = x * 2;
+  if (a && b) {
+    baz();
+  }
 }
 
 function bar(y) {
-    b = y * 2;
-    if (a && b) {
-        baz();
-    }
+  b = y * 2;
+  if (a && b) {
+    baz();
+  }
 }
 
 function baz() {
-    console.log( a + b );
+  console.log(a + b);
 }
 
 // ajax(..)是某个库中的某个Ajax函数
-ajax( "http://some.url.1", foo );
-ajax( "http://some.url.2", bar );
+ajax("http://some.url.1", foo);
+ajax("http://some.url.2", bar);
 ```
 
 #### 小结
 
-一旦有事件需要运行，事件循环就会运行，知道队列清空。事件循环的每一轮称为一个`tick`。用户交互、IO和定时器会向事件队列中加入事件。
+一旦有事件需要运行，事件循环就会运行，知道队列清空。事件循环的每一轮称为一个`tick`。用户交互、IO 和定时器会向事件队列中加入事件。
 
 两个或多个"进程"在同一程序内并发地交替运行他们的步骤/事件时，如果这些任务彼此不想管，就不一定需要交互，如果进程间没有相互影响的话，不确定性完全可以接受。如果出现了交互，就需要对他们的交互进行协调。
 
@@ -2263,38 +2276,38 @@ ajax( "..", function(..) {
 #### 嵌套回调与链式回调
 
 ```js
-listen('click', function handler(evt) {
-    setTimeOut(function request() {
-        ajax('http://some.url.1', function response(text) {
-            if (text == 'hello') {
-                handler();
-            } else if (text == 'world') {
-                request();
-            }
-        });
-    }, 500);
+listen("click", function handler(evt) {
+  setTimeOut(function request() {
+    ajax("http://some.url.1", function response(text) {
+      if (text == "hello") {
+        handler();
+      } else if (text == "world") {
+        request();
+      }
+    });
+  }, 500);
 });
 ```
 
 这种代码常常被称作回调地狱(callback hell)，有时也被称为毁灭金字塔(pyramid of doom，得名于嵌套缩进产生的横向三角形状)。
 
 ```js
-listen('click', handle);
+listen("click", handle);
 
 function handler() {
-    setTimeOut( request, 500);
+  setTimeOut(request, 500);
 }
 
 function request() {
-    ajax('..', response);
+  ajax("..", response);
 }
 
 function response(text) {
-    if (text == 'hello') {
-        handler();
-    } else if (text == 'world') {
-        request();
-    }
+  if (text == "hello") {
+    handler();
+  } else if (text == "world") {
+    request();
+  }
 }
 ```
 
@@ -2302,7 +2315,7 @@ function response(text) {
 
 手工硬编码回调的真正问题在于一旦指定(也就是预先计划)了所有可能事件和路径，代码就会变的非常复杂，以至于无法维护和更新。嵌套和缩进基本上只是转移注意力的枝节。
 
-"error-first风格"，有时候也叫"Node风格"，其中回调的第一个参数保留用作错误对象。如果成功的话，这个参数就会被清空/置假。
+"error-first 风格"，有时候也叫"Node 风格"，其中回调的第一个参数保留用作错误对象。如果成功的话，这个参数就会被清空/置假。
 
 #### 小结
 
@@ -2322,44 +2335,45 @@ function response(text) {
 
 ##### 未来值
 
-设想一个场景：麦当劳买汉堡，付款(发出对某个value(这里是汉堡)的请求)，拿取号单(这代表未来的汉堡)，订单号就是一个promise，等待期间可以做其他事情，比如玩手机，当通知取餐的时候，凭value-promise换取这个value(汉堡)。
+设想一个场景：麦当劳买汉堡，付款(发出对某个 value(这里是汉堡)的请求)，拿取号单(这代表未来的汉堡)，订单号就是一个 promise，等待期间可以做其他事情，比如玩手机，当通知取餐的时候，凭 value-promise 换取这个 value(汉堡)。
 
 有两种结果，拿到汉堡和汉堡售罄。
 
 当编写代码要得到某个值的时候，比如通过数学计算，不管你有没有意识到，你都已经对这个值做出了一些非常基本的假设，那就是，它已经是一个具体的现在值:
 
 ```js
-var x, y = 2;
+var x,
+  y = 2;
 
-console.log( x + y ); // NaN 因为x还没有定
+console.log(x + y); // NaN 因为x还没有定
 ```
 
-设想一种方式表达:"把x和y加起来，
+设想一种方式表达:"把 x 和 y 加起来，
 但如果它们中的任何一个还没有准备好，就等待两者都准备好。一旦可以就马上执行加运算。"
 
 用回调函数处理：
 
 ```js
-function add(getX,getY,cb) {
-    var x, y;
-    getX( function(xVal){
-        x = xVal;
-        // 两个都准备好了?
-        if (y != undefined) {
-            cb( x + y ); // 发送和
-        }
-    });
-    getY( function(yVal){
-        y = yVal;
-        // 两个都准备好了?
-        if (x != undefined) {
-            cb( x + y ); // 发送和
-        }
-    });
+function add(getX, getY, cb) {
+  var x, y;
+  getX(function(xVal) {
+    x = xVal;
+    // 两个都准备好了?
+    if (y != undefined) {
+      cb(x + y); // 发送和
+    }
+  });
+  getY(function(yVal) {
+    y = yVal;
+    // 两个都准备好了?
+    if (x != undefined) {
+      cb(x + y); // 发送和
+    }
+  });
 }
 // fetchX()和fetchY()是同步或者异步函数
-add( fetchX, fetchY, function(sum){
-    console.log( sum ); // 是不是很容易?
+add(fetchX, fetchY, function(sum) {
+  console.log(sum); // 是不是很容易?
 });
 ```
 
@@ -2370,48 +2384,49 @@ add( fetchX, fetchY, function(sum){
 先大致看一下如何通过`Promise`函数表达这个`x + y`的例子：
 
 ```js
-function add(xPromise,yPromise) {
-    // Promise.all([..])接受一个promise数组并返回一个新的promise
-    // 这个新的promise等待数组中的所有promise完成
-    return Promise.all([xPromise, yPromise])
+function add(xPromise, yPromise) {
+  // Promise.all([..])接受一个promise数组并返回一个新的promise
+  // 这个新的promise等待数组中的所有promise完成
+  return (
+    Promise.all([xPromise, yPromise])
 
-    // 这个promise决议之后，我们取得收到的X和Y值并加在一起
-    .then(function(values) {
+      // 这个promise决议之后，我们取得收到的X和Y值并加在一起
+      .then(function(values) {
         // values是来自于之前决议的promise的消息数组
         return values[0] + values[1];
-    });
+      })
+  );
 }
 
 // fetchX()和fetchY()返回相应值得promise，可能已经就绪
 // 也可能以后就绪
 add(fetchX(), fetchY())
-
-// 我们得到一个这两个数组的和的promise
-// 现在链式调用then(..)来等待返回promise的决议
-.then(function(sum) {
+  // 我们得到一个这两个数组的和的promise
+  // 现在链式调用then(..)来等待返回promise的决议
+  .then(function(sum) {
     console.log(sum); // 这更简单！
-});
+  });
 ```
 
 使用事件侦听对象对`Promise`进行模拟。
 
 ```js
 function foo(x) {
-    // 开始做点可能耗时的工作
-    // 构造一个listener事件通知处理对象来返回
+  // 开始做点可能耗时的工作
+  // 构造一个listener事件通知处理对象来返回
 
-    return listener;
+  return listener;
 }
 
-var evt = foo( 42 );
+var evt = foo(42);
 
 evt.on("conpletion", function() {
-    // 可以进行下一步！
+  // 可以进行下一步！
 });
 
 evt.on("faliure", function() {
-    // 啊，foo(..)中出错了
-})
+  // 啊，foo(..)中出错了
+});
 ```
 
 回调本身表达了一种控制反转，对回调模式的反转实际上是对反转的反转。
@@ -2443,26 +2458,25 @@ evt.on("faliure", function() {
 ```js
 // 用于超时一个Promise的工具
 function timeoutPromise(delay) {
-    return new Promise(function(resolve,reject) {
-        setTimeout(function() {
-            reject("Timeout!");
-        }, delay);
-    });
+  return new Promise(function(resolve, reject) {
+    setTimeout(function() {
+      reject("Timeout!");
+    }, delay);
+  });
 }
 
 // 设置foo()超时
 Promise.race([
-    foo(),                  //试着开始foo()
-    timeoutPromise(3000)    //给它3秒钟
-])
-.then(
-    function() {
-        // foo(..)及时完成！
-    },
-    function(err) {
-        // 或者foo()被拒绝，或者只是没能按时完成
-        // 查看err来了解是那种情况
-    }
+  foo(), //试着开始foo()
+  timeoutPromise(3000) //给它3秒钟
+]).then(
+  function() {
+    // foo(..)及时完成！
+  },
+  function(err) {
+    // 或者foo()被拒绝，或者只是没能按时完成
+    // 查看err来了解是那种情况
+  }
 );
 ```
 
@@ -2478,18 +2492,18 @@ Promise.race([
 如果在`Promise`的创建过程中或在查看其决议结果过程中的任何时间点上出现了一个`JavaScript`异常错误，比如一个`TypeError`或`ReferenceError`，那这个异常就会被捕捉，并且会使这个`Promise`被拒绝。
 
 ```js
-var p = new Promise( function(resolve,reject){
-    foo.bar(); // foo未定义，所以会出错!
-    resolve( 42 ); // 永远不会到达这里 :(
+var p = new Promise(function(resolve, reject) {
+  foo.bar(); // foo未定义，所以会出错!
+  resolve(42); // 永远不会到达这里 :(
 });
 
 p.then(
-    function fulfilled(){
-        // 永远不会到达这里 :(
-    },
-    function rejected(err){
-        // err将会是一个TypeError异常对象来自foo.bar()这一行
-    }
+  function fulfilled() {
+    // 永远不会到达这里 :(
+  },
+  function rejected(err) {
+    // err将会是一个TypeError异常对象来自foo.bar()这一行
+  }
 );
 ```
 
@@ -2501,7 +2515,7 @@ p.then(
 
 ```js
 var p1 = new Promise(function(resolve, reject) {
-    resolve(42);
+  resolve(42);
 });
 
 var p2 = Promise.resolve(42);
@@ -2521,20 +2535,20 @@ p1 === p1; // true
 
 `Promise`两个固有特性
 
-+ 每次你对`Promise`调用`then(..)`，它都会创建并返回一个新的`Promise`，我们可以将其链接起来;
-+ 不管从`then(..)`调用的完成回调(第一个参数)返回的值是什么，它都会被自动设置为被链接`Promise`(第一点中的)的完成。
+- 每次你对`Promise`调用`then(..)`，它都会创建并返回一个新的`Promise`，我们可以将其链接起来;
+- 不管从`then(..)`调用的完成回调(第一个参数)返回的值是什么，它都会被自动设置为被链接`Promise`(第一点中的)的完成。
 
 调用`then(..)`时的完成处理函数或拒绝处理函数如果抛出异常，都会导致(链中的)下一个`promise`因这个异常而立即被拒绝。
 
-+ 调用`Promise的then(..)`会自动创建一个新的`Promise`从调用返回。
-+ 在完成或拒绝处理函数内部，如果返回一个值或抛出一个异常，新返回的(可链接的)`Promise`就相应地决议。
-+ 如果完成或拒绝处理函数返回一个`Promise`，它将会被展开，这样一来，不管它的决议值是什么，都会成为当前`then(..)`返回的链接`Promise`的决议值。
+- 调用`Promise的then(..)`会自动创建一个新的`Promise`从调用返回。
+- 在完成或拒绝处理函数内部，如果返回一个值或抛出一个异常，新返回的(可链接的)`Promise`就相应地决议。
+- 如果完成或拒绝处理函数返回一个`Promise`，它将会被展开，这样一来，不管它的决议值是什么，都会成为当前`then(..)`返回的链接`Promise`的决议值。
 
 #### 术语: 决议、完成以及拒绝
 
-+ 决议(resolve)
-+ 完成(fulfill)
-+ 拒绝(reject)
+- 决议(resolve)
+- 完成(fulfill)
+- 拒绝(reject)
 
 第二个参数名很容易定，几乎所有文献都将其命名为`reject(..)`。
 
@@ -2543,21 +2557,21 @@ p1 === p1; // true
 `Promise(..)`构造器的第一个参数回调会展开`thenable`(和`Promise.resolve(..)`一样)或真正的`Promise`:
 
 ```js
-var rejectedPr = new Promise( function(resolve,reject){
-    // 用一个被拒绝的promise完成这个promise
-    resolve(Promise.reject("Oops"));
+var rejectedPr = new Promise(function(resolve, reject) {
+  // 用一个被拒绝的promise完成这个promise
+  resolve(Promise.reject("Oops"));
 });
 rejectedPr.then(
-    function fulfilled() {
-        // 永远不会到达这里
-    },
-    function rejected(err) {
-        console.log( err ); // "Oops"
-    }
+  function fulfilled() {
+    // 永远不会到达这里
+  },
+  function rejected(err) {
+    console.log(err); // "Oops"
+  }
 );
 ```
 
-`then(..)`的回调，ES6规范将这两个回调命名为`onFulfilled(..)`和`onRjected(..)`，所以这两个术语很准确。
+`then(..)`的回调，ES6 规范将这两个回调命名为`onFulfilled(..)`和`onRjected(..)`，所以这两个术语很准确。
 
 #### 错误处理
 
@@ -2566,43 +2580,40 @@ rejectedPr.then(
 `Promise`中的错误处理，其中拒绝处理函数被传递给`then(..)`。`Promise`没有采用流行的`error-first`回调设计风格，而是使用了分离回调(`split-callback`)风格。一个回调用于完成情况，一个回调用于拒绝情况:
 
 ```js
-var p = Promise.reject( "Oops" );
+var p = Promise.reject("Oops");
 p.then(
-    function fulfilled() {
-        // 永远不会到达这里
-    },
-    function rejected(err) {
-        console.log( err ); // "Oops"
-    }
+  function fulfilled() {
+    // 永远不会到达这里
+  },
+  function rejected(err) {
+    console.log(err); // "Oops"
+  }
 );
 ```
 
 表面来看，这种出错模式很合理。
 
 ```js
-var p = Promise.resolve( 42 );
+var p = Promise.resolve(42);
 p.then(
-    function fulfilled(msg){
-        // 数字没有string函数，所以会抛出错误
-        console.log( msg.toLowerCase() );
-    },
-    function rejected(err){
-        // 永远不会到达这里
-    }
+  function fulfilled(msg) {
+    // 数字没有string函数，所以会抛出错误
+    console.log(msg.toLowerCase());
+  },
+  function rejected(err) {
+    // 永远不会到达这里
+  }
 );
 ```
 
 如果`msg.toLowerCase()`合法地抛出一个错误(事实确实如此!)，为什么我们的错误处理函数没有得到通知呢?正如前面解释过的，这是因为那个错误处理函数是为`promise p`准备的，而这个`promise`已经用值`42`填充了。`promise p`是不可变的，所以唯一可以被通知这个错误的`promise`是从`p.then(..)`返回的那一个，但我们在此例中没有捕捉。
 
 ```js
-var p = Promise.resolve( 42 );
-p.then(
-    function fulfilled(msg){
-        // 数字没有string函数，所以会抛出错误
-        console.log( msg.toLowerCase() );
-    },
-)
-.catch(handleErrors);
+var p = Promise.resolve(42);
+p.then(function fulfilled(msg) {
+  // 数字没有string函数，所以会抛出错误
+  console.log(msg.toLowerCase());
+}).catch(handleErrors);
 ```
 
 问题似乎解决了，但是如果`handlErrors`内部也有错误就很头疼，后面问题太高深，先不展开讨论。
@@ -2640,21 +2651,21 @@ p.then(
 ```js
 // polyfill安全的guard检查
 if (!Promise.first) {
-    Promise.first = function(prs) {
-        return new Promise( function(resolve,reject){
-            // 在所有promise上循环
-            prs.forEach( function(pr){
-                // 把值规整化
-                Promise.resolve( pr )
-                // 不管哪个最先完成，就决议主promise
-                .then( resolve );
-            });
-        });
-    };
+  Promise.first = function(prs) {
+    return new Promise(function(resolve, reject) {
+      // 在所有promise上循环
+      prs.forEach(function(pr) {
+        // 把值规整化
+        Promise.resolve(pr)
+          // 不管哪个最先完成，就决议主promise
+          .then(resolve);
+      });
+    });
+  };
 }
 ```
 
-#### Promise API概述
+#### Promise API 概述
 
 1.`new Promise(..)`构造器
 
@@ -2662,8 +2673,8 @@ if (!Promise.first) {
 
 ```js
 var p = new Promise(function(resolve, reject) {
-    // resolve(..)用以决议/完成这个promise
-    // reject(..)用于拒绝这个promise
+  // resolve(..)用以决议/完成这个promise
+  // reject(..)用于拒绝这个promise
 });
 ```
 
@@ -2676,10 +2687,10 @@ var p = new Promise(function(resolve, reject) {
 
 ```js
 var p1 = new Promise(function(resolve, reject) {
-    reject('Oops');
+  reject("Oops");
 });
 
-var p2 = Promise.reject('Oops');
+var p2 = Promise.reject("Oops");
 ```
 
 3.`then(..)`和`catch(..)`
