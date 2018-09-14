@@ -726,7 +726,7 @@ ease-in-out|先加速再减速
 .child{
     width: 100px;
     height: 150px;
-    margin: 0 auto; // block元素要
+    margin: 0 auto;
 }
 ```
 
@@ -753,7 +753,7 @@ Block Element Modifier
 + `_`单下划线：单下划线用来描述一个块或者块的子元素的一种状态
 
 ```css
-.type-block__element_modifier
+.type-block__element_modifier {}
 ```
 
 ### Block
