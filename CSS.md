@@ -377,6 +377,8 @@ Lightness：颜色越高色彩越亮。取值范围0-100%
 
 ## Flex
 
+![flex](./images/CSS/1.png)
+
 水平轴(`main axis`)
 
 垂直交叉轴(`cross axis`)
