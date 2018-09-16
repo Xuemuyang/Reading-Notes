@@ -130,7 +130,7 @@ vm.a = 'hehe';
 </div>
 ```
 
-```javascript
+```js
 var app = new Vue({
   el: '#app',
   data: {
