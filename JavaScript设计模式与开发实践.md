@@ -667,7 +667,7 @@ const createLoginLayer = (function() {
 这段代码的问题
 
 + 违反单一职责原则，创建对象和管理单例的逻辑都放在`createLoginLayer`中
-+ 下次再需要创建单例的时候，还是一样的思路，`createLoginLayer`几乎照抄一遍
++ 下次再需要创建单例的时候，还是一样的思路，`createLoginLayer`照抄一遍
 
 需要将相同的逻辑抽象出来
 
@@ -687,11 +687,32 @@ const getSingle = function(fn) {
 }
 ```
 
+于是这么去用
+
+```js
+const createLoginLayer = function() {
+  div = document.createElement("div");
+  div.innerHTML = "我是登录浮窗";
+  div.style.display = "none";
+  document.body.appendChild(div);
+  return div;
+};
+
+const createSingleLoginLayer = getSingle(createLoginLayer)
+
+document.getElementById('loginBtn').onclick = function() {
+  const loginLayer = createSingleLoginLayer();
+  loginLayer.style.display = 'block';
+};
+```
+
 ### 第5章 策略模式
 
 > 定义一系列的算法，把它们一个个封装起来，并且使它们可以相互替换。
 
 到同一个目的地可以有多种途径，根据实际情况来选择出行的线路。
+
+#### 使用策略模式计算奖金
 
 ### 第6章 代理模式
 
