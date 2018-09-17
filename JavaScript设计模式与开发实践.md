@@ -571,6 +571,122 @@ const CreateDiv = function(html) {
 
 #### 用代理实现单例模式
 
+引入代理类，将负责管理单例的代码放进去。
+
+```js
+const CreateDiv = function(html) {
+  this.html = html
+  this.init()
+}
+
+CreateDiv.prototype.init = function() {
+  let div = document.createElement('div')
+  div.innerHTML = this.html
+  document.body.appendChild(div)
+}
+
+const ProxySingletonCreateDiv = (function() {
+  let instance
+  return function(html) {
+    if (!instance) {
+      instance = new CreateDiv(html)
+    }
+    return instance
+  }
+})()
+
+const a = new ProxySingletonCreateDiv('hehe')
+const b = new ProxySingletonCreateDiv('haha')
+```
+
+#### JavaScript中的单例模式
+
+JavaScript其实是一门无类(class-free)语言。
+
+> 单例模式的核心是确保只有一个实例，并提供全局访问。
+
+在JavaScript开发中，会把全局变量当成单例来使用。
+
+```js
+var a = {};
+```
+
+全局变量存在很多问题，容易造成命名空间污染。大中型项目中容易出现问题。
+
+有两种方式*降低*全局变量带来的命名污染。
+
++ 使用命名空间
++ 闭包
+
+```js
+// 命名空间
+const namespace = {
+  a: function() {
+    alert(1);
+  },
+  b: function() {
+    alert(2);
+  }
+}
+```
+
+减少变量和全局作用域打交道的机会。
+
+```js
+const user = (function() {
+  let __name = 'myoung',
+      __age = 23;
+  
+  return {
+    getUserInfo: function() {
+      return `${__name}-${__age}`;
+    }
+  }
+})();
+```
+
+#### 惰性单例
+
+在需要的时候才创建对象实例。惰性单例是单例模式的重点。
+
+```js
+const createLoginLayer = (function() {
+  let div;
+  return function() {
+    if (!div) {
+      div = document.createElement("div");
+      div.innerHTML = "我是登录浮窗";
+      div.style.display = "none";
+      document.body.appendChild(div);
+    }
+    return div;
+  };
+})();
+```
+
+这段代码的问题
+
++ 违反单一职责原则，创建对象和管理单例的逻辑都放在`createLoginLayer`中
++ 下次再需要创建单例的时候，还是一样的思路，`createLoginLayer`几乎照抄一遍
+
+需要将相同的逻辑抽象出来
+
+```js
+var obj
+if (!obj) {
+  obj = xxx;
+}
+```
+
+```js
+const getSingle = function(fn) {
+  let result;
+  return function() {
+    return result || (result = fn.apply(this, arguments));
+  }
+}
+```
+
 ### 第5章 策略模式
 
 > 定义一系列的算法，把它们一个个封装起来，并且使它们可以相互替换。
