@@ -784,53 +784,164 @@ calculateBonus('A', 10000); // 30000
 > 一个基于策略模式的程序至少有两部分组成。第一个部分是一组策略类，策略类封装了具体的算法，并负责具体的计算过程。第二个部分是环境类Context，Context接受客户端请求，随后把请求委托给某一个策略类。Context中要维持对某个策略对象的引用。
 
 ```js
-const performanceS = function(){};
-
-performanceS.prototype.calculate = function(salary) {
-  return salary * 4;
-};
-
-const performanceA = function(){};
-
-performanceA.prototype.calculate = function(salary) {
-  return salary * 3;
+class PerformanceS {
+  calculate(salary) {
+    return salary * 4;
+  }
 }
 
-const performanceB = function(){};
+class PerformanceA {
+  calculate(salary) {
+    return salary * 3;
+  }
+}
 
-performanceB.prototype.calculate = function(salary) {
-  return salary * 2;
-};
+class PerformanceB {
+  calculate(salary) {
+    return salary * 4;
+  }
+}
 
-const Bonus = function() {
-  this.salary = null;
-  this.strategy = null;
-};
+class Bonus {
+  constructor(salary = null, strategy = null) {
+    this.salary = salary
+    this.strategy = strategy
 
-Bonus.prototype.setSalary = function(salary) {
-  this.salary = salary;
-};
+    this.setSalary = this.setSalary.bind(this)
+    this.setStrategy = this.setStrategy.bind(this)
+    this.getBonus = this.getBonus.bind(this)
+  }
 
-Bonus.prototype.setStrategy = function(strategy) {
-  this.strategy = strategy;
-};
+  setSalary(salary) {
+    this.salary = salary
+  }
 
-Bonus.prototype.getBonus = function() {
-  return this.strategy.calculate(this.salary);
-};
+  setStrategy(strategy) {
+    this.strategy = strategy
+  }
 
-const bonus = new Bonus();
+  getBonus() {
+    return this.strategy.calculate(this.salary)
+  }
+}
 
-bonus.setSalary(10000);
-bonus.setStrategy(new performanceS());
+const bonus = new Bonus()
 
-console.log(bonus.getBonus()); // 40000
+bonus.setSalary(10000)
+bonus.setStrategy(new PerformanceS())
 
-bonus.setStrategy(new performanceA());
-console.log(bonus.getBonus()); // 30000
+console.log(bonus.getBonus()) // 40000
+
+bonus.setStrategy(new PerformanceA())
+console.log(bonus.getBonus()) // 30000
 ```
 
-在对环境类`Context`发起请求的时候，`Context`把请求委托给这些策略对象中间的某一个进行计算。
+在对环境类`Context`(这里是Bonus)发起请求的时候，`Context`把请求委托给这些策略对象中间的某一个进行计算。
+
+#### JavaScript版本的策略模式
+
+```js
+const strategies = {
+  S(salary) {
+    return salary * 4
+  },
+  A(salary) {
+    return salary * 3
+  },
+  B(salary) {
+    return salary * 2
+  },
+};
+
+const calculateBonus = function(level, salary) {
+  return strategies[level](salary)
+}
+
+console.log(calculateBonus('S', 2000))
+console.log(calculateBonus('A', 10000))
+```
+
+#### 表单校验的例子
+
+表单验证中常见的编码方式，分支过多，维护性差，复用性差。
+
+```js
+if (registerForm.userName.value === '') {
+  alert('用户名不能为空');
+  return false;
+}
+if (registerForm.password.value.length < 6) {
+  alert('密码长度不能少于6位');
+  return false;
+}
+if (!/^1(3|5|8)[0-9]{9}$/.test(registerForm.phoneNumber.value)) {
+  alert('手机号码格式不正确');
+  return false;
+}
+```
+
+下面使用策略模式改写
+
+```js
+const strategies = {
+  isNonEmpty(value, errorMsg) {
+    if (value === '') {
+      return errorMsg
+    }
+  },
+  minLength(value, length, errorMsg) {
+    if (value.length < length) {
+      return errorMsg
+    }
+  },
+  isMobile(value, errorMsg) {
+    if (!/^1(3|5|8)[0-9]{9}$/.test(value)) {
+      return errorMsg
+    }
+  }
+}
+
+// 验证调用
+const validataFunc = function() {
+  const validator = new Validator()
+
+  validator.add(registerForm.userName, 'isNonEmpty', '用户名不能为空')
+  validator.add(registerForm.password, 'minLength:6', '密码长度不能少于6位')
+  validator.add(registerForm.phoneNumber, 'isMobile', '手机号码格式不正确')
+
+  let errorMsg = validator.start()
+  return errorMsg
+}
+
+class Validator {
+  constructor() {
+    this.cache = []
+    this.add = this.add.bind(this)
+    this.start = this.start.bind(this)
+  }
+
+  add(dom, rule, errorMsg) {
+    const ary = rule.split(':')
+    this.cache.push(function() {
+      const strategy = ary.shift()
+      ary.unshift(dom.value)
+      ary.push(errorMsg)
+      return strategies[strategy].apply(dom, ary)
+    })
+  }
+
+  start() {
+    for (let i = 0, validataFunc; validataFunc = this.cache[i++];) {
+      let msg = validataFunc()
+      if (msg) {
+        return msg
+      }
+    }
+  }
+}
+```
+
+大致实现思路如此，可将其改写为一个输入框支持多条验证规则，详见84页。
 
 ### 第6章 代理模式
 
