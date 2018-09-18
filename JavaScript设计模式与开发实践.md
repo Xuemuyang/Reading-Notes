@@ -472,9 +472,9 @@ let addEvent = function(elem, type, handler) {
 
 ## 第二部分 设计模式
 
-### 第4章 单例模式
+### 第4章 单例模式(Singleton Pattern)
 
-> 保证一个类仅有一个实例，并提供一个访问它的全局访问点。
+> Ensure a class has only one instance, and provide a global point of access to it.（保证一个类仅有一个实例，并提供一个访问它的全局访问点。）
 
 单例模式是一种常用的模式，有些对象往往只需要一个。比如Toast。
 
@@ -706,13 +706,131 @@ document.getElementById('loginBtn').onclick = function() {
 };
 ```
 
-### 第5章 策略模式
+### 第5章 策略模式(Strategy Pattern)
 
-> 定义一系列的算法，把它们一个个封装起来，并且使它们可以相互替换。
+> Define a family of algorithms, encapsulate each one, and make them interchangeable.（定义一组算法，将每个算法都封装起来，并且使他们之间可以互换。）
 
 到同一个目的地可以有多种途径，根据实际情况来选择出行的线路。
 
 #### 使用策略模式计算奖金
+
+1.看一个绩效考核的例子
+
+```js
+const calculateBonus = function(performanceLevel, salary) {
+  if (performanceLevel === 'S') {
+    return salary * 4;
+  }
+
+  if (performanceLevel === 'A') {
+    return salary * 3;
+  }
+
+  if (performanceLevel === 'B') {
+    return salary * 2;
+  }
+}
+
+calculateBonus('B', 20000); // 40000
+calculateBonus('S', 6000); // 24000
+```
+
+问题显而易见:
+
++ `calculateBonus`函数庞大，包含很多`if-else`语句，这些语句需要覆盖所有的逻辑分支。
++ `calculateBonus`函数缺乏弹性，如果增加了一种新的绩效等级C，或者绩效S的计算逻辑改变，必须要修改其内部实现，违反开放-封闭原则。
++ 算法复用性差。
+
+2.使用组合函数重构
+
+```js
+const performanceS = function(salary) {
+  return salary * 4;
+}
+
+const performanceA = function(salary) {
+  return salary * 3;
+}
+
+const performanceB = function(salary) {
+  return salary * 2;
+}
+
+const calculateBonus = function(performanceLevel, salary) {
+  if (performanceLevel === 'S') {
+    return performanceS(salary);
+  }
+
+  if (performanceLevel === 'A') {
+    return performanceA(salary);
+  }
+
+  if (performanceLevel === 'B') {
+    return performanceB(salary);
+  }
+}
+
+calculateBonus('A', 10000); // 30000
+```
+
+没有解决`calculateBonus`函数会越来越大的问题，在系统变化的时候缺乏弹性。
+
+3.使用策略模式重构
+
+> 策略模式的目的就是将算法的使用与算法的实现部分分离开来。
+
+在计算奖金的这个例子中，算法的使用方式是不变的，都是根据某个算法取得计算后的奖金数额。而算法的实现是变化的。
+
+> 一个基于策略模式的程序至少有两部分组成。第一个部分是一组策略类，策略类封装了具体的算法，并负责具体的计算过程。第二个部分是环境类Context，Context接受客户端请求，随后把请求委托给某一个策略类。Context中要维持对某个策略对象的引用。
+
+```js
+const performanceS = function(){};
+
+performanceS.prototype.calculate = function(salary) {
+  return salary * 4;
+};
+
+const performanceA = function(){};
+
+performanceA.prototype.calculate = function(salary) {
+  return salary * 3;
+}
+
+const performanceB = function(){};
+
+performanceB.prototype.calculate = function(salary) {
+  return salary * 2;
+};
+
+const Bonus = function() {
+  this.salary = null;
+  this.strategy = null;
+};
+
+Bonus.prototype.setSalary = function(salary) {
+  this.salary = salary;
+};
+
+Bonus.prototype.setStrategy = function(strategy) {
+  this.strategy = strategy;
+};
+
+Bonus.prototype.getBonus = function() {
+  return this.strategy.calculate(this.salary);
+};
+
+const bonus = new Bonus();
+
+bonus.setSalary(10000);
+bonus.setStrategy(new performanceS());
+
+console.log(bonus.getBonus()); // 40000
+
+bonus.setStrategy(new performanceA());
+console.log(bonus.getBonus()); // 30000
+```
+
+在对环境类`Context`发起请求的时候，`Context`把请求委托给这些策略对象中间的某一个进行计算。
 
 ### 第6章 代理模式
 

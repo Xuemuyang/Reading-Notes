@@ -2020,6 +2020,35 @@ const asyncReadFile = async function () {
 
 ### 属性和方法
 
+```js
+function Point(x, y) {
+  this.x = x;
+  this.y = y;
+}
+
+Point.prototype.toString = function () {
+  return '(' + this.x + ', ' + this.y + ')';
+};
+
+var p = new Point(1, 2);
+```
+
+使用ES6的class语法可以写成这样:
+
+```js
+//定义类
+class Point {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  toString() {
+    return '(' + this.x + ', ' + this.y + ')';
+  }
+}
+```
+
 使用 class 定义类，使用 constructor 定义构造函数。
 
 通过 new 生成新实例的时候，会自动调用构造函数。

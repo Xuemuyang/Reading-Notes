@@ -2180,6 +2180,8 @@ alert(person1.sayName == person2.sayName); //true
 
 1.理解原型对象
 
+![](./images/javascript/1.png)
+
 只要创建了一个新函数,就会根据一组特定的规则为该函数创建一个`peototype`属性,这个属性是一个指针,指向函数的原型对象。
 
 `isPrototype()`方法来确定对象之间原型关系
