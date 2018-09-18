@@ -2018,7 +2018,7 @@ const asyncReadFile = async function () {
 
 ## Class
 
-### 属性和方法
+### 简介
 
 ```js
 function Point(x, y) {
@@ -2049,9 +2049,22 @@ class Point {
 }
 ```
 
-使用 class 定义类，使用 constructor 定义构造函数。
+ES6的`class`，可以看做构造函数的另一种写法。
 
-通过 new 生成新实例的时候，会自动调用构造函数。
+```js
+class Point {
+  // ...
+}
+
+typeof Point // "function"
+Point === Point.prototype.constructor // true
+```
+
+### `constructor`方法
+
+`constructor`方法是类的默认方法，通过`new`命令生成对象实例时，自动调用该方法。一个类必须有`constructor`方法。如果没有显式定义，一个空的`constructor`方法会被默认添加。
+
+通过`new`生成新实例的时候，会自动调用构造函数。
 
 ```js
 class Animal {
@@ -2065,6 +2078,135 @@ class Animal {
 
 let a = new Animal('Jack');
 console.log(a.sayHi()); // My name is Jack
+```
+
+### Class表达式
+
+与函数一样，类也可以使用表达式的形式定义。
+
+```js
+const MyClass = class Me {
+  getClassName() {
+    return Me.name;
+  }
+};
+```
+
+如果这么定义，类的名字是`MyClass`而不是`Me`。`Me`只在Class的内部代码可用。
+
+### 私有方法
+
+1.变量命名做区别
+
+```js
+class Widget {
+
+  // 公有方法
+  foo (baz) {
+    this._bar(baz);
+  }
+
+  // 私有方法
+  _bar(baz) {
+    return this.snaf = baz;
+  }
+
+  // ...
+}
+```
+
+2.Symbol
+
+```js
+const bar = Symbol('bar');
+const snaf = Symbol('snaf');
+
+export default class myClass{
+
+  // 公有方法
+  foo(baz) {
+    this[bar](baz);
+  }
+
+  // 私有方法
+  [bar](baz) {
+    return this[snaf] = baz;
+  }
+
+  // ...
+};
+```
+
+```js
+const Point = (function() {
+  let _x = Symbol('x'),
+    _y = Symbol('y')
+
+  return class {
+    constructor(x, y) {
+      this[_x] = x
+      this[_y] = y
+    }
+    get length() {
+      const x = this[_x],
+        y = this[_y]
+      return Math.sqrt( x ** 2 + y ** 2)
+    }
+  }
+}())
+
+let p1 = new Point(3, 4),
+  p2 = new Point(1, 1)
+
+console.log(Point)
+```
+
+### `this`的指向
+
+```js
+class Logger {
+  printName(name = 'there') {
+    this.print(`Hello ${name}`);
+  }
+
+  print(text) {
+    console.log(text);
+  }
+}
+
+const logger = new Logger();
+const { printName } = logger;
+printName(); // TypeError: Cannot read property 'print' of undefined
+```
+
+类方法内部的`this`默认指向类的实例。如果将方法单独提取出来使用，`this`会指向该方法运行时所在的环境，可能因为找不到`print`方法报错。
+
+两种解决思路
+
+1.在构造方法中绑定`this`
+
+```js
+class Logger {
+  constructor() {
+    this.printName = this.printName.bind(this);
+  }
+
+  // ...
+}
+```
+
+2.箭头函数
+
+```js
+class Logger {
+  constructor() {
+    this.printName = (name = 'there') => {
+      this.print(`Hello ${name}`);
+    };
+  }
+
+  // ...
+}
 ```
 
 ### 类的继承
