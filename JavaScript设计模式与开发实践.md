@@ -951,7 +951,151 @@ class Validator {
 
 代理模式的关键是，当客户不方便直接访问一个对象或者不满足需要的时候，提供一个替身对象来控制这个对象的访问，客户实际上访问的是替身对象。替身对象对请求做出一些处理之后，再把请求转交给本体对象。
 
-### 第7章 迭代器模式
+保护代理用于控制不同权限的对象对目标对象的访问。
+
+#### 虚拟代理实现图片预加载
+
+```js
+const myImage = (function() {
+  const imgNode = document.createElement('img')
+  document.body.appendChild(imgNode)
+
+  return {
+    setSrc: function(src) {
+      imgNode.src = src
+    }
+  }
+})()
+
+const proxyImage = (function() {
+  const img = new Image()
+  img.onload = function() {
+    myImage.setSrc(this.src)
+  }
+  return {
+    setSrc(src) {
+      myImage.setSrc('loading.gif')
+      img.src = src
+    }
+  }
+})()
+
+proxyImage.setSrc('hehe.jpg')
+```
+
+下面是没有引入代理的代码
+
+```js
+const MyImage = (function() {
+  const imgNode = document.createElement('img')
+  document.body.appendChild(imgNode)
+  const img = new Image()
+
+  img.onload = function() {
+    imgNode.src = img.src
+  }
+
+  return {
+    setSrc: function(src) {
+      imgNode.src = 'loading.gif'
+      img.src = src
+    }
+  }
+})()
+
+MyImage.setSrc('hehe.jpg')
+```
+
+单一职责原则，如果一个对象的职责过多，等于将很多职责耦合到一起，导致低内聚的设计。所以这里使用代理将预加载和请求图片职责分离。
+
+需要注意的是，代理和本体接口需要体现一致性，对用户来说是透明的，并不知道代理和本体的区别。
+
+#### 虚拟代理合并HTTP请求
+
+通过代理函数来手机一段时间之内的请求，然后一次性发给服务器。
+
+```js
+const synchronousFile = function(id) {
+  console.log(`开始同步文件，id为${id}`)
+}
+
+const proxySynchronousFile = (function() {
+  const cache = []
+  let timer
+  
+  return function(id) {
+    cache.push(id)
+    if (timer) {
+      return
+    }
+
+    timer = setTimeout(function() {
+      synchronousFile(cache.join(','))
+      clearTimeout(timer)
+      timer = null
+      cache.length = 0
+    }, 2000)
+  }
+})()
+
+let checkbox = document.getElementsByTagName('input')
+
+for (let i = 0, c; c = checkbox[i++]; ) {
+  c.onclick = function() {
+    if (this.checked === true) {
+      proxySynchronousFile(this.id)
+    }
+  }
+}
+```
+
+#### 缓存代理
+
+缓存代理可以为一些开销大的运算结果提供暂时的存储，下次运算时，如果传递进来的参数跟之前的一致，则可以直接返回前面存储的运算结果。
+
+```js
+const mult = function(...args) {
+  console.log('开始计算乘积')
+  let a = 1
+  for (let i = 0; i < args.length; i++) {
+    a *= args[i]
+  }
+  return a
+}
+
+const proxyMult = (function() {
+  const cache = {}
+  return function(...args) {
+    let key = args.join(',')
+    if (cache[key]) {
+      return cache[key]
+    }
+    return cache[key] = mult.apply(this, args)
+  }
+})()
+
+proxyMult(1, 2, 3, 4)
+proxyMult(1, 2, 3, 4)
+```
+
+这里可以将缓存抽离出来一个高阶函数
+
+```js
+const createProxyFactory = function(fn) {
+  const cache = {}
+  return function(...args) {
+    let key = args.join(',')
+    if (cache[key]) {
+      return cache[key]
+    }
+    return cache[key] = fn.apply(this, args)
+  }
+}
+```
+
+### 第7章 迭代器模式(Iterator Pattern)
+
+Provide a way to access the elements of an aggregate object sequentially without exposing its underlying representation.（它提供一种方法访问一个容器对象中各个元素，而又不需要暴露该对象的内部细节。）
 
 > 迭代器模式是指提供一种方法顺序访问一个聚合对象中的各个元素，而又不需要暴露该对象的内部表示。及不用关心对象的内部构造，也可以按顺序访问其中的每个元素。
 
