@@ -943,7 +943,9 @@ class Validator {
 
 大致实现思路如此，可将其改写为一个输入框支持多条验证规则，详见84页。
 
-### 第6章 代理模式
+### 第6章 代理模式(Proxy pattern)
+
+Proxy pattern（代理模式）：Provide a surrogate (代理) or placeholder for another object to control access to it.（为其他对象提供一种代理以控制对这个对象的访问。）
 
 > 代理模式是为一个对象提供一个代用品或占位符，以便控制对它的访问。
 
