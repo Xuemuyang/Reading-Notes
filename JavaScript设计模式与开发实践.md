@@ -1101,9 +1101,131 @@ Provide a way to access the elements of an aggregate object sequentially without
 
 > 迭代器模式是指提供一种方法顺序访问一个聚合对象中的各个元素，而又不需要暴露该对象的内部表示。及不用关心对象的内部构造，也可以按顺序访问其中的每个元素。
 
-### 第8章 发布-订阅模式
+### 第8章 发布-订阅模式(Observer Pattern)
+
+Define a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.（定义对象间一种一对多的依赖关系，使得每当一个对象改变状态，则所有依赖于它的对象都会得到通知并被自动更新。）
 
 > 发布-订阅模式又叫做观察者模式，它定义对象间的一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都将得到通知。在JavaScript开发中，一般用事件模型来替代传统的发布-订阅模式。
+
+发布订阅模式的通用实现
+
+```js
+const event = {
+  clientList: [],
+  listen(key, fn) {
+    if (!this.clientList[key]) {
+      this.clientList[key] = []
+    }
+    this.clientList[key].push(fn)
+  },
+  trigger(...args) {
+    const key = args.shift()
+    const fns = this.clientList[key]
+
+    if (!fns || fns.length === 0) {
+      return false
+    }
+
+    for (let i = 0, fn; fn = fns[i++];) {
+      fn.apply(this, args)
+    }
+  }
+}
+
+const installEvent = function(obj) {
+  for (let i of Object.keys(event)) {
+    obj[i] = event[i]
+  }
+}
+```
+
+这里是调用的例子
+
+```js
+const salesOffices = {}
+installEvent(salesOffices)
+
+salesOffices.listen('squareMeter88', function(price) {
+  console.log(`价格= ${price}`)
+})
+
+salesOffices.listen('squareMeter100', function(price) {
+  console.log(`价格= ${price}`)
+})
+
+salesOffices.trigger('squareMeter88', 2000000)
+salesOffices.trigger('squareMeter100', 3000000)
+```
+
+问题在于发布订阅者存在一定耦合性，需要知道对象的名称才能顺利订阅事件。
+
+#### 全局的发布-订阅对象
+
+```js
+const Event = (function() {
+
+  const clientList = {}
+  
+  const listen = function(key, fn) {
+    if (!clientList[key]) {
+      clientList[key] = []
+    }
+    clientList[key].push(fn)
+  }
+
+  const trigger = function(...args) {
+    const key = args.shift()
+    const fns = clientList[key]
+
+    if (!fns || fns.length === 0) {
+      return false
+    }
+
+    for (let i = 0, fn; fn = fns[i++];) {
+      fn.apply(this, args)
+    }
+  }
+
+  const remove = function(key, fn) {
+    const fns = clientList[key]
+    if (!fns) {
+      return false
+    }
+    if (!fn) {
+      fns && (fns.length = 0)
+    } else {
+      for (let i = fns.length - 1; i >= 0; i--) {
+        const _fn = fns[i]
+        if (_fn === fn) {
+          fns.splice(i ,1)
+        }
+      }
+    }
+  }
+
+  return {
+    listen,
+    trigger,
+    remove
+  }
+})()
+
+Event.listen('squareMeter88', fn1 = function(price) {
+  console.log(`价格= ${price}`)
+})
+
+Event.trigger('squareMeter88', 2000000)
+
+Event.remove('squareMeter88', fn1)
+```
+
+#### 先订阅再发布
+
+某些场景，比如QQ离线消息，需要先把消息保存下来，等到有对象订阅了，再把消息发布给订阅者。
+
+#### 全局事件命名冲突
+
+项目体积不断增大，难免出现事件名冲突。需要提供创建命名空间的功能。
 
 ### 第9章 命令模式
 
