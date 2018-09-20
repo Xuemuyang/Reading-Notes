@@ -34,6 +34,14 @@ option|description
 --stat|显示每次更新的文件修改统计信息
 --name-status|显示新增，修改，删除的文件清单
 
+## 添加默认忽略文件
+
+编辑`~/.subversion/config`，找到`global-ignores`这一行，添加一下经常需要忽略的文件及目录
+
+```git
+global-ignores = *.o *.lo *.la *.al .libs *.so *.so.[0-9]* *.a *.pyc *.pyo node_modules .git .gitignore *.cache .DS_Store *.map .sass-cache *.swp .build
+```
+
 ## 解决痛点
 
 1. 历史修改追溯
