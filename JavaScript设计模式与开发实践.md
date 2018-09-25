@@ -1242,7 +1242,54 @@ Event.remove('squareMeter88', fn1)
 `setCommand`函数负责往按钮上安装命令。
 
 ```js
-const setCommand = func
+const setCommand = function(button, command) {
+  botton.onclick = function() {
+    command.excute()
+  }
+}
+
+const MenuBar = {
+  refresh() {
+    console.log('刷新菜单目录')
+  }
+}
+
+const SubMenu = {
+  add() {
+    console.log('增加子菜单')
+  },
+  del() {
+    console.log('删除子菜单')
+  }
+}
+
+class RefreshMenuBarCommand {
+  constructor(receiver) {
+    this.receiver = receiver
+  }
+
+  excute() {
+    this.receiver.refresh()
+  }
+}
+
+class AddSubBarCommand {
+  constructor(receiver) {
+    this.receiver = receiver
+  }
+
+  excute() {
+    this.receiver.add()
+  }
+}
+
+const refreshMenuBarCommand = new RefreshMenuBarCommand(MenuBar)
+const addSubMenuCommand = new AddSubMenuCommand(SubMenu)
+const delSubMenuCommand = new DelSubMenuCommand(SubMenu)
+
+setCommand(botton1, refreshMenuBarCommand)
+setCommand(botton2, addSubMenuCommand)
+setCommand(botton3, delSubMenuCommand)
 ```
 
 ### 第10章 组合模式
