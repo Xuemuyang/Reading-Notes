@@ -1292,6 +1292,29 @@ setCommand(botton2, addSubMenuCommand)
 setCommand(botton3, delSubMenuCommand)
 ```
 
+#### JavaScript中的命令模式
+
+```js
+const RefreshMenuBarCommand = function(receiver) {
+  return {
+    execute() {
+      receiver.refresh()
+    }
+  }
+}
+
+const setCommand = function(button, command) {
+  botton.onclick = function() {
+    command.excute()
+  }
+}
+
+const refreshMenuBarCommand = RefreshMenuBarCommand(MenuBar)
+setCommand(button1, refreshMenuBarCommand)
+```
+
+#### 撤销命令
+
 ### 第10章 组合模式
 
 "事物是由相似的子事物构成"。
