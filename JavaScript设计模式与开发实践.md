@@ -1233,6 +1233,88 @@ Event.remove('squareMeter88', fn1)
 
 有一个快餐店的点餐服务员，当客人点餐或者订餐时，将需求写在清单上交给厨房，客人不用关心是哪位厨师给他做菜。客人还可以要求一小时之后开始炒他的菜，打电话撤单等等。这些记录着订餐信息的清单就是命令模式中的命令对象。
 
+#### 命令模式的例子---菜单程序
+
+绘制一排Button按钮，给其绑定`click`事件。
+
+按下按钮之后会发生一些事情是不变的，而具体发生什么事情是可变的。
+
+`setCommand`函数负责往按钮上安装命令。
+
+```js
+const setCommand = function(button, command) {
+  botton.onclick = function() {
+    command.excute()
+  }
+}
+
+const MenuBar = {
+  refresh() {
+    console.log('刷新菜单目录')
+  }
+}
+
+const SubMenu = {
+  add() {
+    console.log('增加子菜单')
+  },
+  del() {
+    console.log('删除子菜单')
+  }
+}
+
+class RefreshMenuBarCommand {
+  constructor(receiver) {
+    this.receiver = receiver
+  }
+
+  excute() {
+    this.receiver.refresh()
+  }
+}
+
+class AddSubBarCommand {
+  constructor(receiver) {
+    this.receiver = receiver
+  }
+
+  excute() {
+    this.receiver.add()
+  }
+}
+
+const refreshMenuBarCommand = new RefreshMenuBarCommand(MenuBar)
+const addSubMenuCommand = new AddSubMenuCommand(SubMenu)
+const delSubMenuCommand = new DelSubMenuCommand(SubMenu)
+
+setCommand(botton1, refreshMenuBarCommand)
+setCommand(botton2, addSubMenuCommand)
+setCommand(botton3, delSubMenuCommand)
+```
+
+#### JavaScript中的命令模式
+
+```js
+const RefreshMenuBarCommand = function(receiver) {
+  return {
+    execute() {
+      receiver.refresh()
+    }
+  }
+}
+
+const setCommand = function(button, command) {
+  botton.onclick = function() {
+    command.excute()
+  }
+}
+
+const refreshMenuBarCommand = RefreshMenuBarCommand(MenuBar)
+setCommand(button1, refreshMenuBarCommand)
+```
+
+#### 撤销命令
+
 ### 第10章 组合模式
 
 "事物是由相似的子事物构成"。
