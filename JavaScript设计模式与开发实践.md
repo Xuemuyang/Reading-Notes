@@ -1315,6 +1315,55 @@ setCommand(button1, refreshMenuBarCommand)
 
 #### 撤销命令
 
+直接看代码，利用属性将之前操作结果记录下来
+
+```js
+class MoveCommand {
+  constructor(receiver, pos) {
+    this.receiver = receiver
+    this.pos = pos
+    this.oldPos = null
+  }
+
+  execute() {
+    this.receiver.start('left', this.pos, 1000)
+    this.oldPos = this.receiver.dom.getBoundingClientRect()[this.receiver.propertyName]
+  }
+
+  undo() {
+    this.receiver.start('left', this.oldPos, 1000)
+  }
+}
+
+moveBtn.onclick = function() {
+  const animate = new animate(ball)
+  moveCommand = new MoveCommand(animate, pos.value)
+  moveCommand.execute()
+}
+
+cancelBtn.onclick = function() {
+  moveCommand.undo()
+}
+```
+
+#### 宏命令
+
+```js
+const MacroCommand = function() {
+  return {
+    commandList: [],
+    add(command) {
+      this.commandList.push(command)
+    },
+    execute() {
+      for (let i = 0, command; command = this.commandList[i++];) {
+        command.execute()
+      }
+    }
+  }
+}
+```
+
 ### 第10章 组合模式
 
 "事物是由相似的子事物构成"。
