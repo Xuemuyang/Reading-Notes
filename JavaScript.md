@@ -1038,11 +1038,100 @@ alert(sum); //25
 
 ### Date 类型
 
+两个小常识
+
+UTC -> Coordinated Universal Time
+
+GMT -> Greenwich Mean Time
+
+Date对象可以作为普通函数直接调用，返回一个代表当前时间的字符串。
+
+当作为普通函数使用的时候，即使带有参数，返回的还是当前时间。
+
+```js
+Date() // "Fri Sep 28 2018 14:10:44 GMT+0800 (中国标准时间)"
+Date(2018, 9, 28) // "Fri Sep 28 2018 14:16:19 GMT+0800 (中国标准时间)"
+```
+
+#### 构造函数
+
 ```js
 // 本地时间2005年5月5日下午5:55:55
 var date = new Date(2005, 4, 5, 17, 55, 55); // 注意这里传入的month是从0开始计算,而day从1计算
 date.getTime(); // 返回表示日期的毫秒数
 ```
+
+作为构造函数时，`Date`对象可以接受多种格式的参数，返回一个该参数对应的时间实例。
+
+- 参数可以是负整数，代表1970/1/1之前的时间
+- 凡是能被`Date.parse()`方法解析的字符串，都可以当做参数
+- 参数为年、月、日等多个整数时，年和月不能省略，如果传一个参数，`Date`会将其解释为毫秒数
+
+```js
+new Date('2013-2-15')
+new Date('2013/2/15')
+new Date('02/15/2013')
+new Date('2013-FEB-15')
+new Date('FEB, 15, 2013')
+new Date('FEB 15, 2013')
+new Date('Feberuary, 15, 2013')
+new Date('Feberuary 15, 2013')
+new Date('15 Feb 2013')
+new Date('15, Feberuary, 2013')
+```
+
+月份需要特别注意，从0开始计算，0表示一月。
+
+#### 日期的运算
+
+两个日期实例对象进行减法运算时，返回的是他们间隔的毫秒数；进行假发运算时，返回的是两个字符串连接而成的新字符串。
+
+```js
+var d1 = new Date(2000, 1, 1)
+var d2 = new Date(2018,1,1)
+
+d2 - d1 // 568080000000
+d1 + d2 // "Tue Feb 01 2000 00:00:00 GMT+0800 (中国标准时间)Thu Feb 01 2018 00:00:00 GMT+0800 (中国标准时间)"
+```
+
+#### 静态方法
+
+`Date.now()`返回的是当前时间距离零点(1970/1/1 00:00:00 UTC)的毫秒数。
+
+`Date.parse()`用来解析日期字符串(需要符合一定标准/格式)。
+
+这个标准有RFC 2822和IOS 8061，其他的格式也可以被解析。
+
+```js
+`Date.now()` // 1538116532905
+```
+
+#### 实例方法
+
+1.`Date.prototype.toString()`
+
+`toString`方法返回一个完整的日期字符串，`toString`是默认的调用方法，如果直接读取`Date`实例，就相当于调用这个方法。
+
+```js
+var d = new Date(2013, 0, 1)
+
+d.toString() // "Tue Jan 01 2013 00:00:00 GMT+0800 (CST)"
+d // "Tue Jan 01 2013 00:00:00 GMT+0800 (CST)"
+```
+
+2.`Date.prototype.toUTCString()`
+
+`toUTCString`方法对应的是UTC时间，比北京时间晚8个小时。
+
+```js
+var d = new Date()
+d // Fri Sep 28 2018 14:44:49 GMT+0800 (中国标准时间)
+d.toUTCString() // "Fri, 28 Sep 2018 06:44:49 GMT"
+```
+
+3.`Date.prototype.toISOString()`
+
+`toISOString`方法返回对应时间的ISO8601方法。
 
 ### RegExp 类型
 
