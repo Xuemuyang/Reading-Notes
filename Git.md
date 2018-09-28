@@ -28,11 +28,29 @@ $git reset --hard 版本号 // 强制回退某个版本
 $cd ~/.ssh //查看ssh秘钥
 ```
 
+oh-my-zsh中对git命令进行了简化
+
+```zsh
+ga = git add
+gaa = git add all
+gb = git branch
+gco = git checkout
+ggpull = git pull origin $(git_current_branch)
+ggpush =git push origin $(git_current_branch)
+```
+
 option|description
 ---|---
 -p|按补丁格式显示每个更新之间差异
 --stat|显示每次更新的文件修改统计信息
 --name-status|显示新增，修改，删除的文件清单
+
+## ssh相关
+
+```sh
+ssh-keygen
+ssh-add -K [path/to/your/ssh-key] // 将秘钥添加keychain中
+```
 
 ## 添加默认忽略文件
 

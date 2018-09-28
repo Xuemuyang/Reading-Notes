@@ -27,3 +27,5 @@ formatList(arr) {
   return arr.filter(({ checked }) => checked).map(({way}) => way).join(' ');
 }
 ```
+
+4.表单按照场景来确定使用什么值,`0,1,2`或者直接用`男/女`，某些场景下可以少一步映射操作
