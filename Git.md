@@ -26,11 +26,16 @@ $git stash apply // 恢复工作区
 $git stash drop // 删除工作区
 $git reset --hard 版本号 // 强制回退某个版本
 $cd ~/.ssh //查看ssh秘钥
+$git config --global user.name "John Doe"
+$git config --global user.email johndoe@example.com
+$git config --local user.name "John Doe"
+$git config --local user.email johndoe@example.com // 只修改项目配置name
 ```
 
 oh-my-zsh中对git命令进行了简化
 
 ```zsh
+glg = git log
 ga = git add
 gaa = git add all
 gb = git branch
