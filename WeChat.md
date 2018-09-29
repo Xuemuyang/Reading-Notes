@@ -107,6 +107,22 @@ longtap|手指触摸后，超过350ms再离开(推荐使用longpress事件代替
 
 小程序内，触摸类事件支持捕获阶段，捕获先于冒泡触发，绑定捕获事件，可以使用`capture-bind`、`capture-catch`,后者将中断捕获阶段和取消冒泡阶段。
 
+`bind`事件绑定不会阻止冒泡事件向上冒泡，`catch`事件绑定可以阻止冒泡事件向上冒泡。
+
+如在下边这个例子中，点击 inner view 会先后调用handleTap3和handleTap2(因为tap事件会冒泡到 middle view，而 middle view 阻止了 tap 事件冒泡，不再向父节点传递)，点击 middle view 会触发handleTap2，点击 outer view 会触发handleTap1。
+
+```js
+<view id="outer" bindtap="handleTap1">
+  outer view
+  <view id="middle" catchtap="handleTap2">
+    middle view
+    <view id="inner" bindtap="handleTap3">
+      inner view
+    </view>
+  </view>
+</view>
+```
+
 ## 小程序特点
 
 小程序没有`window`、`document`，更像是一个Node.js宿主环境，小程序内不能使用`document.querySeletor`这类DOM选择器，也不支持`XMLHttpRequest`、`location`、`localStorage`等浏览器提供的API。
