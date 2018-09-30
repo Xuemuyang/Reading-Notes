@@ -40,8 +40,11 @@ ga = git add
 gaa = git add all
 gb = git branch
 gco = git checkout
+gl = git pull
+gp = git push
+gpsup = git push --set-upstream origin $(current_branch)
 ggpull = git pull origin $(git_current_branch)
-ggpush =git push origin $(git_current_branch)
+ggpush = git push origin $(git_current_branch)
 ```
 
 option|description
