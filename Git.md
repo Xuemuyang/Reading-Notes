@@ -15,6 +15,8 @@
 
 ```bash
 $git reset HEAD . // 撤销git add .操作
+$git reset HEAD~[n] // 回退到n个提交之前
+$git reset [version] // 回退到某个版本
 $git checkout -b xxx // 切换并创建xxx分支
 $git branch -a // 查看所有分支
 $git branch -d dev // 删除dev分支
