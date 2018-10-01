@@ -246,3 +246,39 @@ $git remote
 1. 之后`git push origin branch-name`推送就能成功
 
 如果`git pull`提示"no tracking information"，说明本地分支和远程分支的链接关系没有创建，用命令`git branch --set-upstream branch-name origin/branch-name`。
+
+## GitBook
+
+### 2.4撤消操作
+
+```sh
+$git commit --amend
+```
+
+提交后发现忘记了暂存某些需要的修改，可以像下面这样操作：
+
+```sh
+$git commit -m 'initial commit'
+$git add forgotten_file
+$git commit --amend
+```
+
+最终你只会有一个提交 - 第二次提交将代替第一次提交的结果。
+
+## git reset
+
+三棵树
+
++ HEAD 是当前分支引用的指针，它总是指向该分支上的最后一次提交。
++ Index 是预计的下一次提交，即“暂存区”
++ Working Directory
+
+![git-reset](./images/git/reset-tree.png)
+
+soft是默认选项
+
+![git-reset--soft](./images/git/reset-soft.png)
+
+![git-reset--mixed](./images/git/reset-mixed.png)
+
+![git-reset--hard](./images/git/reset-hard.png)
