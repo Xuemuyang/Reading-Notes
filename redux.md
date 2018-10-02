@@ -36,6 +36,16 @@ AppDispatcher.dispatch({
 
 Dispatcher 的作用是将 Action 派发到 Store，可以将其看做是一个路由器，负责在 View 和 Store 之间建立 Action 的正确传递路线。
 
-## Action
+## 基础
+
+### Action
 
 Action 是把数据从应用传到 Store 的有效荷载，是 Store 数据的唯一来源。
+
+### Reducer
+
+reducer 就是一个纯函数，接收旧的 state 和 action，返回新的 state。
+
+```js
+(previousState, action) => newState
+```
