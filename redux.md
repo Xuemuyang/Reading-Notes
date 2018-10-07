@@ -36,6 +36,52 @@ AppDispatcher.dispatch({
 
 Dispatcher 的作用是将 Action 派发到 Store，可以将其看做是一个路由器，负责在 View 和 Store 之间建立 Action 的正确传递路线。
 
-## Action
+## Redux基础
+
+### Action
 
 Action 是把数据从应用传到 Store 的有效荷载，是 Store 数据的唯一来源。
+
+约定action内必须使用一个字符串类型的`type`字段来表示将要执行的动作，多数情况下，`type`会被定义成字符串常量。建议使用调度的模块或文件来存放actionTypes。
+
+```js
+import { ADD_TODO, REMOVE_TODO } from '../actionTypes'
+```
+
+Action创建函数
+
+```js
+function addTodo(text) {
+  return {
+    type: ADD_TODO,
+    text
+  }
+}
+```
+
+### Reducer
+
+Reducer是一个纯函数，接收旧的state和action，返回新的state
+
+```js
+(previousState, action) => newState
+```
+
+### Store
+
+Redux应用只有一个单一的store
+
+```js
+import { createStore } from 'redux'
+import todoApp from './reducers'
+let store = createStore(todoApp)
+```
+
+### 数据流
+
+严格的单向数据流是Redux架构的设计核心
+
+1. 调用`store.dispatch(action)`
+2. Redux store调用传入的reducer函数
+3. 根reducer应该把多个子reducer输出合并成一个单一的state树
+4. Redux store保存了根reducer返回的完整state树
