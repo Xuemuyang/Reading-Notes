@@ -36,7 +36,29 @@ AppDispatcher.dispatch({
 
 Dispatcher 的作用是将 Action 派发到 Store，可以将其看做是一个路由器，负责在 View 和 Store 之间建立 Action 的正确传递路线。
 
-## Redux基础
+## 废话
+
+Redux使用场景
+
+- 用户的使用方式复杂
+- 不同身份的用户有不同的使用方式（比如普通用户和管理员）
+- 多个用户之间可以协作
+- 与服务器大量交互，或者使用了WebSocket
+- View要从多个来源获取数据
+
+从组件角度的使用场景
+
+- 某个组件的状态，需要共享
+- 某个状态需要在任何地方都可以拿到
+- 一个组件需要改变全局状态
+- 一个组件需要改变另一个组件的状态
+
+设计思想
+
+1. Web应用是一个状态机，视图与状态是一一对应的。
+2. 所有的状态，保存在一个对象里面。
+
+## 基础
 
 ### Action
 
@@ -61,7 +83,7 @@ function addTodo(text) {
 
 ### Reducer
 
-Reducer是一个纯函数，接收旧的state和action，返回新的state
+Reducer是一个纯函数，接收旧的state和action，返回新的state。
 
 ```js
 (previousState, action) => newState
@@ -69,7 +91,7 @@ Reducer是一个纯函数，接收旧的state和action，返回新的state
 
 ### Store
 
-Redux应用只有一个单一的store
+Store是保存数据的地方，Redux应用只有一个单一的store。
 
 ```js
 import { createStore } from 'redux'
