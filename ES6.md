@@ -234,15 +234,27 @@ window.b // undefined
 
 上面代码中，全局变量`a`由`var`命令声明，所以它是顶层对象的属性；全局变量`b`由`let`命令声明，所以它不是顶层对象的属性，返回`undefined`。
 
-## 3. 变量的解构赋值
+## 3. 变量的解构赋值(Destructuring)
 
-1. 数组的解构赋值
+### 数组的解构赋值
 
 > ES6 允许按照一定模式，从数组和对象中提取值，对变量进行赋值，这被称为解构（Destructuring）。
 
 `let [a, b, c] = [1, 2, 3];`
 
 本质上，这种写法属于“模式匹配”，只要等号两边的模式相同，左边的变量就会被赋予对应的值。下面是一些使用嵌套数组进行解构的例子。
+
+### 默认值
+
+结构赋值允许指定默认值
+
+```js
+let [foo = true] = [];
+foo // true
+
+let [x, y = 'b'] = ['a']; // x='a', y='b'
+let [x, y = 'b'] = ['a', undefined]; // x='a', y='b'
+```
 
 ## 4. 字符串的扩展
 
@@ -375,9 +387,9 @@ function log(x, y = 'World') {
   console.log(x, y);
 }
 
-log('Hello') // Hello World
-log('Hello', 'China') // Hello China
-log('Hello', '') // Hello
+console.log('Hello') // Hello World
+console.log('Hello', 'China') // Hello China
+console.log('Hello', '') // Hello
 ```
 
 ### 与解构赋值结合使用

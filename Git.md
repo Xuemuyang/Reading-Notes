@@ -177,6 +177,10 @@ $git push origin master
 $git clone xxx
 ```
 
+将远程更新拉取到本地使用`git fetch`命令。
+
+`git pull`命令取回远程某个分支的更新，再与本地的指定分支合并。
+
 ## 分支管理
 
 ```sh
