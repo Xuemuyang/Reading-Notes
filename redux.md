@@ -157,3 +157,11 @@ let store = createStore(reducer)
 1. Redux store保存了根Reducer返回的完整State树
 
 ![redux-flow](./images/Redux/redux-flow.jpg)
+
+## 中间件和异步操作
+
+异步操作思路
+
+- 操作开始时，送出一个Action，触发State更新为“正在操作”状态，View重新渲染
+- 操作结束后，再送出一个Action，触发State更新为“操作结束状态”，View再一次重新渲染
+
