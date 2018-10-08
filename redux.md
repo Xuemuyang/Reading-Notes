@@ -150,10 +150,10 @@ let store = createStore(reducer)
 
 严格的单向数据流是Redux架构的设计核心
 
+![redux-flow](./images/Redux/redux-flow.jpg)
+
 1. 调用`store.dispatch(action)`，发出Action
 1. Redux store自动调用Reducer，并传入当前的State和收到的Action，Reducer返回新的State
 1. State一旦有变化，Store就会调用监听函数
 1. 根Reducer应该把多个子Reducer输出合并成一个单一的State树
 1. Redux store保存了根Reducer返回的完整State树
-
-![redux-flow](./images/Redux/redux-flow.jpg)
