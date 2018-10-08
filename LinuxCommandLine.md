@@ -6,6 +6,8 @@
 $cd ~/.ssh //查看ssh秘钥
 $lsof -i tcp:port // 查看端口
 $kill -9 PID // 根据PID杀进程
+$bg // 查看正在运行的任务
+$fg [n] // 将后台任务调回到前台运行
 ```
 
 ## Chap1. Intro
