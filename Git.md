@@ -55,6 +55,21 @@ option|description
 --stat|显示每次更新的文件修改统计信息
 --name-status|显示新增，修改，删除的文件清单
 
+## 分支功能
+
+type|desc
+---|---
+feat|A new feature
+fix|A bug fix
+docs|Documentation only changes
+style|Changes that do not affect the meaning of the code(white-space)
+refactor|A code change that neither fixes a bug nor adds a feature
+perf|A code change that improves performance
+test|Adding missing tests or correcting existing tests
+build|Changes that affec the build system or external dependencies
+ci|
+chore|Other changes that don't modify src or test files
+
 ## ssh相关
 
 ```sh
