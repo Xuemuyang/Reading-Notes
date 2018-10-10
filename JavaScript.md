@@ -5090,6 +5090,8 @@ export default function jsonp(url, data, option) {
 }
 ```
 
+如果 promise 已成功或失败，且在之后添加了成功/失败回调，则将会调用正确的回调，即使事件发生在先也可以调用，这与事件监听不同。
+
 `promise`会有如下保证:
 
 1. 在事件队列的当前运行完成之前,回调函数永远不会被调用。
@@ -5248,10 +5250,10 @@ undefined
 Promise 对象的`then`方法返回一个新的 Promise 对象,因此可以通过链式调用`then`方法。`then`方法接收两个函数作为参数,第一个参数是 Promise 执行成功时的回调,第二个参数是 Promise 执行失败时的回调。两个函数只会有一个被调用,函数的返回值将被用作创建`then`返回的 Promise 对象。这两个参数的返回值可以是以下三种情况中的一种：
 
 - `return`一个同步的值 ,或者`undefined`（当没有返回一个有效值时,默认返回`undefined`）,`then`方法将返回一个`resolved`状态的 Promise 对象,Promise 对象的值就是这个返回值。
-- `return`另一个 Promise,`then`方法将根据这个 Promise 的状态和值创建一个新的 Promise 对象返回。
+- `return`另一个 Promise,`then`方法将根据这个 Promise 的状态和值创建一个新的 Promise 对象返回，并在这个promise产生结果时调用。
 - `throw`一个同步异常,`then`方法将返回一个`rejected`状态的 Promise, 值是该异常。
 
-  5.`Promise.then()`回调异步性
+5.`Promise.then()`回调异步性
 
 ```js
 var p = new Promise(function(resolve, reject) {
@@ -5430,6 +5432,28 @@ p2 rejected: reject
 ```
 
 Promise 回调中的第一个参数`resolve`,会对 Promise 执行"拆箱"动作,当`resolve`参数是一个 Promise 对象,`resolve`会"拆箱"获取这个 Promise 对象的状态和值,这个过程是异步的。由于"拆箱"的结果是`resolved`,`fulfilled`回调被执行。`reject`不具备"拆箱"能力,将参数直接传给`then`方法中`reject`回调。
+
+#### 错误处理流程图
+
+```js
+asyncThing1().then(function() {
+  return asyncThing2();
+}).then(function() {
+  return asyncThing3();
+}).catch(function(err) {
+  return asyncRecovery1();
+}).then(function() {
+  return asyncThing4();
+}, function(err) {
+  return asyncRecovery2();
+}).catch(function(err) {
+  console.log("Don't worry about it");
+}).then(function() {
+  console.log("All done!");
+})
+```
+
+![错误处理流程图](./images/javascript/2.png)
 
 ### Node 中的异步
 
