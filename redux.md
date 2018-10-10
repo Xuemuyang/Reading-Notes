@@ -87,7 +87,7 @@ Store允许`store.subscribe`设置监听函数，一旦State发生变化，就�
 当前时刻的State可以用`store.getState()`拿到。
 
 ```js
-import import { createStore } from 'redux'
+import { createStore } from 'redux'
 import todoApp from './reducers'
 let store = createStore(todoApp)
 
