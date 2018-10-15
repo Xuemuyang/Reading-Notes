@@ -74,7 +74,7 @@ chore|Other changes that don't modify src or test files
 
 ```sh
 ssh-keygen
-ssh-add -K [path/to/your/ssh-key] // 将秘钥添加keychain中
+ssh-add -K [path/to/your/ssh-key] // 将秘钥添加keychain中，添加私钥
 ```
 
 ## 添加默认忽略文件
