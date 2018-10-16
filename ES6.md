@@ -246,7 +246,7 @@ window.b // undefined
 
 ### 默认值
 
-结构赋值允许指定默认值
+解构赋值允许指定默认值
 
 ```js
 let [foo = true] = [];
@@ -255,6 +255,25 @@ foo // true
 let [x, y = 'b'] = ['a']; // x='a', y='b'
 let [x, y = 'b'] = ['a', undefined]; // x='a', y='b'
 ```
+
+对象的解构赋值也可以指定默认值
+
+```js
+var {x = 3} = {};
+x // 3
+```
+
+默认值生效的条件是，对应位置的值严格等于`undefined`
+
+```js
+var {x = 3} = {x: undefined};
+x // 3
+
+var {x = 3} = {x: null};
+x // null
+```
+
+如果解构失败，变量的值等于`undefined`
 
 ## 4. 字符串的扩展
 
