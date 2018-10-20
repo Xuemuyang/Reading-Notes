@@ -636,7 +636,7 @@ const namespace = {
 const user = (function() {
   let __name = 'myoung',
       __age = 23;
-  
+
   return {
     getUserInfo: function() {
       return `${__name}-${__age}`;
@@ -1024,7 +1024,7 @@ const synchronousFile = function(id) {
 const proxySynchronousFile = (function() {
   const cache = []
   let timer
-  
+
   return function(id) {
     cache.push(id)
     if (timer) {
@@ -1165,7 +1165,7 @@ salesOffices.trigger('squareMeter100', 3000000)
 const Event = (function() {
 
   const clientList = {}
-  
+
   const listen = function(key, fn) {
     if (!clientList[key]) {
       clientList[key] = []
@@ -1369,6 +1369,22 @@ const MacroCommand = function() {
 "事物是由相似的子事物构成"。
 
 组合模式就是用小的子对象来构建更大的对象，这些小的子堆在了本身也许是由更小的"孙"对象构成的。
+
+宏命令对象包含了一组具体的子命令对象，不管是宏命令对象，还是子命令对象，都有一个`excute`方法负责执行命令。
+
+宏命令中包含了一组子命令，他们组成了一个树形结构。
+
+`MacroCommand`表现的像一个命令，实际上只是一组真正命令的“代理”，只负责传递请求给叶对象。
+
+#### 组合模式的用途
+
+组合模式将对象组合成树形结构，使得用户对单个对象和组合对象的使用具有一致性。
+
+提供了一种遍历树形结构的方案，通过调用组合对象的`excute`方法，程序递归调用组合对象下面叶对象的`excute`方法。
+
+请求从树最顶端的对象往下传递，如果子节点是叶对象，叶对象自身会处理这个请求，如果子节点还是组合对象，请求会继续向下传递。
+
+![组合模式](./images/designpattern/tree.png)
 
 ### 第11章 模板方法模式
 
