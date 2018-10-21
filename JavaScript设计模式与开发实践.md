@@ -1386,6 +1386,104 @@ const MacroCommand = function() {
 
 ![组合模式](./images/designpattern/tree.png)
 
+透明性的同时带来安全问题，解决方案通常是给叶对象增加`add`方法，并且在调用这个方法时，抛出一个异常来及时提醒客户。
+
+```js
+const openTvCommand = {
+  excute() {
+    console.log('打开电视')
+  },
+  add() {
+    throw new Error('叶对象不能添加子节点')
+  }
+}
+```
+
+看一个🌰---扫描文件夹
+
++ 文件夹中既可以包括文件，又可以包含其他文件夹，组合模式让粘贴复制成了一个统一的操作。
++ 杀毒软件扫描文件夹，只需扫描最外层即可。
+
+```js
+class Folder {
+  constructor(name) {
+    this.name = name
+    this.parent = null
+    this.files = []
+  }
+  add(file) {
+    file.parent = this
+    this.files.push(file)
+  }
+  scan() {
+    console.log(`开始扫描文件夹${this.name}`)
+    for (let i = 0, file; file = this.files[i++];) {
+      file.scan()
+    }
+  }
+  remove() {
+    if (!this.parent) {
+      return;
+    }
+    for (let files = this.parent.files, l = files.length - 1; l >= 0; l--) {
+      let file = files[l]
+      if (file === this) {
+        files.splice(l, 1)
+      }
+    }
+  }
+}
+
+class File {
+  constructor(name) {
+    this.name = name
+    this.parent = null
+  }
+  add() {
+    throw new Error('文件下面不能再添加文件')
+  }
+  scan() {
+    console.log(`开始扫描文件${this.name}`)
+  }
+  remove() {
+    if (!this.parent) {
+      return;
+    }
+    for (let files = this.parent.files, l = files.length - 1; l >= 0; l--) {
+      let file = files[l]
+      if (file === this) {
+        files.splice(l , 1)
+      }
+    }
+  }
+}
+
+const folder = new Folder('Learning')
+
+const folder1 = new Folder('CSS')
+const folder2 = new Folder('JavaScript')
+
+const file1 = new File('JavaScript权威指南')
+const file2 = new File('JavaScript高级程序设计')
+const file3 = new File('CSS揭秘')
+const file4 = new File('Docker')
+
+folder.add(folder1)
+folder.add(folder2)
+folder.add(file4)
+
+folder1.add(file3)
+folder2.add(file1)
+folder2.add(file2)
+
+folder.scan()
+```
+
+#### 何时使用组合模式
+
++ 表示对象的部分，整体层次结构，只需要通过请求树的最顶层对象，便能对整棵树做统一的操作。
++ 客户希望统一对待树中的所有对象，不用关心当前正在处理的对象是组合对象还是叶对象。组合对象和叶对象会各自做自己正确的事情，这是组合模式最重要的能力。
+
 ### 第11章 模板方法模式
 
 ### 第12章 享元模式(flyweight)
