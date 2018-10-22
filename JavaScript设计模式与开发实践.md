@@ -1519,6 +1519,38 @@ folder.scan()
 1. 把饮料倒入杯子
 1. 加调料
 
+```js
+class Beverage {
+  boilWater() {
+    console.log('把水煮沸')
+  }
+  brew() {}
+  pourInCup() {}
+  addCondiments() {}
+  init() {
+    this.boilWater()
+    this.brew()
+    this.pourInCup()
+    this.addCondiments()
+  }
+}
+
+class Coffee extends Beverage {
+  brew() {
+    console.log('用沸水冲泡咖啡')
+  }
+  pourInCup() {
+    console.log('把咖啡倒进杯子')
+  }
+  addCondiments() {
+    console.log('加糖和牛奶')
+  }
+}
+
+const coffee = new Coffee()
+coffee.init()
+```
+
 ### 第12章 享元模式(flyweight)
 
 ### 第13章 职责链模式
