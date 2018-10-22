@@ -243,7 +243,7 @@ Animal anim = new Animal();
 
 ```java
 abstract class Canine extends Animal {
-    public void roam() { }
+  public void roam() { }
 }
 ```
 
@@ -266,7 +266,7 @@ Java中所有类都是从Object这个类继承出来的。
 
 ```java
 if (o instanceof Dog) {
-    Dog d = (Dog) o;
+  Dog d = (Dog) o;
 }
 ```
 
@@ -283,16 +283,16 @@ if (o instanceof Dog) {
 ```java
 // 接口的定义
 public interface Pet {
-    public abstract void beFriendly(); // 接口的方法一定是抽象的
-    public abstract void play();
+  public abstract void beFriendly(); // 接口的方法一定是抽象的
+  public abstract void play();
 }
 
 // 接口的实现
 public class Dog extends Canine implements Pet {
-    public void beFriendly() {...} // 必须在这里实现出接口的方法
-    public void play();
+  public void beFriendly() {...} // 必须在这里实现出接口的方法
+  public void play();
 
-    public void roam() {...} // 一般的覆盖方法
+  public void roam() {...} // 一般的覆盖方法
 }
 ```
 

@@ -2095,6 +2095,8 @@ Point === Point.prototype.constructor // true
 
 `constructor`方法是类的默认方法，通过`new`命令生成对象实例时，自动调用该方法。一个类必须有`constructor`方法。如果没有显式定义，一个空的`constructor`方法会被默认添加。
 
+`constructor`方法默认返回实例对象(即`this`)
+
 通过`new`生成新实例的时候，会自动调用构造函数。
 
 ```js
