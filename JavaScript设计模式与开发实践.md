@@ -1547,9 +1547,31 @@ class Coffee extends Beverage {
   }
 }
 
+class Tea extends Beverage {
+  brew() {
+    console.log('用沸水浸泡茶叶')
+  }
+  pourInCup() {
+    console.log('把茶倒进杯子')
+  }
+  addCondiments() {
+    console.log('加柠檬')
+  }
+}
+
 const coffee = new Coffee()
+const tea = new Tea()
 coffee.init()
+tea.init()
 ```
+
+`Beverage`类的`init`方法就是模板方法，他其中封装了子类的算法框架。
+
+#### 抽象类
+
+在Java中，有两种类，抽象类和具体类，具体类可以被实例化，抽象类不能被实例化。抽象类用来被某些具体类继承。
+
+抽象方法被声明在抽象类中，抽象方法没有具体的实现过程，子类继承抽象类时，必须重写父类的抽象方法。
 
 ### 第12章 享元模式(flyweight)
 
