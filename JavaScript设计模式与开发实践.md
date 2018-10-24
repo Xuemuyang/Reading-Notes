@@ -1573,6 +1573,75 @@ tea.init()
 
 抽象方法被声明在抽象类中，抽象方法没有具体的实现过程，子类继承抽象类时，必须重写父类的抽象方法。
 
+Java中的方法
+
+```java
+public abstract class Beverage {
+    final void init() {
+        boilWater();
+        brew();
+        pourInCup();
+        addCondiments();
+    }
+
+    void boilWater() {
+        System.out.println("把水煮沸");
+    }
+
+    abstract void brew();
+    abstract void addCondiments();
+    abstract void pourInCup();
+}
+
+public class Coffee extends Beverage {
+    @Override
+    void brew() {
+        System.out.println("用沸水冲泡咖啡");
+    }
+
+    @Override
+    void pourInCup() {
+        System.out.println("把咖啡倒进杯子");
+    }
+
+    @Override
+    void addCondiments() {
+        System.out.println("加糖和牛奶");
+    }
+}
+
+public class Tea extends Beverage {
+    @Override
+    void brew() {
+        System.out.println("用沸水浸泡茶叶");
+    }
+
+    @Override
+    void pourInCup() {
+        System.out.println("把茶倒进杯子");
+    }
+
+    @Override
+    void addCondiments() {
+        System.out.println("加柠檬");
+    }
+}
+
+public class Test {
+    private static void prepareRecipe( Beverage beverage ) {
+        beverage.init();
+    }
+
+    public static void main( String args[] ) {
+        Beverage coffee = new Coffee();
+        prepareRecipe(coffee);
+
+        Beverage tea = new Tea();
+        prepareRecipe(tea);
+    }
+}
+```
+
 ### 第12章 享元模式(flyweight)
 
 ### 第13章 职责链模式
