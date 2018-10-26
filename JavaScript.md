@@ -5340,6 +5340,8 @@ p2 then then then value: 1
 
 Promise 中的异常由`then`参数中的第二个回调处理,异常信息将作为 Promise 的值。异常一旦得到处理,`then`返回的后续 Promise 对象将恢复正常。
 
+`Promise.prototype.catch`方法是`.then(null, rejection)`的别名，用于指定发生错误时的回调函数。
+
 7.`Promise.resolve()`
 
 ```js
