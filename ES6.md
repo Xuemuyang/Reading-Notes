@@ -1460,15 +1460,13 @@ for (let i of s) {
 
 ### 1. `Promise`的含义
 
-> `Promise`是异步编程的一种解决方案，最早有社区提出，ES6原生提供`Promise`对象
+> `Promise`是异步编程的一种解决方案，最早由社区提出，ES6原生提供`Promise`对象
 
 两个特点
 
 1.对象的状态不受外界影响，`Promise`对象代表一个异步操作，有三种状态：`pending`（进行中）、`fulfilled`（已成功）和`rejected`（已失败）。只有异步操作的结果可以决定当前是哪一种状态，这正是"Promise"的由来。
 
 2.一旦状态改变就不会再变。`Promise`对象的状态改变只有两种可能，`Pending`到`fulfilled`，`Pending`到`rejected`。只要这两种情况发生，状态就凝固了。
-
-`fullfilled`状态也可用`resolved`来指代。
 
 有了`Promise`对象，就可以将异步操作以同步操作的流程表达出来，避免了层层嵌套的回调函数。此外，`Promise`对象提供统一的接口，使得控制异步操作更加容易。
 
@@ -1592,6 +1590,18 @@ getJSON("/post/1.json").then(
   err => console.log("rejected: ", err)
 );
 ```
+
+### 4. `Promise.prototype.catch()`
+
+`Promise.prototype.catch`方法是`.then(null, rejection)`的别名。
+
+`Promise`对象的错误会一直向后传递，直到被捕获为止。
+
+`Promise`内部的错误不会影响到`Promise`外部的代码。
+
+### 5. `Promise.prototype.finally()`
+
+`finally`
 
 ## 15. Iterator 和 for...of 循环
 

@@ -5435,6 +5435,19 @@ p2 rejected: reject
 
 Promise 回调中的第一个参数`resolve`,会对 Promise 执行"拆箱"动作,当`resolve`参数是一个 Promise 对象,`resolve`会"拆箱"获取这个 Promise 对象的状态和值,这个过程是异步的。由于"拆箱"的结果是`resolved`,`fulfilled`回调被执行。`reject`不具备"拆箱"能力,将参数直接传给`then`方法中`reject`回调。
 
+> 注意，调用`resolve`或`reject`并不会终结 `Promise`的参数函数的执行。
+
+```js
+new Promise((resolve, reject) => {
+  resolve(1);
+  console.log(2);
+}).then(r => {
+  console.log(r);
+});
+// 2
+// 1
+```
+
 #### 错误处理流程图
 
 ```js
