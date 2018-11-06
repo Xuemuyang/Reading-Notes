@@ -1642,6 +1642,45 @@ public class Test {
 }
 ```
 
+在Java中会保证子类必须重写父类中的抽象方法，但是在JavaScript中没有检查，有两种解决方案。
+
+1. 用鸭子类型来检查接口
+1. 让Bevearge.prototype.brew等方法直接抛出一个异常
+
+#### 钩子方法
+
+```js
+class Beverage {
+  boilWater() {
+    console.log('把水煮沸')
+  }
+  brew() {
+    throw new Error('子类必须重写brew方法')
+  }
+  pourInCup() {
+    throw new Error('子类必须重写pourInCup方法')
+  }
+  addCondiments() {
+    throw new Error('子类必须重写addCondiments方法')
+  }
+  customerWantsConfiments() {
+    return true;
+  }
+  init() {
+    this.boilWater()
+    this.brew()
+    this.pourInCup()
+    if (this.customerWantsConfiments()) {
+      this.addCondiments()
+    }
+  }
+}
+```
+
+#### 小结
+
+模板方法模式是一种典型的通过封装变化提高系统扩展性的设计模式
+
 ### 第12章 享元模式(flyweight)
 
 ### 第13章 职责链模式
