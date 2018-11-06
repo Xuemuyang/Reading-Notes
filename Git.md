@@ -22,6 +22,7 @@ $git branch -a // 查看所有分支
 $git branch -d dev // 删除dev分支
 $git rm --cached // 删除文件的git追踪，但是本地还会有
 $git log --stat/-p // 查看文件修改记录
+$git reflog // 查看操作记录
 $git stash // 工作区暂存
 $git stash list // 工作区暂存列表
 $git stash apply // 恢复工作区
@@ -44,6 +45,9 @@ gb = git branch
 gco = git checkout
 gl = git pull
 gp = git push
+g reflog = git reflog
+glol 查看log记录
+ggf = git push --force origin $(current_branch)
 gpsup = git push --set-upstream origin $(current_branch)
 ggpull = git pull origin $(git_current_branch)
 ggpush = git push origin $(git_current_branch)
