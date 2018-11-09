@@ -5569,3 +5569,31 @@ async getBooksAndAuthor(authorId) {
   };
 }
 ```
+
+## 原型与原型链
+
+![原型与原型链](./images/javascript/prototype.png)
+
+每个函数都有一个`protytpe`属性，指向一个对象，这个对象是调用该构造函数创建的实例的原型。
+
+每一个对象(`null`除外)都有一个`__proto__`属性，指向该对象的原型。
+
+每一个原型都有一个`constructor`属性指向关联的构造函数。
+
+```js
+function Person() {
+}
+
+var person = new Person();
+
+console.log(person.__proto__ == Person.prototype) // true
+console.log(Person.prototype.constructor == Person) // true
+// 顺便学习一个ES5的方法,可以获得对象的原型
+console.log(Object.getPrototypeOf(person) === Person.prototype) // true
+```
+
+三个容易忽视的点
+
+- 实例中并没有`constructor`属性，当访问其`constructor`属性会从其原型中读取
+- `__proto__`绝大多数浏览器都支持这个非标准方法，实际上来自`Object.prototype`，`obj.__prototype__`可以理解为返回了`Object.getPrototypeOf(obj)`
+- JavaScript中委托(delegation)的叫法更准确，只是在两个对象之间创建一个关联
