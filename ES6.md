@@ -518,6 +518,26 @@ function f(a, ...b, c) {
 
 ### 箭头函数
 
+MDN对于箭头函数的介绍是:
+
+> An arrow function expression has a shorter syntax than a function expression and does not have its own this, arguments, super, or new.target. These function expressions are best suited for non-method functions, and they cannot be used as constructors.
+
+non-method就是指不被用作对象属性中的函数。
+
+```js
+var obj = {
+  i: 10,
+  b: () => console.log(this.i, this),
+  c: function() {
+    console.log( this.i, this)
+  }
+}
+obj.b();
+// undefined Window
+obj.c();
+// 10, Object {...}
+```
+
 ES6 允许使用“箭头”（=>）定义函数。
 
 ```javascript
