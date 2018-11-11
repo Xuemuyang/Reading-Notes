@@ -2921,6 +2921,52 @@ In English
 
 每个执行环境都有一个与之关联的变量对象（variable object）,环境中定义的所有变量和函数都保存在这个对象中。虽然我们编写的代码无法访问这个对象,但解析器在处理数据时会在后台使用它。如果这个执行环境是函数,则将其活动对象（activation object）作为变量对象。
 
+当进入到一个执行上下文中，执行上下文的变量对象才会被激活，所以才叫`activation object`。
+
+举个例子
+
+```js
+function foo(a) {
+  var b = 2;
+  function c() {};
+  var d = function() {};
+
+  b = 3;
+}
+
+foo(1);
+```
+
+进入执行上下文后的AO
+
+```js
+AO = {
+  arguments: {
+    0: 1,
+    length: 1
+  },
+  a: 1,
+  b: undefined,
+  c: reference to function c(){},
+  d: undefined
+}
+```
+
+代码执行完之后
+
+```js
+AO = {
+  arguments: {
+    0: 1,
+    length: 1
+  },
+  a: 1,
+  b: 3,
+  c: reference to function c(){},
+  d: reference to FunctionExpression "d"
+}
+```
+
 #### 执行上下文中的细节
 
 首先分为两个阶段
@@ -2995,14 +3041,14 @@ foo(22);
 fooExecutionContext = {
   scopeChain: { ... },
   variableObject: {
-      arguments: {
-          0: 22,
-          length: 1
-      },
-      i: 22,
-      c: pointer to function c()
-      a: undefined,
-      b: undefined
+    arguments: {
+      0: 22,
+      length: 1
+    },
+    i: 22,
+    c: pointer to function c()
+    a: undefined,
+    b: undefined
   },
   this: { ... }
 }
@@ -3014,14 +3060,14 @@ fooExecutionContext = {
 fooExecutionContext = {
   scopeChain: { ... },
   variableObject: {
-      arguments: {
-          0: 22,
-          length: 1
-      },
-      i: 22,
-      c: pointer to function c()
-      a: 'hello',
-      b: pointer to function privateB()
+    arguments: {
+      0: 22,
+      length: 1
+    },
+    i: 22,
+    c: pointer to function c()
+    a: 'hello',
+    b: pointer to function privateB()
   },
   this: { ... }
 }
