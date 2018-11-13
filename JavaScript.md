@@ -951,6 +951,22 @@ alert(numbers.indexOf(4, 4)); //5
 alert(numbers.lastIndexOf(4, 4)); //3
 ```
 
+ES6中引入了`find()`和`findIndex()`方法
+
+`find()`找出第一个返回值为`true`的成员，返回该成员，如果没有符合条件的成员，返回`undefined`。
+
+```js
+[1, 4, -5, 10].find(n => n < 0) // -5
+```
+
+`findIndex()`返回第一个符合条件的数组成员的位置，如果所有成员都不符合条件，则返回`-1`。
+
+```js
+[1, 5, 10, 15].findIndex(function(value, index, arr) {
+  return value > 9;
+}) // 2
+```
+
 ##### 迭代方法
 
 ECMAScript5 为数组定义了 5 个迭代方法。每个方法都接受两个参数：要在每一项上运行的函数和（可选）运行该函数的作用域对象---影响 this 的值。传入这些方法的函数会接受三个参数：数组项的值、该项数组中的位置和数组对象本身。
