@@ -518,6 +518,26 @@ function f(a, ...b, c) {
 
 ### 箭头函数
 
+MDN对于箭头函数的介绍是:
+
+> An arrow function expression has a shorter syntax than a function expression and does not have its own this, arguments, super, or new.target. These function expressions are best suited for non-method functions, and they cannot be used as constructors.
+
+non-method就是指不被用作对象属性中的函数。
+
+```js
+var obj = {
+  i: 10,
+  b: () => console.log(this.i, this),
+  c: function() {
+    console.log( this.i, this)
+  }
+}
+obj.b();
+// undefined Window
+obj.c();
+// 10, Object {...}
+```
+
 ES6 允许使用“箭头”（=>）定义函数。
 
 ```javascript
@@ -960,22 +980,14 @@ i32a.copyWithin(0, 2);
 数组实例的`find`方法，用于找出第一个符合条件的数组成员。它的参数是一个回调函数，所有数组成员依次执行该回调函数，直到找出第一个返回值为`true`的成员，然后返回该成员。如果没有符合条件的成员，则返回`undefined`。
 
 ```js
-[1, 4, -5, 10].find((n) => n < 0)
+[1, 4, -5, 10].find(n => n < 0)
 // -5
-```
-
-```js
-[1, 5, 10, 15].find(function(value, index, arr) {
-  return value > 9;
-}) // 10
 ```
 
 数组实例的`findIndex`方法的用法与`find`方法非常类似，返回第一个符合条件的数组成员的位置，如果所有成员都不符合条件，则返回`-1`。
 
 ```js
-[1, 5, 10, 15].findIndex(function(value, index, arr) {
-  return value > 9;
-}) // 2
+[1, 5, 10, 15].findIndex(i => i > 10) // 3
 ```
 
 这两个方法都可以接受第二个参数，用来绑定回调函数的`this`对象。

@@ -951,6 +951,22 @@ alert(numbers.indexOf(4, 4)); //5
 alert(numbers.lastIndexOf(4, 4)); //3
 ```
 
+ES6中引入了`find()`和`findIndex()`方法
+
+`find()`找出第一个返回值为`true`的成员，返回该成员，如果没有符合条件的成员，返回`undefined`。
+
+```js
+[1, 4, -5, 10].find(n => n < 0) // -5
+```
+
+`findIndex()`返回第一个符合条件的数组成员的位置，如果所有成员都不符合条件，则返回`-1`。
+
+```js
+[1, 5, 10, 15].findIndex(function(value, index, arr) {
+  return value > 9;
+}) // 2
+```
+
 ##### 迭代方法
 
 ECMAScript5 为数组定义了 5 个迭代方法。每个方法都接受两个参数：要在每一项上运行的函数和（可选）运行该函数的作用域对象---影响 this 的值。传入这些方法的函数会接受三个参数：数组项的值、该项数组中的位置和数组对象本身。
@@ -2921,6 +2937,52 @@ In English
 
 每个执行环境都有一个与之关联的变量对象（variable object）,环境中定义的所有变量和函数都保存在这个对象中。虽然我们编写的代码无法访问这个对象,但解析器在处理数据时会在后台使用它。如果这个执行环境是函数,则将其活动对象（activation object）作为变量对象。
 
+当进入到一个执行上下文中，执行上下文的变量对象才会被激活，所以才叫`activation object`。
+
+举个例子
+
+```js
+function foo(a) {
+  var b = 2;
+  function c() {};
+  var d = function() {};
+
+  b = 3;
+}
+
+foo(1);
+```
+
+进入执行上下文后的AO
+
+```js
+AO = {
+  arguments: {
+    0: 1,
+    length: 1
+  },
+  a: 1,
+  b: undefined,
+  c: reference to function c(){},
+  d: undefined
+}
+```
+
+代码执行完之后
+
+```js
+AO = {
+  arguments: {
+    0: 1,
+    length: 1
+  },
+  a: 1,
+  b: 3,
+  c: reference to function c(){},
+  d: reference to FunctionExpression "d"
+}
+```
+
 #### 执行上下文中的细节
 
 首先分为两个阶段
@@ -2995,14 +3057,14 @@ foo(22);
 fooExecutionContext = {
   scopeChain: { ... },
   variableObject: {
-      arguments: {
-          0: 22,
-          length: 1
-      },
-      i: 22,
-      c: pointer to function c()
-      a: undefined,
-      b: undefined
+    arguments: {
+      0: 22,
+      length: 1
+    },
+    i: 22,
+    c: pointer to function c()
+    a: undefined,
+    b: undefined
   },
   this: { ... }
 }
@@ -3014,14 +3076,14 @@ fooExecutionContext = {
 fooExecutionContext = {
   scopeChain: { ... },
   variableObject: {
-      arguments: {
-          0: 22,
-          length: 1
-      },
-      i: 22,
-      c: pointer to function c()
-      a: 'hello',
-      b: pointer to function privateB()
+    arguments: {
+      0: 22,
+      length: 1
+    },
+    i: 22,
+    c: pointer to function c()
+    a: 'hello',
+    b: pointer to function privateB()
   },
   this: { ... }
 }
@@ -5569,3 +5631,31 @@ async getBooksAndAuthor(authorId) {
   };
 }
 ```
+
+## 原型与原型链
+
+![原型与原型链](./images/javascript/prototype.png)
+
+每个函数都有一个`protytpe`属性，指向一个对象，这个对象是调用该构造函数创建的实例的原型。
+
+每一个对象(`null`除外)都有一个`__proto__`属性，指向该对象的原型。
+
+每一个原型都有一个`constructor`属性指向关联的构造函数。
+
+```js
+function Person() {
+}
+
+var person = new Person();
+
+console.log(person.__proto__ == Person.prototype) // true
+console.log(Person.prototype.constructor == Person) // true
+// 顺便学习一个ES5的方法,可以获得对象的原型
+console.log(Object.getPrototypeOf(person) === Person.prototype) // true
+```
+
+三个容易忽视的点
+
+- 实例中并没有`constructor`属性，当访问其`constructor`属性会从其原型中读取
+- `__proto__`绝大多数浏览器都支持这个非标准方法，实际上来自`Object.prototype`，`obj.__prototype__`可以理解为返回了`Object.getPrototypeOf(obj)`
+- JavaScript中委托(delegation)的叫法更准确，只是在两个对象之间创建一个关联
