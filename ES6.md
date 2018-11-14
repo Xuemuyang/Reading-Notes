@@ -234,6 +234,65 @@ window.b // undefined
 
 上面代码中，全局变量`a`由`var`命令声明，所以它是顶层对象的属性；全局变量`b`由`let`命令声明，所以它不是顶层对象的属性，返回`undefined`。
 
+看几个babel编译的例子:
+
+```js
+let value = 1;
+```
+
+编译为:
+
+```js
+var value = 1;
+```
+
+```js
+let value = 1;
+{
+  let value = 2;
+}
+value = 3;
+```
+
+编译为:
+
+```js
+var value = 1;
+{
+  var _value = 2;
+}
+value = 3;
+```
+
+循环中的let声明
+
+```js
+var funcs = [];
+for (let i = 0; i < 10; i++) {
+  funcs[i] = function () {
+    console.log(i);
+  };
+}
+funcs[0](); // 0
+```
+
+编译为:
+
+```js
+var funcs = [];
+
+var _loop = function _loop(i) {
+  funcs[i] = function () {
+    console.log(i);
+  };
+};
+
+for (var i = 0; i < 10; i++) {
+  _loop(i);
+}
+funcs[0](); // 0
+```
+
 ## 3. 变量的解构赋值(Destructuring)
 
 ### 数组的解构赋值
