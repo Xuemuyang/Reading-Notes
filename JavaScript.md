@@ -1100,7 +1100,7 @@ new Date('15, Feberuary, 2013')
 
 #### 日期的运算
 
-两个日期实例对象进行减法运算时，返回的是他们间隔的毫秒数；进行假发运算时，返回的是两个字符串连接而成的新字符串。
+两个日期实例对象进行减法运算时，返回的是他们间隔的毫秒数；进行加法运算时，返回的是两个字符串连接而成的新字符串。
 
 ```js
 var d1 = new Date(2000, 1, 1)
@@ -1148,6 +1148,34 @@ d.toUTCString() // "Fri, 28 Sep 2018 06:44:49 GMT"
 3.`Date.prototype.toISOString()`
 
 `toISOString`方法返回对应时间的ISO8601方法。
+
+4.`Date.prototype.toDateString()`
+
+`toDateString`方法返回日期字符串(不含小时、分和秒)。
+
+```js
+var d = new Date(2013, 0, 1);
+d.toDateString() // "Tue Jan 01 2013"
+```
+
+5.`Date.prototype.toTimeString()`
+
+`toTimeString`方法返回时间字符串(不含年月日)。
+
+```js
+var d = new Date(2013, 0, 1);
+d.toTimeString() // "00:00:00 GMT+0800 (CST)"
+```
+
+6.本地时间
+
+以下三种方法，可以将 Date 实例转为表示本地时间的字符串。
+
+- Date.prototype.toLocaleString()：完整的本地时间。
+- Date.prototype.toLocaleDateString()：本地日期（不含小时、分和秒）。
+- Date.prototype.toLocaleTimeString()：本地时间（不含年月日）。
+
+这几项可以传入配置
 
 ### RegExp 类型
 
