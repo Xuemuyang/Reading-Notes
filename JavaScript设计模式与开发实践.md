@@ -1691,6 +1691,125 @@ class Beverage {
 
 > Use sharing to support large numbers of fine-grained objects efficiently.（使用共享对象可有效地支持大量的细粒度对象。）
 
+举一个例子，没有必要为每一首歌曲都创建一个播放对象，只用一个播放对象，通过切换url，播放时间等参数来控制歌曲的播放。
+
+享元模式要求将对象的属性划分为内部状态和外部状态。享元模式的目标是尽量减少共享对象的数量。
+
++ 内部状态存储于对象内部
++ 内部状态可以被一些对象共享
++ 内部状态独立于具体的场景，通常不会改变
++ 外部状态取决于具体的场景，并根据场景而变化，外部状态不能被共享
+
+享元模式是一种用时间换空间的性能优化模式。
+
+#### 文件上传的例子
+
+```js
+class Upload {
+  constructor(uploadType) {
+    this.uploadType = uploadType;
+  }
+
+  delFile(id) {
+    uploadManager.setExternalState(id, this); // (1)
+    if (this.fileSize < 3000) {
+      return this.dom.parentNode.removeChild(this.dom);
+    }
+    if (window.confirm('确定要删除该文件吗? ' + this.fileName)) {
+      return this.dom.parentNode.removeChild(this.dom);
+    }
+  }
+}
+
+const UploadFactory = (function () {
+  const createdFlyWeightObjs = {};
+  return {
+    create: function (uploadType) {
+      if (createdFlyWeightObjs[uploadType]) {
+        return createdFlyWeightObjs[uploadType];
+      }
+      return createdFlyWeightObjs[uploadType] = new Upload(uploadType);
+    }
+  }
+})();
+
+const uploadManager = (function () {
+  const uploadDatabase = {};
+  return {
+    add: function (id, uploadType, fileName, fileSize) {
+      const flyWeightObj = UploadFactory.create(uploadType);
+      const dom = document.createElement('div');
+      dom.innerHTML = '<span>文件名称:' + fileName + ', 文件大小: ' + fileSize + '</span>' + '<button class="delFile">删除</button>';
+      dom.querySelector('.delFile').onclick = function () {
+        flyWeightObj.delFile(id);
+      }
+      document.body.appendChild(dom);
+      uploadDatabase[id] = {
+        fileName: fileName,
+        fileSize: fileSize,
+        dom: dom
+      };
+      return flyWeightObj;
+    },
+    setExternalState: function (id, flyWeightObj) {
+      const uploadData = uploadDatabase[id];
+      for (const i in uploadData) {
+        flyWeightObj[i] = uploadData[i];
+      }
+    }
+  }
+})();
+```
+
+享元模式是一种很好的性能优化方案，但是需要多维护一个`factory`对象和一个`manager`对象。
+
+以下情况可以使用享元模式：
+
++ 一个程序中使用了大量的相似对象
++ 使用了大量对象，造成很大的内存开销
++ 对象的大多数状态都可以变为外部状态
++ 剥离出对象的外部状态之后，可以用相对较少的共享对象取代大量对象
+
+#### 对象池
+
+原理：人手一本权威指南太浪费，先买一本放公共书架上，看的时候去借，借完了放回去，如果同时有两个人要看，就再去买一本...
+
+看一个简单的应用
+
+地图应用上的小气泡，搜索A的时候出来两个，搜索B出来6个，在第二次的搜索中只需要再创建四个即可。
+
+一个通用的对象池实现
+
+```js
+const objectPoolFactory = function(createObjFn) {
+  const objectPool = []
+
+  return {
+    create(...args) {
+      const obj = objectPool.length === 0 ? createObjFn.apply(this, args) : objectPool.shift()
+
+      return obj;
+    },
+    recover(obj) {
+      objectPool.push(obj)
+    }
+  }
+}
+
+const testObjFactory = objectPoolFactory(() => {
+  // 对象的行为
+  const testObj = {}
+
+  return testObj;
+})
+```
+
+可以在创建的时候给加入到一个数组中保存，用完之后对数组中元素进行recover(回收)操作。
+
+#### 小结
+
+享元模式在一个存在大量相似对象的系统中可以很好的解决大量对象带来的性能问题。
+
 ### 第13章 职责链模式
 
 > 使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系，将这些对象连成一条链，并沿着这条链传递该请求，直到有一个对象处理它为止。
@@ -1708,3 +1827,110 @@ class Beverage {
 ### 第17章 适配器模式
 
 > 适配器模式的作用是解决两个软件实体间的接口不兼容的问题。使用适配器模式之后，原本由于接口不兼容而不能工作的两个软件实体可以一起工作。
+
+### 工厂模式(Factory Pattern)
+
+> Define an interface for creating an object,but let subclass decide which class to instantiate.Factory Method lets a class defer instantiation to subclass.（定义一个用于创建对象的接口，让子类决定实例化哪一个类。工厂方法是一个类的实例化延迟到其子类。）
+
+在创建对象的时候不会对客户端暴露创建逻辑，通过一个共同的接口来指向新创建的对象。
+
+1.创建一个接口
+
+Shape.java
+
+```java
+public interface Shape {
+  void draw();
+}
+```
+
+2.创建接口的实体类
+
+Rectangle.java
+
+```java
+public class Rectangle implements Shape {
+
+  @Override
+  public void draw() {
+    System.out.println("Inside Rectangle::draw() method.");
+  }
+}
+```
+
+Square.java
+
+```java
+public class Square implements Shape {
+
+  @Override
+  public void draw() {
+    System.out.println("Inside Square::draw() method.");
+  }
+}
+```
+
+Circle.java
+
+```java
+public class Circle implements Shape {
+
+  @Override
+  public void draw() {
+    System.out.println("Inside Circle::draw() method.");
+  }
+}
+```
+
+3.创建一个工厂，生成基于给定信息的实体类的对象
+
+ShapeFactory.java
+
+```java
+public class ShapeFactory {
+
+  //使用 getShape 方法获取形状类型的对象
+  public Shape getShape(String shapeType){
+    if(shapeType == null){
+      return null;
+    }
+    if(shapeType.equalsIgnoreCase("CIRCLE")){
+      return new Circle();
+    } else if(shapeType.equalsIgnoreCase("RECTANGLE")){
+      return new Rectangle();
+    } else if(shapeType.equalsIgnoreCase("SQUARE")){
+      return new Square();
+    }
+    return null;
+  }
+}
+```
+
+4.使用该工厂，通过传递类型信息来获取实体类的对象
+
+```java
+public class FactoryPatternDemo {
+
+  public static void main(String[] args) {
+    ShapeFactory shapeFactory = new ShapeFactory();
+
+    //获取 Circle 的对象，并调用它的 draw 方法
+    Shape shape1 = shapeFactory.getShape("CIRCLE");
+
+    //调用 Circle 的 draw 方法
+    shape1.draw();
+
+    //获取 Rectangle 的对象，并调用它的 draw 方法
+    Shape shape2 = shapeFactory.getShape("RECTANGLE");
+
+    //调用 Rectangle 的 draw 方法
+    shape2.draw();
+
+    //获取 Square 的对象，并调用它的 draw 方法
+    Shape shape3 = shapeFactory.getShape("SQUARE");
+
+    //调用 Square 的 draw 方法
+    shape3.draw();
+  }
+}
+```
