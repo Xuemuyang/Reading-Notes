@@ -1812,7 +1812,57 @@ const testObjFactory = objectPoolFactory(() => {
 
 ### 第13章 职责链模式
 
-> 使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系，将这些对象连成一条链，并沿着这条链传递该请求，直到有一个对象处理它为止。
+> Avoid coupling the sender of a request to its receiver by giving more than one object a chance to handle the request.Chain the receiving objects and pass the request along the chain until an object handles it.（使多个对象有机会处理请求，从而避免了请求的发送者和接收者之间的耦合关系 。将这些对象连成一个链，并沿着这条链传递请求，知道有对象处理它为止。）
+
+看🌰
+
+坐公交，人太多，后门上车，投币，一个接一个传过去。
+
+弱化了发送者和接收者之间的强联系。
+
+看需求
+
+公司针对支付过定金的用户有一定的优惠政策。在正式购买后，已经支付过 500 元定金的用 户会收到 100 元的商城优惠券，200 元定金的用户可以收到 50 元的优惠券，而之前没有支付定金 的用户只能进入普通购买模式，也就是没有优惠券，且在库存有限的情况下不一定保证能买到。
+我们的订单页面是 PHP 吐出的模板，在页面加载之初，PHP 会传递给页面几个字段。
+
++ orderType:表示订单类型(定金用户或者普通购买用户)，code 的值为 1 的时候是 500 元 定金用户，为 2 的时候是 200 元定金用户，为 3 的时候是普通购买用户。
++ pay:表示用户是否已经支付定金，值为 true 或者 false, 虽然用户已经下过 500 元定金的 订单，但如果他一直没有支付定金，现在只能降级进入普通购买模式。
++ stock:表示当前用于普通购买的手机库存数量，已经支付过 500 元或者 200 元定金的用 户不受此限制。
+
+```js
+var order = function (orderType, pay, stock) {
+  if (orderType === 1) { // 500 元定金购买模式
+    if (pay === true) { // 已支付定金
+      console.log('500 元定金预购, 得到 100 优惠券');
+    } else { // 未支付定金，降级到普通购买模式
+      if (stock > 0) { // 用于普通购买的手机还有库存
+        console.log('普通购买, 无优惠券');
+      } else {
+        console.log('手机库存不足');
+      }
+    }
+  } else if (orderType === 2) {
+    if (pay === true) {
+      // 200 元定金购买模式
+      console.log('200 元定金预购, 得到 50 优惠券');
+    } else {
+      if (stock > 0) {
+        console.log('普通购买, 无优惠券');
+      } else {
+        console.log('手机库存不足');
+      }
+    }
+  } else if (orderType === 3) {
+    if (stock > 0) {
+      console.log('普通购买, 无优惠券');
+    } else {
+      console.log('手机库存不足');
+    }
+  }
+}
+
+order(1, true, 500); // 输出: 500 元定金预购, 得到 100 优惠券
+```
 
 ### 第14章 中介者模式
 
