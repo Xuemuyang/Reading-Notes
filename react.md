@@ -866,3 +866,18 @@ React 拥护不可变的数据结构，相比直接改变对象的属性，更�
 
 ## React Router
 
+### Basic Components
+
+三种组件
+
+- router
+- router match
+- navigation
+
+1.Routers
+
+React提供了`<BrowserRouter>`和`<HashRouter>`，总的来说如果做静态文件服务器的话推荐使用`<HashRouter>`
+
+2.Route Matching
+
+将当前的路径与`<Route>`的path属性比较，匹配就将内容render，否则render null，一个没有path属性的`<Router>`总是会被匹配。
