@@ -1236,6 +1236,11 @@ d.toTimeString() // "00:00:00 GMT+0800 (CST)"
 
 JavaScript 只支持正向前瞻和负向前瞻,即在正则表达式后面加上断言,断言部分不匹配。
 
+表达式|名称|描述
+---|---|---
+(?=exp)|正向前瞻|匹配后面满足表达式exp的位置
+(?!exp)|负向前瞻|匹配后面不满足表达式exp的位置
+
 ```js
 "a2*3".replace(/\w(?=\d)/g, "X"); // 'X2*3'
 "a2*34vv".replace(/\w(?!=\d)/g, "X"); // 'aX*3XXX'
@@ -1582,6 +1587,96 @@ blackCat.say();
 
 如果`call()`和`apply()`的第一个参数传入的是`undefined`或者是`null`,那么这个函数的执行环境将是全局。
 
+##### call和apply的深入
+
+`call()`方法在使用一个指定的this值和若干个指定的参数的前提下调用某个函数或方法。
+
+```js
+var foo = {
+  value: 1
+};
+
+function bar() {
+  console.log(this.value);
+}
+
+bar.call(foo); // 1
+```
+
+- call改变了this的指向，指向foo
+- bar函数执行了
+
+模拟实现`call`和`apply`方法
+
+当调用call的时候，把foo对象改造
+
+```js
+var foo = {
+  value: 1,
+  bar: function() {
+    console.log(this.value)
+  }
+};
+
+foo.bar(); // 1
+```
+
+模拟的步骤大概为:
+
+1. 将函数设为对象的属性 foo.fn = bar
+1. 执行该函数 foo.fn()
+1. 删除该函数 delete foo.fn
+
+还有两个点注意一下
+
+1. this参数可以传null，当为null的时候，视为指向window
+1. 函数可以有返回值
+
+```js
+Function.prototype.call2 = function (context) {
+  var context = context || window;
+  context.fn = this;
+
+  var args = [];
+  for(var i = 1, len = arguments.length; i < len; i++) {
+    args.push('arguments[' + i + ']');
+  }
+
+  var result = eval('context.fn(' + args +')');
+
+  delete context.fn
+  return result;
+}
+
+// 测试一下
+var value = 2;
+
+var obj = {
+  value: 1
+}
+
+function bar(name, age) {
+  console.log(this.value);
+  return {
+    value: this.value,
+    name: name,
+    age: age
+  }
+}
+
+bar.call2(null); // 2
+
+console.log(bar.call2(obj, 'kevin', 18));
+// 1
+// Object {
+//    value: 1,
+//    name: 'kevin',
+//    age: 18
+// }
+```
+
+##### bind深入
+
 `ECMAScript 5`引入了`Function.prototype.bind`。调用`f.bind(someObject)`会创建一个与`f`具有相同函数体和作用域的函数,但是在这个新函数中,`this`将永久地被绑定到了`bind`的第一个参数,无论这个函数是如何被调用的。
 
 ```javascript
@@ -1609,6 +1704,10 @@ console.log(h()); // azerty
 var o = { a: 37, f: f, g: g, h: h };
 console.log(o.f(), o.g(), o.h()); // 37, azerty, azerty
 ```
+
+模拟实现bind方法
+
+> bind() 方法会创建一个新函数。当这个新函数被调用时，bind() 的第一个参数将作为它运行时的 this，之后的一序列参数将会在传递的实参前传入作为它的参数。
 
 ### 基本包装类型
 
