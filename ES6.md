@@ -1094,6 +1094,30 @@ new Array(3).fill(7)
 // ['a', 7, 'c']
 ```
 
+### 数组实例的`entries()`,`keys()`和`values()`
+
+ES6提供的这三个方法都返回一个遍历器对象，可以用`for...of`进行遍历，`keys()`是对键名的遍历、`values()`是对键值的遍历，`entries()`是对键值对的遍历。
+
+```js
+for (let index of ['a', 'b'].keys()) {
+  console.log(index);
+}
+// 0
+// 1
+
+for (let elem of ['a', 'b'].values()) {
+  console.log(elem);
+}
+// 'a'
+// 'b'
+
+for (let [index, elem] of ['a', 'b'].entries()) {
+  console.log(index, elem);
+}
+// 0 "a"
+// 1 "b"
+```
+
 ### 数组实例的`includes()`
 
 `Array.prototype.includes`方法返回一个布尔值，表示某个数组是否包含给定的值，与字符串的`includes`方法类似。
@@ -1680,7 +1704,11 @@ getJSON("/post/1.json").then(
 
 遍历器（`Iterator`）就是这样一种机制。它是一种接口，为各种不同的数据结构提供统一的访问机制。任何数据结构只要部署`Iterator`接口，就可以完成遍历操作（即依次处理该数据结构的所有成员）。
 
-`Iterator`的作用有三个：一是为各种数据结构，提供一个统一的、简便的访问接口；二是使得数据结构的成员能够按某种次序排列；三是`ES6`创造了一种新的遍历命令`for...of`循环，`Iterator`接口主要供`for...of`消费。
+`Iterator`的作用有三个：
+
++ 为各种数据结构，提供一个统一的、简便的访问接口
++ 使得数据结构的成员能够按某种次序排列
++ 三是`ES6`创造了一种新的遍历命令`for...of`循环，`Iterator`接口主要供`for...of`消费。
 
 `Iterator`的遍历过程是这样的。
 
@@ -1788,6 +1816,37 @@ iterator.next() // { value: 4, done: false }
 iterator.next() // { value: 5, done: false }
 iterator.next() // { value: undefined, done: true }
 ```
+
+### for...of循环
+
+一个数据结构只要部署了`Symbol.iterator`属性，就被视为具有iterator接口，可以用`for...of`循环遍历它的成员。
+
+```js
+var arr = ['a', 'b', 'c', 'd'];
+
+for (let a in arr) {
+  console.log(a); // 0 1 2 3
+}
+
+for (let a of arr) {
+  console.log(a); // a b c d
+}
+```
+
+`for...in`循环读取键名，`for...of`循环读取键值。
+
+`for...in`循环有几个缺点：
+
++ 数组的键名是数字，`for...in`循环是字符串键名'0','1','2'
++ 会遍历数字键名还有原型链上的键
++ 遍历顺序不可控
+
+`for...in`为遍历对象而设计，不适用与数组。
+
+`for...of`有如下优点：
+
++ 可以与`break`、`continue`和`return`配合使用
++ 提供了遍历所有数据结构的统一操作接口
 
 ## 16. Generator 函数的语法
 
