@@ -1014,7 +1014,7 @@ MyImage.setSrc('hehe.jpg')
 
 #### 虚拟代理合并HTTP请求
 
-通过代理函数来手机一段时间之内的请求，然后一次性发给服务器。
+通过代理函数来收集一段时间之内的请求，然后一次性发给服务器。
 
 ```js
 const synchronousFile = function(id) {
@@ -1864,9 +1864,100 @@ var order = function (orderType, pay, stock) {
 order(1, true, 500); // 输出: 500 元定金预购, 得到 100 优惠券
 ```
 
-### 第14章 中介者模式
+### 第14章 中介者模式(Mediator Pattern)
 
-> 中介者模式的作用就是解除对象与对象之间的紧耦合关系。增加一个中介者对象后，所有的相关对象都通过中介者对象来通信，而不是相互引用。中介者使各对象之间耦合松散，而且可以独立地改变它们之间的交互。中介者模式使网状的do对多关系变成了相对简单的一对多关系。
+> Define an object that encapsulates how a set of objects interact.Mediator promotes loose couping by keeping objects from referring to each other explicitly,and it lets you vary their interaction independently.（用一个中介对象封装一系列的对象交互，中介者使各对象不需要显示的相互作用，从而使其耦合松散，而且可以独立的改变它们之间的交互。）
+
+中介者模式的作用就是解除对象与对象之间的紧耦合关系。增加一个中介者对象后，所有的相关对象都通过中介者对象来通信，而不是相互引用。中介者使各对象之间耦合松散，而且可以独立地改变它们之间的交互。中介者模式使网状的多对多关系变成了相对简单的一对多关系。
+
+#### 现实中的中介者
+
+如果没有机场指挥塔的存在，每一架飞机要和方圆100km里的所有飞机通信，才能确定航线以及飞行状况。指挥塔作为调停者，知道每一架飞机的飞行状况，可以安排所有飞机的起降时间，及时作出航线调整。
+
+#### 拿泡泡堂举个例子
+
+```js
+const players = []
+
+class Player {
+  constructor(name, teamColor) {
+    this.partners = []
+    this.enemies = []
+    this.state = 'live'
+    this.name = name
+    this.teamColor = teamColor
+  }
+
+  win() {
+    console.log(`winner: ${this.name}`)
+  }
+
+  lose() {
+    console.log(`loser: ${this.name}`)
+  }
+
+  die() {
+    this.state = 'dead'
+    let all_dead = this.partners.every(i => {
+      return i.state === 'dead'
+    })
+
+    if (all_dead) {
+      this.lose()
+      this.partners.forEach(i => i.lose())
+      this.enemies.forEach(i => i.win())
+    }
+  }
+}
+
+// 创建玩家的工厂
+const playerFactory = function(name, teamColor) {
+  const newPlayer = new Player(name, teamColor)
+
+  players.forEach(i => {
+    if (i.teamColor === newPlayer.teamColor) {
+      i.partners.push(newPlayer)
+      newPlayer.partners.push(i)
+    } else {
+      i.enemies.push(newPlayer)
+      newPlayer.enemies.push(i)
+    }
+  })
+
+  players.push(newPlayer)
+
+  return newPlayer
+}
+
+const player1 = playerFactory('皮蛋', 'red'),
+      player2 = playerFactory('小乖', 'red'),
+      player3 = playerFactory('宝宝', 'red'),
+      player4 = playerFactory('小强', 'red')
+
+const player5 = playerFactory('黑妞', 'blue'),
+      player6 = playerFactory('葱头', 'blue'),
+      player7 = playerFactory('胖墩', 'blue'),
+      player8 = playerFactory('海盗', 'blue')
+
+player1.die()
+player2.die()
+player3.die()
+player4.die()
+
+// loser: 皮蛋
+// loser: 小乖
+// loser: 宝宝
+// winner: 黑妞
+// winner: 葱头
+// winner: 胖墩
+// winner: 海盗
+```
+
+每个玩家和其他玩家都是紧密耦合在一起的，每个玩家对象属性中都有`partners`和`enemies`用来保准其他玩家对象的引用，每个对象的状态发生改变，都要显式遍历通知其他对象。
+
+#### 使用中介者模式改造
+
+
 
 ### 第15章 装饰者模式
 

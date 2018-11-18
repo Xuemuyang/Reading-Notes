@@ -1967,6 +1967,27 @@ for (let v of foo()) {
 // 1 2 3 4 5
 ```
 
+当`next`方法的返回对象的`done`属性为`true`，`for...of`循环就会中止。
+
+除了`for...of`循环以外，扩展运算符(`...`)、解构赋值和`Array.from`方法内部调用的都是遍历器接口。
+
+使用Generator函数和`for...of`循环生成斐波那契数列
+
+```js
+function* fibonacci() {
+  let [prev, curr] = [0, 1];
+  for (;;) {
+    yield curr;
+    [prev, curr] = [curr, prev + curr];
+  }
+}
+
+for (let n of fibonacci()) {
+  if (n > 1000) break;
+  console.log(n);
+}
+```
+
 ### `Generator.prototype.throw()`
 
 `Generator`函数返回的遍历器对象，都有一个`throw`方法，可以在函数体外抛出错误，然后在`Generator`函数体内捕获。
