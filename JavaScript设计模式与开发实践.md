@@ -1957,7 +1957,119 @@ player4.die()
 
 #### 使用中介者模式改造
 
+```js
+class Player {
+  constructor(name, teamColor) {
+    this.name = name
+    this.teamColor = teamColor
+    this.state = 'alive'
+  }
 
+  win() {
+    console.log(`${this.name} won`)
+  }
+
+  lose() {
+    console.log(`${this.name} lost`)
+  }
+
+  die() {
+    this.state = 'dead'
+    playerDirector.receiveMessage('playerDead', this)
+  }
+
+  remove() {
+    playerDirector.receiveMessage('removePlayer', this)
+  }
+
+  changeTeam() {
+    playerDirector.receiveMessage('addPlayer', this, color)
+  }
+}
+
+const playerFactory = function(name, teamColor) {
+  const newPlayer = new Player(name, teamColor)
+  playerDirector.receiveMessage('addPlayer', newPlayer)
+
+  return newPlayer
+}
+
+const playerDirector = new class{
+  constructor() {
+    this.players = {}
+  }
+  // 新增一个玩家
+  addPlayer(player) {
+    const { teamColor } = player
+    this.players[teamColor] = this.players[teamColor] || []
+    this.players[teamColor].push(player)
+  }
+  // 移除一个玩家
+  removePlayer(player) {
+    const { teamColor } = player
+    const { [teamColor]: teamPlayers = [] } = this.players
+
+    let index = teamPlayers.findIndex(i => i === player)
+    ~index && teamPlayers.splice(index, 1)
+  }
+  // 玩家换队伍
+  changeTeam(player, newTeamColor) {
+    this.removePlayer(player)
+    player.teamColor = newTeamColor
+    this.addPlayer(player)
+  }
+  // 玩家死亡
+  playerDead(player) {
+    const { teamColor } = player
+    const { [teamColor]: teamPlayers } = this.players
+
+    let all_dead = teamPlayers.every(i => {
+      return i.state === 'dead'
+    })
+
+    if (all_dead) {
+      teamPlayers.forEach(i => {
+        i.lose()
+      })
+
+      for (let [color, team] of Object.entries(this.players)) {
+        if (color !== teamColor) {
+          team.forEach(player => {
+            player.win()
+          })
+        }
+      }
+    }
+  }
+  receiveMessage(operation, ...args) {
+    this[operation].apply(this, args)
+  }
+}()
+
+const player1 = playerFactory('皮蛋', 'red'),
+      player2 = playerFactory('小乖', 'red'),
+      player3 = playerFactory('宝宝', 'red'),
+      player4 = playerFactory('小强', 'red')
+
+const player5 = playerFactory('黑妞', 'blue'),
+      player6 = playerFactory('葱头', 'blue'),
+      player7 = playerFactory('胖墩', 'blue'),
+      player8 = playerFactory('海盗', 'blue')
+
+player1.die()
+player2.die()
+player3.die()
+player4.die()
+
+// 皮蛋 lost
+// 小乖 lost
+// 宝宝 lost
+// 小强 lost
+// 黑妞 won
+// 葱头 won
+// 胖墩 won
+// 海盗 won
+```
 
 ### 第15章 装饰者模式
 
