@@ -1883,7 +1883,7 @@ class Player {
   constructor(name, teamColor) {
     this.partners = []
     this.enemies = []
-    this.state = 'live'
+    this.state = 'alive'
     this.name = name
     this.teamColor = teamColor
   }
