@@ -2071,9 +2071,15 @@ player4.die()
 // 海盗 won
 ```
 
-### 第15章 装饰者模式
+#### 小结
 
-> 装饰者模式可以动态地给某个对象添加一些额外的职责，而不会影响从这个类中派生的其他对象。
+中介者模式使得各个对象之间得以解耦，每个对象只需关注自身功能的实现，对象之间的交互关系交给了中介者对象来实现和维护
+
+### 第15章 装饰者模式(Decorator Pattern)
+
+> Attach additional responsibilities to an object dynamically keeping the same interface.Decorators provide a flexible alternative to subclassing for extending functionality.（动态地给一个对象添加一些额外的职责。就增加功能来说，装饰模式相比生成子类更为灵活。）
+
+装饰者模式可以动态地给某个对象添加一些额外的职责，而不会影响从这个类中派生的其他对象。
 
 ### 第16章 状态模式
 
