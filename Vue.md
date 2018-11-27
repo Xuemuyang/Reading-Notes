@@ -1773,3 +1773,8 @@ axios.interceptors.response.use(function (response) {
 
 ## Vue.js运行机制
 
+## CLI3的webpack配置修改
+
+修改均在`vue.config.js`中进行
+
+最简单的配置在`configureWebpack`选项提供一个对象，该对象会被`webpack-merge`合并入最终的webpack配置

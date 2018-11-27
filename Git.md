@@ -17,7 +17,8 @@
 $git reset HEAD . // 撤销git add .操作
 $git reset HEAD~[n] // 回退到n个提交之前
 $git reset [version] // 回退到某个版本
-$git checkout -b xxx // 切换并创建xxx分支
+$git fetch origin xxx // 拉取远程xxx分支
+$git checkout -b xxx origin/xxx // 切换并创建xxx分支，可以从后面的基础上切出
 $git branch -a // 查看所有分支
 $git branch -d dev // 删除dev分支
 $git rm --cached // 删除文件的git追踪，但是本地还会有
