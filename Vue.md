@@ -1777,4 +1777,11 @@ axios.interceptors.response.use(function (response) {
 
 修改均在`vue.config.js`中进行
 
-最简单的配置在`configureWebpack`选项提供一个对象，该对象会被`webpack-merge`合并入最终的webpack配置
+常见的配置如图所示
+
+![vue-config](./images/vue/vue_config.png)
+
+baseurl为项目提供base的路径，比如设置为`vue`
+
+`http://localhost:8080/`->`http://localhost:8080/vue/`
+
