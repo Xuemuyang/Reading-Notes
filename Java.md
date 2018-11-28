@@ -4,16 +4,16 @@
 
 ### Chap1. 基本概念
 
-#### Java的工作方式
+#### Java 的工作方式
 
 1. 源代码(.java)
 2. 编译器(检查错误)
 3. 输出字节码(.class)
-4. Java虚拟机(读取和执行.class文件)
+4. Java 虚拟机(读取和执行.class 文件)
 
-Java虚拟机启动执行时，会寻找在命令列所指定的类，接着会去执行main方法，每个Java程序最少都会有一个类以及一个main()，每个应用程序只有一个main()函数。
+Java 虚拟机启动执行时，会寻找在命令列所指定的类，接着会去执行 main 方法，每个 Java 程序最少都会有一个类以及一个 main()，每个应用程序只有一个 main()函数。
 
-在Java中所有东西都会属于某个类，`.java`文件会被编译为类`.class`文件，真正被执行的是类。
+在 Java 中所有东西都会属于某个类，`.java`文件会被编译为类`.class`文件，真正被执行的是类。
 
 ### Chap2. 类与对象
 
@@ -23,46 +23,46 @@ Java虚拟机启动执行时，会寻找在命令列所指定的类，接着会�
 
 `main()`的两种用途:
 
-+ 测试类
-+ 启动Java应用程序
+- 测试类
+- 启动 Java 应用程序
 
-Java创建的对象会被放在堆内存中，Java会主动回收内存，当某个对象被JVM标记为可回收，当内存不足式就会启动垃圾回收器来清理，回收空间。
+Java 创建的对象会被放在堆内存中，Java 会主动回收内存，当某个对象被 JVM 标记为可回收，当内存不足式就会启动垃圾回收器来清理，回收空间。
 
-### Chap3. primitive主数据类型和引用
+### Chap3. primitive 主数据类型和引用
 
 > Variables must have a type
 
 > Variables must have a name
 
-primitive主数据类型(8种)
+primitive 主数据类型(8 种)
 
-+ boolean
-+ char
-+ byte
-+ short
-+ int
-+ long
-+ float
-+ double
+- boolean
+- char
+- byte
+- short
+- int
+- long
+- float
+- double
 
-类型|位数|值域
----|---|---
-boolean|(Java虚拟机决定)|true/false
-char|16bits|0~65535
-数值(带正负号)interger||
-byte|8bits|-128~127
-short|16bits|-32768~32767
-int|32bits|-2147483648~2147483647
-long|64bits|-很大~+很大
-浮点数||
-float|32bits|范围规模可变
-double|64bits|范围规模可变
+| 类型                   | 位数              | 值域                   |
+| ---------------------- | ----------------- | ---------------------- |
+| boolean                | (Java 虚拟机决定) | true/false             |
+| char                   | 16bits            | 0~65535                |
+| 数值(带正负号)interger |                   |
+| byte                   | 8bits             | -128~127               |
+| short                  | 16bits            | -32768~32767           |
+| int                    | 32bits            | -2147483648~2147483647 |
+| long                   | 64bits            | -很大~+很大            |
+| 浮点数                 |                   |
+| float                  | 32bits            | 范围规模可变           |
+| double                 | 64bits            | 范围规模可变           |
 
 变量命名方法
 
-+ 名称必须以字母，下划线(_)，或者$符号开头，不能用数字开头
-+ 除了第一个字符之外，后面可以用数字
-+ 还需要避开Java保留字
+- 名称必须以字母，下划线(\_)，或者\$符号开头，不能用数字开头
+- 除了第一个字符之外，后面可以用数字
+- 还需要避开 Java 保留字
 
 #### 对象引用
 
@@ -84,60 +84,60 @@ nums = new int[7]; // 创建大小为7的数组，并将它赋值给nums
 
 ### Chap4. 方法操作实例变量
 
-+ 实参(argument)
-+ 形参(parameter)
+- 实参(argument)
+- 形参(parameter)
 
 > 如果将一个方法声明有返回值，就必须返回所声明类型的值
 
-Java是通过值传递传递的，也就是说通过拷贝传递。
+Java 是通过值传递传递的，也就是说通过拷贝传递。
 
 `getter`和`setter`正式的命名`Accessor`与`Mutator`
 
 封装的基本原则:
 
-+ 将实例变量标记为`private`
-+ 将`getter`和`setter`标记为`public`
+- 将实例变量标记为`private`
+- 将`getter`和`setter`标记为`public`
 
 实例变量永远都会有默认值:
 
-类型|默认值
----|---
-integers|0
-floating points|0.0
-booleans|false
-references|null
+| 类型            | 默认值 |
+| --------------- | ------ |
+| integers        | 0      |
+| floating points | 0.0    |
+| booleans        | false  |
+| references      | null   |
 
 实例变量与局部变量之间的差别:
 
 ```java
 // 实例变量是声明在类内而不是方法中
 class Horse {
-    private double height = 15.2;
-    private String bread;
-    ...
+  private double height = 15.2;
+  private String bread;
+  ...
 }
 
 // 局部变量是声明在方法中的
 class AddThing {
-    int a;
-    int b = 12;
+  int a;
+  int b = 12;
 
-    public int add() {
-        int total = a + b;
-        return total;
-    }
+  public int add() {
+    int total = a + b;
+    return total;
+  }
 }
 
 // 局部变量在使用前必须初始化
 class Foo {
-    public void go() {
-        int x;
-        int z = x + 3; // !!!无法编译
-    }
+  public void go() {
+    int x;
+    int z = x + 3; // !!!无法编译
+  }
 }
 ```
 
-#### 变量的比较(primitive主数据类型或引用)
+#### 变量的比较(primitive 主数据类型或引用)
 
 使用`==`来比较两个`primitive`主数据类型或者判断两个引用是否引用同一个对象。
 
@@ -149,7 +149,7 @@ class Foo {
 
 测试码(测试用的程序代码)
 
-真实码(实际设计出的真正Java程序代码)
+真实码(实际设计出的真正 Java 程序代码)
 
 ```java
 Integer.parseInt("3"); // 将string转换成int
@@ -159,7 +159,7 @@ for(int cell:locationCells) {} // for in
 int randomNum = (int)(Math.random() * 5) // Math.ramdom会返回一个0~1之间的书，double类型
 ```
 
-### Chap6. 使用Java API
+### Chap6. 使用 Java API
 
 以`ArrayList`为例
 
@@ -198,8 +198,8 @@ publiv void roam() {
 }
 ```
 
-+ public类型的成员会被继承
-+ private类型的成员不会被继承
+- public 类型的成员会被继承
+- private 类型的成员不会被继承
 
 子类会继承父类所有`public`类型的实例变量和方法，但不会继承父类所有`private`类型的变量和方法。
 
@@ -219,18 +219,18 @@ Animal myDog = new Dog();
 
 运用多态时，引用类型可以是实际对象类型的父类。
 
-final这个修饰符表示是继承树的末端，不能被继承。
+final 这个修饰符表示是继承树的末端，不能被继承。
 
 覆盖的规则:
 
-+ 参数必须要一样，且返回类型必须要兼容
-+ 不能降低方法的存取权限
+- 参数必须要一样，且返回类型必须要兼容
+- 不能降低方法的存取权限
 
 方法的重载：
 
-+ 返回类型可以不同
-+ 不能只改变返回类型
-+ 可以更改存取权限
+- 返回类型可以不同
+- 不能只改变返回类型
+- 可以更改存取权限
 
 ### Chap8. 接口与抽象类
 
@@ -255,14 +255,14 @@ abstract class Canine extends Animal {
 public abstract void eat();
 ```
 
-Java中所有类都是从Object这个类继承出来的。
+Java 中所有类都是从 Object 这个类继承出来的。
 
 有下面几个方法:
 
-+ equals(Object o)
-+ getClass()
-+ hashCode()
-+ toString()
+- equals(Object o)
+- getClass()
+- hashCode()
+- toString()
 
 ```java
 if (o instanceof Dog) {
@@ -274,9 +274,9 @@ if (o instanceof Dog) {
 
 关于多态的几句总结
 
-+ 不管实际上所引用的对象是什么类型，只有在引用变量的类型就是带有某方法的类型时才能调用该方法
-+ `Object`引用变量在没有类型转换的情况下不能赋值给其他类型`Dog d = (Dog) x.getObject(aDog);`
-+ 从`ArrayList<Object>`取出的对象只能被`Object`引用，不然就要用类型转换来改变
+- 不管实际上所引用的对象是什么类型，只有在引用变量的类型就是带有某方法的类型时才能调用该方法
+- `Object`引用变量在没有类型转换的情况下不能赋值给其他类型`Dog d = (Dog) x.getObject(aDog);`
+- 从`ArrayList<Object>`取出的对象只能被`Object`引用，不然就要用类型转换来改变
 
 #### 接口
 
@@ -302,19 +302,19 @@ public class Dog extends Canine implements Pet {
 
 ### Chap9. 构造器与垃圾收集器
 
-+ 变量的生存空间 ==> 栈(stack)
-+ 对象的生存空间 ==> 堆(heap)
+- 变量的生存空间 ==> 栈(stack)
+- 对象的生存空间 ==> 堆(heap)
 
-java同样有调用栈
+java 同样有调用栈
 
-+ 实例变量是声明在类中方法之外的地方，位于堆上
-+ 局部变量声明在方法或方法的参数上
+- 实例变量是声明在类中方法之外的地方，位于堆上
+- 局部变量声明在方法或方法的参数上
 
 创建对象的三个步骤
 
-+ 声明
-+ 创建
-+ 赋值
+- 声明
+- 创建
+- 赋值
 
 ```java
 // 声明引用变量|
@@ -365,8 +365,8 @@ Hippo   Hippo   Hippo   Hippo
 
 ```java
 public Boop(int i) {
-    size = i;
-    super(); // 这样过不了编译
+  size = i;
+  super(); // 这样过不了编译
 }
 ```
 
@@ -391,8 +391,8 @@ t2.play();
 
 静态变量的值对所有的实例来说都相同，静态变量被同类所有实例共享
 
-+ 实例变量: 每个实例一个
-+ 静态变量：每个类一个
+- 实例变量: 每个实例一个
+- 静态变量：每个类一个
 
 对于一个`final`变量，如果是基本数据类型的变量，则其数值一旦在初始化之后便不能更改；如果是引用类型的变量，则在对其初始化之后便不能再让其指向另一个对象。
 
@@ -404,28 +404,28 @@ public static final double PI = 3.1415926;
 
 `final`修饰类表示不能继承该类(也就是创建它的子类)
 
-+ 如果类只有静态的方法，可以将构造函数标记为`private`以避免被初始化
-+ Java中的常量是把变量同时标记为`static`和`final`的
-+ 常量的命名惯例是全部使用大写字母
+- 如果类只有静态的方法，可以将构造函数标记为`private`以避免被初始化
+- Java 中的常量是把变量同时标记为`static`和`final`的
+- 常量的命名惯例是全部使用大写字母
 
-Math的方法
+Math 的方法
 
-+ `Math.random()`返回介于0.0~1.0之间的双精度浮点
-+ `Math.abs()`返回双精度浮点参数的绝对值
-+ `Math.round()`返回四舍五入的`int`
-+ `Math.min()`返回两个参数中较小的
-+ `Math.max()`返回两个参数中较大的
+- `Math.random()`返回介于 0.0~1.0 之间的双精度浮点
+- `Math.abs()`返回双精度浮点参数的绝对值
+- `Math.round()`返回四舍五入的`int`
+- `Math.min()`返回两个参数中较小的
+- `Math.max()`返回两个参数中较大的
 
 包装类
 
-+ Boolean
-+ Character
-+ Byte
-+ Short
-+ Interger
-+ Long
-+ Float
-+ Double
+- Boolean
+- Character
+- Byte
+- Short
+- Interger
+- Long
+- Float
+- Double
 
 ```java
 // 包装
@@ -450,11 +450,11 @@ String s = String.format("%, d", 1000000)
 
 ```java
 try {
-    // 危险动作
+  // 危险动作
 } catch(Exception ex) {
-    // 尝试恢复
+  // 尝试恢复
 } finally {
-    // 无论如何都会执行
+  // 无论如何都会执行
 }
 ```
 
@@ -465,4 +465,3 @@ try {
 ### Chap16. 集合与泛型
 
 泛型意味着更好的类型安全性，创建类型安全更好的集合，让问题在编译期就能抓到
-
