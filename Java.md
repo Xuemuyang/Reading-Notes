@@ -193,8 +193,8 @@ myList.remove(s);
 
 ```java
 publiv void roam() {
-    super.roam();
-    // my own roam stuff
+  super.roam();
+  // my own roam stuff
 }
 ```
 
