@@ -1773,7 +1773,13 @@ axios.interceptors.response.use(function (response) {
 
 ## Vue.js运行机制
 
-## CLI3的webpack配置修改
+## CLI3
+
+### 基础
+
+`vue-cli-service build`提供了一系列可选参数，`--report`生成analyze报告，`--report-json`生成json帮助分析包内容。
+
+### webpack相关
 
 修改均在`vue.config.js`中进行
 
