@@ -1117,7 +1117,7 @@ Define a one-to-many dependency between objects so that when one object changes 
 
 ```js
 const event = {
-  clientList: [],
+  clientList: [], // 缓存列表，存放订阅者的回调函数
   listen(key, fn) {
     if (!this.clientList[key]) {
       this.clientList[key] = []
@@ -1138,6 +1138,7 @@ const event = {
   }
 }
 
+// 给对象动态添加职责，给对象动态添加发布-订阅功能
 const installEvent = function(obj) {
   for (let i of Object.keys(event)) {
     obj[i] = event[i]
