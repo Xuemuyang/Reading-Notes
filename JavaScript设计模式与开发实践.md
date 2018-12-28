@@ -2088,7 +2088,38 @@ player4.die()
 
 装饰者模式可以动态地给某个对象添加一些额外的职责，而不会影响从这个类中派生的其他对象。
 
+装饰着模式也称为包装器(wrapper)模式。实际上将一个对象嵌入另一个对象之中，形成一条包装链，请求随着这条链依次传递到所有的对象，每个对象都有处理请求的机会。
+
+#### 使用AOP装饰函数
+
+```js
+Function.prototype.before = function(beforefn) {
+  const _this = this;
+
+  return (...args) => {
+    beforefn.apply(this, args);
+
+    return _this.apply(this, args);
+  }
+}
+
+Function.prototype.after = function(afterfn) {
+  const _this = this;
+
+  return (...args) => {
+    const ret = _this.apply(this, args);
+    afterfn.apply(this, args);
+
+    return ret;
+  }
+}
+```
+
 ### 第16章 状态模式
+
+> Allow an object to alter its behavior when its internal state changes.The object will appear to change its class.（当一个对象在状态改变时允许其改变行为，这个对象看起来像改变了其类。）
+
+状态模式的关键是区分事物内部的状态，事物内部状态的改变往往会带来事物的行为改变。
 
 ### 第17章 适配器模式
 
