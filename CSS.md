@@ -12,8 +12,9 @@ border: 15px solid transparent;
 2.文字溢出部分显示省略号
 
 ```css
-white-space: nowrap; //规定段落中文本不换行
+white-space: nowrap; // 规定段落中文本不换行
 text-overflow: ellipsis;
+overflow: hidden;
 ```
 
 3.字间距
@@ -349,9 +350,9 @@ Lightness：颜色越高色彩越亮。取值范围0-100%
 
 ```html
 <div class="post">
-    <h1>这是标题一</h1>
-    <p>文章中第一个段落</p>
-    <p>文章中第二个段落</p>
+  <h1>这是标题一</h1>
+  <p>文章中第一个段落</p>
+  <p>文章中第二个段落</p>
 </div>
 ```
 
