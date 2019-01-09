@@ -1632,6 +1632,8 @@ foo.bar(); // 1
 1. this参数可以传null，当为null的时候，视为指向window
 1. 函数可以有返回值
 
+可以用ES6的参数去做参数传递，但是call是ES3的方法，这里的eval可以理解为一个`<script>`标签。
+
 ```js
 Function.prototype.call2 = function (context) {
   var context = context || window;
@@ -2365,6 +2367,22 @@ MDN 上对 new foo(...)执行的解释:
 1. 一个新对象被创建。它继承自 foo.prototype.
 1. 构造函数 foo 被执行。执行的时候,相应的参数会被传入,同时上下文(this)会被指定为这个新实例。new foo 等同于 new foo(), 只能用在不传递任何参数的情况。
 1. 如果构造函数返回了一个“对象”,那么这个对象会取代整个 new 出来的结果。如果构造函数没有返回对象,那么 new 出来的结果为步骤 1 创建的对象,ps：一般情况下构造函数不返回任何值,不过用户如果想覆盖这个返回值,可以自己选择返回一个普通对象来覆盖。当然,返回数组也会覆盖,因为数组也是对象。
+
+`new`操作符的简单模拟实现
+
+```js
+function objectFactory() {
+  var obj = new Object(),
+
+  Constructor = [].shift.call(arguments);
+
+  obj.__proto__ = Constructor.prototype;
+
+  var ret = Constructor.apply(obj, arguments);
+
+  return typeof ret === 'object' ? ret : obj;
+};
+```
 
 #### 将构造函数当做函数
 
@@ -5763,7 +5781,7 @@ async getBooksAndAuthor(authorId) {
 
 ![原型与原型链](./images/javascript/prototype.png)
 
-每个函数都有一个`protytpe`属性，指向一个对象，这个对象是调用该构造函数创建的实例的原型。
+每个函数都有一个`prototype`属性，指向一个对象，这个对象是调用该构造函数创建的实例的原型。
 
 每一个对象(`null`除外)都有一个`__proto__`属性，指向该对象的原型。
 
