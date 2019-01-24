@@ -35,3 +35,11 @@ $curl example.com/form.cgi?data=xxx
 ```sh
 $curl -X POST --data "data=xxx" example.com/form.cgi
 ```
+
+## aria2c
+
+```sh
+brew install aria2
+ps -ef|grep aira2c //查看aria2c进程
+aria2c --conf-path="/Users/mac/.aria2/aria2.conf" -D
+```
