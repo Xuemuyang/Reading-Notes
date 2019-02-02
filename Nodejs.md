@@ -299,6 +299,10 @@ $node --inspect-brk xxx.js
 - 事件驱动和异步的
 - 专为数据密集型实时程序设计的
 
+Node包含了V8提供的语言特性，特性分为`shipping`、`staged`和`in progress`三组。其中`shipping`默认开启，`staged`需要使用`--harmony`开启。
+
+Node的核心模块相当于其他语言的标准库。
+
 #### 异步和事件触发:浏览器
 
 浏览器中的`alert`,`prompt`,`confirm`,同步`XHR`会阻塞程序执行。
@@ -313,7 +317,7 @@ DIRT(data-intensive real-time)数据密集型实时程序
 
 文档在线协作，多人在线游戏
 
-### 第 2 章 构建有多个房间的聊天室程序
+### 构建有多个房间的聊天室程序
 
 为了提供静态文件，需要使用 Node 内置的 http 模块，通过 HTTP 提供文件时，通常不能只是发送文件中的内容，还应该有所发送文件的类型。也就是说要用正确的`MIME`类型设置 HTTP 头的`COntent-Type`。
 
@@ -325,7 +329,7 @@ DIRT(data-intensive real-time)数据密集型实时程序
 
 访问内存(RAM)要比访问文件系统快，Node 程序通常会把常用的数据存到内存里，第一次访问的时候会从文件系统中读取，后面就会从缓存中读取。
 
-### 第 3 章 Node 编程基础
+### Node 编程基础
 
 #### Node 模块
 
