@@ -10,6 +10,16 @@
 + 不能调用系统I/O的API
 + 不能调用Date.now()或者Math.random()等不纯的方法
 
+只要是跟函数外部环境发生的交互就都是副作用。
+
+纯函数的好处
+
++ 总能够根据输入来做缓存(memoize)
++ 可移植性/self-document
++ 可测试性
++ 引用透明(如果一段代码可以替换成它执行所得的结果，而且是在不改变整个程序行为的前提下替换)
++ 并行代码，不会访问共享内存
+
 函数的合成(compose)，一个值要经过多个函数，才能变成另外一个值，就可以把所有中间步骤合并成一个函数。
 
 函数合成就像将管道连起来，让数据一口气从多个管道中穿过。
@@ -56,3 +66,20 @@ compose(compose(f, g), h)
 // 等同于
 compose(f, g, h)
 ```
+
+### pointfree
+
+无须提及将要操作的数据时什么样的
+
+```js
+// 非 pointfree，因为提到了数据：word
+const snakeCase = function (word) {
+  return word.toLowerCase().replace(/\s+/ig, '_');
+};
+
+// pointfree
+const snakeCase = compose(replace(/\s+/ig, '_'), toLowerCase);
+```
+
+pointfree模式可以减少不必要的命名，让代码保持简洁和通用。
+
