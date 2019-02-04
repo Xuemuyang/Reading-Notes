@@ -231,7 +231,7 @@ Node 开始开始执行脚本时，会先进行事件循环初始化，先做下
 - `setImmediate()`的 callback
 - 用于关闭请求的 callback
 
-  3.idle,prepare
+3.idle,prepare
 
 libuv 内部调用
 
@@ -273,7 +273,7 @@ fs.readFile("test.js", () => {
 
 第二轮事件循环，依旧没有到期的定时器，但是已经有了可执行的 I/O callback，这个函数需要 200ms，及执行一半不到的时候定时器就会到期，必须等到函数执行完毕才会离开这个阶段。
 
- 第三轮时间循环，timer 阶段定时器 callback 触发。
+第三轮时间循环，timer 阶段定时器 callback 触发。
 
 ## 调试
 
@@ -319,7 +319,7 @@ DIRT(data-intensive real-time)数据密集型实时程序
 
 ### 构建有多个房间的聊天室程序
 
-为了提供静态文件，需要使用 Node 内置的 http 模块，通过 HTTP 提供文件时，通常不能只是发送文件中的内容，还应该有所发送文件的类型。也就是说要用正确的`MIME`类型设置 HTTP 头的`COntent-Type`。
+为了提供静态文件，需要使用 Node 内置的 http 模块，通过 HTTP 提供文件时，通常不能只是发送文件中的内容，还应该有所发送文件的类型。也就是说要用正确的`MIME`类型设置 HTTP 头的`Content-Type`。
 
 聊天程序需要具备三个基本功能:
 
@@ -1061,7 +1061,9 @@ var app = connect()
 
 15.`directory()`:目录列表
 
-### 第 8 章 Express
+### Express
+
+#### 配置
 
 Express 构建在 Connect 之上
 
@@ -1069,7 +1071,69 @@ Express 构建在 Connect 之上
 
 `express -e hehe` 这里的`-e`代表使用 ejs 模板引擎渲染，命令行使用`express -h`查看更多命令
 
+在系统中设置环境变量
+
+```sh
+NODE_ENV=production node app
+```
+
+Express提供了一套方法来操作环境相关的配置
+
+- app.set()
+- app.get()
+- app.enable()
+- app.disable()
+- app.enabled()
+- app.disabled()
+
+#### 视图渲染
+
+设置模板引擎
+
+```js
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+```
+
+上面代码设置了模板的扩展名为`.ejs`，调用`render`函数的时候就可以省略扩展名
+
+```js
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
+```
+
+express 默认开启视图缓存
+
+视图查找也有一套相应的规则
+
+![](https://ws1.sinaimg.cn/large/006tNc79ly1fzu8f4y2gcj30pa0na10i.jpg)
+
 ## Koa
+
+### 常用的中间件
+
+koa-middlewares这个包中包含如下常用的模块
+
+- koa-bodyparser
+- koa-compress
+- koa-conditional-get
+- koa-csrf
+- koa-ejs
+- koa-etag
+- koa-favicon
+- koa-generic-session
+- koa-logger
+- koa-onerror
+- koa-redis
+- koa-resource-router
+- koa-rewrite
+- koa-router
+- koa-rt
+- koa-safe-jsonp
+- koa-session
+- koa-static-cache
 
 ### 阮老师的 Intro
 
