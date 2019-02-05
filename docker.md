@@ -16,6 +16,7 @@ docker build -t friendlyhello . // 使用目录中的Dockerfile来构建friendly
 docker run hello-world // 跑hello-word镜像
 docker run -p 4000:80 friendlyhello // 跑friendlyhello镜像，local 4000 -> docker 80
 docker run -d -p 4000:80 friendlyhello // detach模式运行
+docker run --name myredis -d -p6379:6379 redis // --name指定名称
 docker container stop <hash> // 停止容器
 docker container kill <hash> // 强行kill容器
 docker container rm <hash> // 删除容器
