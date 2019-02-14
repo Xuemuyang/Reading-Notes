@@ -4868,6 +4868,46 @@ function debounce(fn) {
 }
 ```
 
+debounce 加入 immediate 功能
+
+```js
+/**
+ * debounce 搬运underscore的实现
+ * @param  {Function} func    待处理函数
+ * @param  {Number} timeout  延迟毫秒
+ * @param  {Boolean} immediate 立即执行
+ * @return {Function}        处理后函数
+ */
+function debounce(func, wait, immediate) {
+  let timeout = null;
+  let result;
+
+  return function(...args) {
+    const context = this;
+
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+
+    if (immediate) {
+      // 如果已经执行过，不再执行
+      const callNow = !timeout;
+      timeout = setTimeout(() => {
+        timeout = null;
+      }, wait);
+      if (callNow) {
+        result = func.apply(context, args);
+      }
+    } else {
+      timeout = setTimeout(() => {
+        func.apply(context, args);
+      }, wait);
+    }
+    return result;
+  };
+}
+```
+
 还有 consumer 函数用于将操作累计滞后触发事件
 
 ```js
