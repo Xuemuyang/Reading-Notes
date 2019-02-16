@@ -892,6 +892,12 @@ connect()
 为了向开发人员提供可配置的能力，中间件通常会遵循一个简单的惯例：高阶函数
 
 ```js
+function setup(options) {
+  return function(req, res, next) {
+    // ...
+  }
+}
+
 app.use(setup({some: 'options' }));
 ```
 
