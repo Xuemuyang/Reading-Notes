@@ -968,32 +968,28 @@ module.exports = function route(obj) {
 
 ##### 使用错误处理中间件
 
+Connect 有默认错误处理，一般来说需要自行处理，比如将错误发送给日志守护进程。
+
+错误处理中间件必须有四个参数：`err`、`req`、`res`和`next`。
+
 ```js
-var connect = require("connect");
+const env = process.env.NODE_ENV || 'development';
 
-function badMiddleware(req, res, next) {
-  next(new Error("Bad middleware makes error"));
+function errorHandler(err, req, res, next) {
+  res.statusCode = 500;
+  switch (env) {
+    case 'development':
+      console.error('Error caught by errorHandler:');
+      console.error(err);
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify(err));
+      break;
+    default:
+      res.end('Server error');
+  }
 }
 
-function errorHandler() {
-  var env = process.env.NODE_ENV || "development";
-  return function(err, req, res, next) {
-    res.statusCode = 500;
-    switch (env) {
-      case "development":
-        res.setHeader("Content-Type", "application/json");
-        res.end(JSON.stringify(err));
-        break;
-      default:
-        res.end("Server error");
-    }
-  };
-}
-
-connect()
-  .use(badMiddleware)
-  .use(errorHandler)
-  .listen(3000);
+module.exports = errorHandler;
 ```
 
 ### 第 7 章 Connect 自带的中间件
@@ -1119,6 +1115,10 @@ express 默认开启视图缓存
 视图查找也有一套相应的规则
 
 ![](https://ws1.sinaimg.cn/large/006tNc79ly1fzu8f4y2gcj30pa0na10i.jpg)
+
+数据传递给视图也有一套规则
+
+![](https://ws1.sinaimg.cn/large/006tKfTcgy1g0c0eog74pj30i50ghgms.jpg)
 
 ## Koa
 
