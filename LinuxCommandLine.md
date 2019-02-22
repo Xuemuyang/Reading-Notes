@@ -2,13 +2,24 @@
 
 ## 命令速查
 
-```bash
+```sh
 cd ~/.ssh // 查看ssh秘钥
 lsof -i tcp:port // 查看端口
 kill -9 PID // 根据PID杀进程
 bg // 查看正在运行的任务
 fg [n] // 将后台任务调回到前台运行
 tree -I 'node_modules|dist' // 生成目录树,I参数表忽略
+pwd // 显示用户当前工作目录
+cd // Change Directory
+echo // shell下的打印命令
+cat // 连接文件
+touch // 创建文件
+mkdir // 创建目录
+cp file1 file2 // 复制文件
+cp -r file1 file2 // 复制文件
+rm file // 删除文件
+rm -r dir // 删除目录
+touch a.txt // 创建文件
 ```
 
 ## Chap1. Intro
