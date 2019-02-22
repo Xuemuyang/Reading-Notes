@@ -43,3 +43,31 @@ brew install aria2
 ps -ef|grep aira2c //查看aria2c进程
 aria2c --conf-path="/Users/mac/.aria2/aria2.conf" -D
 ```
+
+## npx
+
+参考 [npx 使用教程-阮一峰](http://www.ruanyifeng.com/blog/2019/02/npx.html)
+
+### 调用项目安装的模块
+
+一般来说需要在 package.json 的 `scripts` 字段里面通过 `npm run scripts` 调用项目依赖。
+
+```sh
+npx mocha --version
+```
+
+### 避免全局安装模块
+
+npx 避免全局安装的模块，比如 `create-react-app`，使用 npx 运行它且不进行全局安装。
+
+可以使用 `@` 指定模块版本
+
+```sh
+npx create-react-app@x.x.x my-react-app
+```
+
+### 使用不同版本的node
+
+```sh
+npx node@0.12.8 -v
+```
