@@ -20,6 +20,7 @@ cp -r file1 file2 // 复制文件
 rm file // 删除文件
 rm -r dir // 删除目录
 touch a.txt // 创建文件
+ssh user@host // 连接远程主机
 ```
 
 ## Chap1. Intro
