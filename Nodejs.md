@@ -1120,6 +1120,24 @@ express 默认开启视图缓存
 
 ![](https://ws1.sinaimg.cn/large/006tKfTcgy1g0c0eog74pj30i50ghgms.jpg)
 
+模板会有字符转义的功能，自动转义上下文中值中的所有特殊字符，将其替换为HTML实体码。
+
+### 数据库
+
+使用 Knex 这个包，查询构建器，构造 SQL 语句。
+
+#### 嵌入式数据库
+
+嵌入式数据库不需要安装或者管理一个外部服务器，嵌入在程序进程里运行的。
+
+SQlite 和 LevelDB 是常用的嵌入式数据库。
+
+#### LevelUP与LevelDown
+
+LevelUp 对 LevelDown 的 API 做了封装。
+
+### 测试 Node 程序
+
 ## Koa
 
 ### 常用的中间件
