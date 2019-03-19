@@ -111,6 +111,10 @@ html 的`contenteditable`允许编辑段落。
 
 设置为`true`即可编辑。
 
+10.`counter-increment`可以用来做编号
+
+[栗子](http://www.w3school.com.cn/tiy/t.asp?f=csse_gen_counter-reset)
+
 ## background
 
 可以有如下属性:
