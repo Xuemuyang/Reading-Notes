@@ -2898,24 +2898,24 @@ function inheritPrototype(subType, superType) {
 
 ```javascript
 function SuperType(name) {
-    this.name = name;
-    this.color = ['red', 'blue', 'green'];
+  this.name = name;
+  this.color = ['red', 'blue', 'green'];
 }
 
 SuperType.prototype.sayName = function() {
-    alert(this.name);
+  alert(this.name);
 };
 
 function SubType(name, age) {
-    SuperType.call(this, name);
+  SuperType.call(this, name);
 
-    this.age = age;
+  this.age = age;
 }
 
 inheritPrototype(SubType, SuperType);
 
 SubType.ptototype.sayAge = funciton() {
-    alert(this.age);
+  alert(this.age);
 };
 ```
 
@@ -5694,6 +5694,41 @@ new Promise((resolve, reject) => {
 // 2
 // 1
 ```
+
+9.finally
+
+```js
+new Promise((resolve, reject) => {
+  reject(1)
+})
+  .then(res => {
+    console.log(res)
+    return 2
+  }, err => {
+    console.log(err)
+    return 3
+  })
+  .catch(err => {
+    console.log(err)
+    return 4
+  })
+  .finally(res => {
+    console.log(res)
+    return 5
+  })
+  .then(
+    res => console.log(res),
+    err => console.log(err),
+  )
+```
+
+```console
+1
+undefined
+3
+```
+
+`finally` 方法的回调函数不接收任何参数，`finally` 方法里面的操作不依赖于 `Promise` 的执行结果。
 
 #### 错误处理流程图
 
