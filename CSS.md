@@ -792,12 +792,13 @@ Block Element Modifier
 
 ## position
 
-position 有四个常用的值
+position 属性
 
 - static，非定位，默认值
 - relative，相对定位(相对自己)
 - absolute，绝对定位，相对非 static 祖先元素定位(这里的祖先元素可以是父元素，父元素的父元素...)
 - fixed，相对于视口绝对定位
+- sticky，粘性布局，可以被认为是相对定位和固定定位的混合，元素在跨越特定的阈值前为 relative，之后为 fixed
 
 relative
 

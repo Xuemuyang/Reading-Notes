@@ -55,6 +55,19 @@ const compose = function(f, g) {
 }
 ```
 
+```js
+// 摘自 https://github.com/reactjs/redux/blob/master/src/compose.js
+export default function compose(...funcs) {
+  if (funcs.length === 0) {
+    return arg => arg
+  }
+  if (funcs.length === 1) {
+    return funcs[0]
+  }
+  return funcs.reduce((a, b) => (...args) => a(b(...args)))
+}
+```
+
 `f`和`g`都是函数，`x`是在他们之间通过"管道"传输的值。
 
 函数的合成遵循结合律。

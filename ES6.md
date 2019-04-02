@@ -2287,7 +2287,7 @@ class Point {
 }
 ```
 
-ES6的`class`，可以看做构造函数的另一种写法。
+ES6的 `class`，可以看做构造函数的另一种写法。
 
 ```js
 class Point {
