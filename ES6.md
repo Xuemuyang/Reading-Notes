@@ -322,7 +322,7 @@ var {x = 3} = {};
 x // 3
 ```
 
-默认值生效的条件是，对应位置的值严格等于`undefined`
+默认值生效的条件是，对应位置的值严格等于 `undefined`
 
 ```js
 var {x = 3} = {x: undefined};
@@ -332,7 +332,7 @@ var {x = 3} = {x: null};
 x // null
 ```
 
-如果解构失败，变量的值等于`undefined`
+如果解构失败，变量的值等于 `undefined`
 
 ## 4. 字符串的扩展
 
