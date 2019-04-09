@@ -3,6 +3,9 @@
 ## 疑问
 
 - `[propName: string]` 是个什么玩意
+- `[index: number]` 关键字
+- 函数参数个数如何灵活，如求和
+- 函数重载是否只是校验类型
 
 ## 简介
 
@@ -200,3 +203,325 @@ let fibonacci: NumberArray = [1, 1, 2, 3, 5];
 
 ### 函数的类型
 
+函数声明，输入多余的（或者少于要求的）参数，是不被允许的。
+
+```ts
+function sum(x: number, y: number): number {
+  return x + y;
+}
+```
+
+函数表达式，在 TS 中，`=>` 用来表示函数定义，左边是输入类型，需要用括号括起来，右边是输出类型。
+
+```ts
+let mySum: (x: number, y: number) => number = function(
+  x: number,
+  y: number
+): number {
+  return x + y;
+};
+```
+
+用接口定义函数的形状
+
+```ts
+interface SearchFunc {
+  (source: string, subString: string): boolean;
+}
+
+let mySearch: SearchFunc;
+mySearch = function(source: string, subString: string) {
+  return source.search(subString) !== -1;
+};
+```
+
+使用 `?` 表示可选参数
+
+```ts
+function buildName(firstName: string, lastName?: string) {
+  if (lastName) {
+    return firstName + " " + lastName;
+  } else {
+    return firstName;
+  }
+}
+let tomcat = buildName("Tom", "Cat");
+let tom = buildName("Tom");
+```
+
+重载允许一个函数接受不同数量或类型的参数时，作出不同的处理。
+
+```ts
+function reverse(x: number): number;
+function reverse(x: string): string;
+function reverse(x: number | string): number | string {
+  if (typeof x === "number") {
+    return Number(
+      x
+        .toString()
+        .split("")
+        .reverse()
+        .join("")
+    );
+  } else if (typeof x === "string") {
+    return x
+      .split("")
+      .reverse()
+      .join("");
+  }
+}
+```
+
+### 类型断言（Type Assertion）
+
+```ts
+function getLength(something: string | number): number {
+  return something.length;
+}
+// 报错
+```
+
+某些情况我们需要在不确定类型的时候访问其中一个类型的属性或方法。
+
+有两种语法：
+
+- <类型>值
+- 值 as 类型
+
+```ts
+function getLength(something: string | number): number {
+  if ((<string>something).length) {
+    return (<string>something).length;
+  } else {
+    return something.toString().length;
+  }
+}
+```
+
+```ts
+function getLength(something: string | number): number {
+  if ((something as string).length) {
+    return (something as string).length;
+  } else {
+    return something.toString().length;
+  }
+}
+```
+
+### 声明文件
+
+使用第三方库需要引用声明文件，才能获得代码补全，接口提示的功能。
+
+### 内置对象
+
+ECMAScript 内置对象有（举个 🌰）：
+
+- `Boolean`
+- `Error`
+- `Date`
+- `RegExp`
+
+DOM 和 BOM 的内置对象（举个 🌰）：
+
+- `Document`
+- `HTMLElement`
+- `Event`
+- `NodeList`
+
+这些文件的定义在 TypeScript 核心库的定义文件中。
+
+Node.js 不是内置对象的一部分。
+
+## 进阶
+
+### 类型别名（Type Aliases）
+
+```ts
+type Name = string;
+type NameResolver = () => string;
+type NameOrResolver = Name | NameResolver;
+function getName(n: NameOrResolver): Name {
+  if (typeof n === "string") {
+    return n;
+  } else {
+    return n();
+  }
+}
+```
+
+### 字符串字面量类型（String Literal Types）
+
+```ts
+type EventNames = "click" | "scroll" | "mousemove";
+function handleEvent(ele: Element, event: EventNames) {
+  // do something
+}
+
+handleEvent(document.getElementById("hello"), "scroll"); // 没问题
+```
+
+### 元组（Tuple）
+
+数组合并相同类型的对象，元组合并了不同类型的对象。
+
+```ts
+let one: [string, number];
+one[0] = "one";
+one[1] = 1;
+
+one[0].slice(1);
+one[1].toFixed(2);
+```
+
+### 枚举（Enum）
+
+枚举类型用于取值被限定在一定范围内的场景，如一周有七天，一年四季，颜色红蓝绿。
+
+枚举成员会被赋值为从 0 开始递增的数字，同时也会对枚举值到枚举名进行反向映射：
+
+```ts
+enum Days {
+  Sun,
+  Mon,
+  Tue,
+  Wed,
+  Thu,
+  Fri,
+  Sat
+}
+
+console.log(Days["Sun"] === 0); // true
+console.log(Days["Mon"] === 1); // true
+console.log(Days["Tue"] === 2); // true
+console.log(Days["Sat"] === 6); // true
+
+console.log(Days[0] === "Sun"); // true
+console.log(Days[1] === "Mon"); // true
+console.log(Days[2] === "Tue"); // true
+console.log(Days[6] === "Sat"); // true
+```
+
+会被编译为:
+
+```ts
+var Days;
+(function(Days) {
+  Days[(Days["Sun"] = 0)] = "Sun";
+  Days[(Days["Mon"] = 1)] = "Mon";
+  Days[(Days["Tue"] = 2)] = "Tue";
+  Days[(Days["Wed"] = 3)] = "Wed";
+  Days[(Days["Thu"] = 4)] = "Thu";
+  Days[(Days["Fri"] = 5)] = "Fri";
+  Days[(Days["Sat"] = 6)] = "Sat";
+})(Days || (Days = {}));
+```
+
+### 类（Classes）
+
+类的相关概念
+
+- 类（Class）：定义了一个东西的抽象特点，包含它的属性和方法
+- 封装（Encapsulation）：将对数据的操作细节隐藏起来，只暴露对外的接口
+- 继承（Inheritance）：子类继承父类
+- 多态（Polymorphism）：由继承而产生了相关的不同的类，对同一个方法可以有不同的响应
+- 修饰符（Modifiers）：通过一些关键字，用于限定成员或者类型的性质
+- 抽象类（Abstract Class）：抽象类提供其他类继承的基类，抽象类不允许被实例化，抽象类中的抽象方法必须在子类中被实现
+- 接口（Interfaces）：不同类之间共有的属性或方法，可以抽象成一个接口。接口可以被类实现（implements），一个类只能继承自另一个类，但可以实现多个接口
+
+#### 静态方法
+
+使用 `static` 修饰符修饰的方法称为静态方法，不需要实例化，直接通过类来调用。
+
+#### 访问修饰符
+
+- public 修饰的属性或方法是公有的，可以在任何地方被访问到，默认所有的属性和方法都是 public 的
+- private 修饰的属性或方法是私有的，不能在声明它的类的外部访问
+- protected 修饰的属性或方法是受保护的，它和 private 类似，区别是它在子类中也是允许被访问的
+
+### 类与接口
+
+接口还可以对类的一部分行为进行抽象。
+
+有时候不同类之间可以有一些共有的特征。
+
+一个类可以实现多个接口：
+
+```ts
+interface Alarm {
+  alert();
+}
+
+interface Light {
+  lightOn();
+  lightOff();
+}
+
+class Car implements Alarm, Light {
+  alert() {
+    console.log("Car alert");
+  }
+  lightOn() {
+    console.log("Car light on");
+  }
+  lightOff() {
+    console.log("Car light off");
+  }
+}
+```
+
+接口继承接口：
+
+```ts
+interface Alarm {
+  alert();
+}
+
+interface LightableAlarm extends Alarm {
+  lightOn();
+  lightOff();
+}
+```
+
+接口继承类：
+
+```ts
+class Point {
+  x: number;
+  y: number;
+}
+
+interface Point3d extends Point {
+  z: number;
+}
+
+let point3d: Point3d = { x: 1, y: 2, z: 3 };
+```
+
+### 泛型（Generics）
+
+泛型（Generics）是指在定义函数、接口或类的时候，不预先指定具体的类型，而在使用的时候再指定类型的一种特性。
+
+```ts
+function createArray<T>(length: number, value: T): Array<T> {
+  let result: T[] = [];
+  for (let i = 0; i < length; i++) {
+    result[i] = value;
+  }
+  return result;
+}
+
+createArray<string>(3, "x"); // ['x', 'x', 'x']
+```
+
+泛型约束
+
+```ts
+interface Lengthwise {
+  length: number;
+}
+
+function loggingIdentity<T extends Lengthwise>(arg: T): T {
+  console.log(arg.length);
+  return arg;
+}
+```
