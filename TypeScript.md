@@ -19,7 +19,7 @@ tsc hehe.ts -d // 编译且生成d.ts文件
 
 ### 声明文件
 
-typeScript 的代码提示秘密在于 d.ts 文件，约定声明文件以.d.ts为后缀。
+typeScript 的代码提示秘密在于 d.ts 文件，约定声明文件以.d.ts 为后缀。
 
 ```ts
 // jQuery.d.ts
@@ -28,11 +28,11 @@ declare var jQuery: (string) => any;
 /// <reference path="./jQuery.d.ts" />
 ```
 
-可以使用@types来管理第三方声明文件。
+可以使用@types 来管理第三方声明文件。
 
-JavaScript中的DOM和BOM内置对象在TypeScript核心库的定义文件中有定义。
+JavaScript 中的 DOM 和 BOM 内置对象在 TypeScript 核心库的定义文件中有定义。
 
-如果用TypeScript来写Node.js，需要引入第三方声明文件:
+如果用 TypeScript 来写 Node.js，需要引入第三方声明文件:
 
 ```sh
 npm install @types/node --save-dev
@@ -88,7 +88,15 @@ x = ["hello", 10];
 枚举成员会被赋值为从 0 开始递增的数字，同时也会对枚举值到枚举名进行反向映射：
 
 ```ts
-enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat};
+enum Days {
+  Sun,
+  Mon,
+  Tue,
+  Wed,
+  Thu,
+  Fri,
+  Sat
+}
 
 console.log(Days["Sun"] === 0); // true
 console.log(Days["Mon"] === 1); // true
@@ -186,7 +194,7 @@ type Name = string;
 type NameResolver = () => string;
 type NameOrResolver = Name | NameResolver;
 function getName(n: NameOrResolver): Name {
-  if (typeof n === 'string') {
+  if (typeof n === "string") {
     return n;
   } else {
     return n();
@@ -195,10 +203,10 @@ function getName(n: NameOrResolver): Name {
 ```
 
 ```ts
-type EventNames = 'click' | 'scroll' | 'mouseover';
+type EventNames = "click" | "scroll" | "mouseover";
 ```
 
-这个例子中使用`type`定了一个字符串字面量类型EventNames，它只能取三种字符串中的一种。
+这个例子中使用`type`定了一个字符串字面量类型 EventNames，它只能取三种字符串中的一种。
 
 ## 类
 
@@ -292,7 +300,7 @@ let tom: Person = {
 
 ### 类实现接口
 
-实现(implements)是面向对象中的一个重要概念。不同类之间可以有一些共有的特性，这时候就可以把特性提取成接口(interfaces)，用implements关键字来实现。
+实现(implements)是面向对象中的一个重要概念。不同类之间可以有一些共有的特性，这时候就可以把特性提取成接口(interfaces)，用 implements 关键字来实现。
 
 举例来说，门是一个类，防盗门是门的子类。如果防盗门有一个报警器的功能，我们可以简单的给防盗门添加一个报警方法。这时候如果有另一个类，车，也有报警器的功能，就可以考虑把报警器提取出来，作为一个接口，防盗门和车都去实现它：
 
@@ -301,18 +309,17 @@ interface Alarm {
   alert();
 }
 
-class Door {
-}
+class Door {}
 
 class SecurityDoor extends Door implements Alarm {
   alert() {
-    console.log('SecurityDoor alert');
+    console.log("SecurityDoor alert");
   }
 }
 
 class Car implements Alarm {
   alert() {
-    console.log('Car alert');
+    console.log("Car alert");
   }
 }
 ```
@@ -331,13 +338,13 @@ interface Light {
 
 class Car implements Alarm, Light {
   alert() {
-    console.log('Car alert');
+    console.log("Car alert");
   }
   lightOn() {
-    console.log('Car light on');
+    console.log("Car light on");
   }
   lightOff() {
-    console.log('Car light off');
+    console.log("Car light off");
   }
 }
 ```
@@ -373,7 +380,7 @@ interface Point3d extends Point {
   z: number;
 }
 
-let point3d: Point3d = {x: 1, y: 2, z: 3};
+let point3d: Point3d = { x: 1, y: 2, z: 3 };
 ```
 
 ## 函数
@@ -393,7 +400,7 @@ function add2(x: number, y: number): number {
 ### 函数表达式
 
 ```ts
-let mySum = function (x: number, y: number): number {
+let mySum = function(x: number, y: number): number {
   return x + y;
 };
 ```
@@ -401,14 +408,17 @@ let mySum = function (x: number, y: number): number {
 这样可以过编译，但是没有对等号左边的类型定义，而是通过赋值操作进行类型推论推断出来的。
 
 ```ts
-let mySum: (x: number, y: number) => number = function (x: number, y: number): number {
+let mySum: (x: number, y: number) => number = function(
+  x: number,
+  y: number
+): number {
   return x + y;
 };
 ```
 
-在TypeScript的类型定义中，`=>`用来表示函数的定义，左边是输入类型，需要用括号括起来，右边是输出类型。
+在 TypeScript 的类型定义中，`=>`用来表示函数的定义，左边是输入类型，需要用括号括起来，右边是输出类型。
 
-这与ES6中的`=>`差别很大
+这与 ES6 中的`=>`差别很大
 
 使用接口的方式来定义一个函数
 
@@ -420,7 +430,7 @@ interface SearchFunc {
 let mySearch: SearchFunc;
 mySearch = function(source: string, subString: string) {
   return source.search(subString) !== -1;
-}
+};
 ```
 
 ### 可选参数
@@ -442,26 +452,44 @@ let result3 = buildName("Bob", "Adams"); // ah, just right
 
 ```ts
 function reverse(x: number | string): number | string {
-  if (typeof x === 'number') {
-    return Number(x.toString().split('').reverse().join(''));
-  } else if (typeof x === 'string') {
-    return x.split('').reverse().join('');
+  if (typeof x === "number") {
+    return Number(
+      x
+        .toString()
+        .split("")
+        .reverse()
+        .join("")
+    );
+  } else if (typeof x === "string") {
+    return x
+      .split("")
+      .reverse()
+      .join("");
   }
 }
 ```
 
 这样的缺点在于不能精准的表达，输入为`number`的时候，输出也应该为`number`，输入为`string`的时候，输出应该为`string`。
 
-需要使用重载定义多个reverse的函数类型:
+需要使用重载定义多个 reverse 的函数类型:
 
 ```ts
 function reverse(x: number): number;
 function reverse(x: string): string;
 function reverse(x: number | string): number | string {
-  if (typeof x === 'number') {
-    return Number(x.toString().split('').reverse().join(''));
-  } else if (typeof x === 'string') {
-    return x.split('').reverse().join('');
+  if (typeof x === "number") {
+    return Number(
+      x
+        .toString()
+        .split("")
+        .reverse()
+        .join("")
+    );
+  } else if (typeof x === "string") {
+    return x
+      .split("")
+      .reverse()
+      .join("");
   }
 }
 ```
@@ -470,3 +498,12 @@ function reverse(x: number | string): number | string {
 
 泛型（Generics）是指在定义函数、接口或类的时候，不预先指定具体的类型，而在使用的时候再指定类型的一种特性。
 
+类型变量是一种特殊的变量，只用于表示类型而不是值。
+
+```ts
+function identity<T>(arg: T): T {
+  return arg;
+}
+```
+
+使用类型变量 `T` 来捕获用户传入的类型，之后就可以使用类型变量。
