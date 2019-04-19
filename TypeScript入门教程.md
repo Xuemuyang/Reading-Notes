@@ -2,10 +2,15 @@
 
 ## 疑问
 
-- `[propName: string]` 是个什么玩意
-- `[index: number]` 关键字
-- 函数参数个数如何灵活，如求和
+- 签名的对象字面量
 - 函数重载是否只是校验类型
+- 关于类型文件的目录
+
+[Typescript-发布](https://www.tslang.cn/docs/handbook/declaration-files/publishing.html)章节中有介绍，包含声明文件一起发布 npm 包，在 package.json 中指定主声明文件，`types` 和 `typings` 具有相同的意义。
+
+- tsconfig.json
+
+ts 的配置文件中指定了 `types`，只有被列出来的包才会被包含进来。
 
 ## 简介
 
@@ -145,7 +150,9 @@ let tom: Person = {
 
 - `?` 可选属性
 - `[propName: string]` 任意属性
-- `readonly` 只读属性
+- `readonly` 只读属性，可以理解为是变量与 `const` 的关系
+- `[index: number]`
+- `<T>(arg: T): T`
 
 ```ts
 interface Person {
@@ -188,6 +195,7 @@ let teemo: Person = {
 ```ts
 let fibonacci: number[] = [1, 1, 2, 3, 5];
 let fibonacciStr: (number | string)[] = ["1", "1", "2", "3", "5"];
+let list: Array<number> = [1, 2, 3];
 ```
 
 数组的项中不允许出现其他的类型。
@@ -201,7 +209,7 @@ interface NumberArray {
 let fibonacci: NumberArray = [1, 1, 2, 3, 5];
 ```
 
-### 函数的类型
+### 函数
 
 函数声明，输入多余的（或者少于要求的）参数，是不被允许的。
 
@@ -271,6 +279,50 @@ function reverse(x: number | string): number | string {
   }
 }
 ```
+
+#### this参数
+
+使用 `--noImplicitThis` 就可以禁用 `this` 相关的类型检查。
+
+typescript 提供一个显示的 `this` 参数，是一个假的参数，出现在参数列表的最前面：
+
+```ts
+function f(this: void) {
+  // make sure `this` is unusable in this standalone function
+}
+```
+
+```ts
+interface Card {
+  suit: string;
+  card: number;
+}
+interface Deck {
+  suits: string[];
+  cards: number[];
+  createCardPicker(this: Deck): () => Card;
+}
+let deck: Deck = {
+  suits: ["hearts", "spades", "clubs", "diamonds"],
+  cards: Array(52),
+  // NOTE: The function now explicitly specifies that its callee must be of type Deck
+  createCardPicker: function(this: Deck) {
+    return () => {
+      let pickedCard = Math.floor(Math.random() * 52);
+      let pickedSuit = Math.floor(pickedCard / 13);
+
+      return {suit: this.suits[pickedSuit], card: pickedCard % 13};
+    }
+  }
+}
+
+let cardPicker = deck.createCardPicker();
+let pickedCard = cardPicker();
+
+alert("card: " + pickedCard.card + " of " + pickedCard.suit);
+```
+
+在回调函数中 `this` 防止报错，需要手动指定 `this` 的类型为 `void`。
 
 ### 类型断言（Type Assertion）
 
@@ -362,7 +414,7 @@ handleEvent(document.getElementById("hello"), "scroll"); // 没问题
 
 ### 元组（Tuple）
 
-数组合并相同类型的对象，元组合并了不同类型的对象。
+元组类型允许表示一个已知元素数量和类型的数组，各元素的类型不必相同。
 
 ```ts
 let one: [string, number];
@@ -525,3 +577,15 @@ function loggingIdentity<T extends Lengthwise>(arg: T): T {
   return arg;
 }
 ```
+
+### 高级类型
+
+#### 交叉类型(Intersection Types)
+
+将多个类型合并为一个类型
+
+`Person & Serializable & Loggable` 同时是 `Person`、`Serializable`、`Loggable`。
+
+#### 联合类型(Union Types)
+
+`number | string | boolean` 表示一个值可以是 `number`、`string` 或 `boolean`。

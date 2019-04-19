@@ -139,3 +139,6 @@ longtap|手指触摸后，超过350ms再离开(推荐使用longpress事件代替
 如果在组件的wxml中使用多个slot，需要使用不同的name来区分。
 
 组件对应的wxss文件的样式，只对组件wxml内的节点生效。
+
+## WXS
+
