@@ -115,6 +115,8 @@ html 的`contenteditable`允许编辑段落。
 
 [栗子](http://www.w3school.com.cn/tiy/t.asp?f=csse_gen_counter-reset)
 
+11.默认`content-box`
+
 ## background
 
 可以有如下属性:

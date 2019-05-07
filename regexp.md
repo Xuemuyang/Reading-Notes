@@ -33,6 +33,16 @@ code|detail|简介
 
 `|` 管道符表示任何之一 `(p1|p2|p3)`
 
+位置|简介
+---|---
+`^`|行开头
+`$`|行结尾
+`\b`|单词边界，`\w` 和 `\W`、`w` 和 `^`、`\w` 和 `$` 之间的位置
+`(?=p)`|`p` 是一个模式，`p` 前面的位置，positive lookahead
+`(?!=p)`|取反 negative lookahead
+`(?<=p)`|positive lookbehind
+`(?<!p)`|negative lookbehind
+
 ## 字符匹配
 
 模糊匹配：
@@ -71,4 +81,55 @@ var regex = /goodbye|good/g;
 var string = "goodbye";
 console.log( string.match(regex) );
 // => ["goodbye"]
+```
+
+## 位置匹配
+
+位置是相邻字符之间的位置
+
+![](https://ws1.sinaimg.cn/large/006tNc79ly1g2s1bgkkkqj30g504dmx9.jpg)
+
+```js
+var result = "[JS] Lesson_01.mp4".replace(/\b/g, '#');
+console.log(result);
+// => "[#JS#] #Lesson_01#.#mp4#"
+```
+
+```js
+var result = "[JS] Lesson_01.mp4".replace(/\B/g, '#');
+console.log(result);
+// => "#[J#S]# L#e#s#s#o#n#_#0#1.m#p#4"
+```
+
+`(?=p)` positive lookahead
+
+```js
+var result = "hello".replace(/(?=l)/g, '#');
+console.log(result);
+// => "he#l#lo"
+```
+
+`(?!p)` negative lookahead
+
+```js
+var result = "hello".replace(/(?!l)/g, '#');
+
+console.log(result);
+// => "#h#ell#o#"
+```
+
+ES6 中支持 `(?<=p)` positive lookbehind
+
+```js
+var result = "hello".replace(/(?<=l)/g, '#');
+console.log(result);
+// => "hel#l#o"
+```
+
+`(?<!p)` negative lookbehind
+
+```js
+var result = "hello".replace(/(?<!l)/g, '#');
+console.log(result);
+// => "#h#e#llo#"
 ```
