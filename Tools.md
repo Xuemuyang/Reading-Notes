@@ -71,3 +71,6 @@ npx create-react-app@x.x.x my-react-app
 ```sh
 npx node@0.12.8 -v
 ```
+
+## Chrome 控制台
+

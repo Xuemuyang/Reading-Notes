@@ -5,12 +5,64 @@
 - 签名的对象字面量
 - 函数重载是否只是校验类型
 - 关于类型文件的目录
+- TS里面函数的几种写法总结
 
 [Typescript-发布](https://www.tslang.cn/docs/handbook/declaration-files/publishing.html)章节中有介绍，包含声明文件一起发布 npm 包，在 package.json 中指定主声明文件，`types` 和 `typings` 具有相同的意义。
 
 - tsconfig.json
 
 ts 的配置文件中指定了 `types`，只有被列出来的包才会被包含进来。
+
+代码片段1：
+
+```ts
+interface Person {
+  name: string;
+  age: number;
+}
+
+let person: Person = {
+  name: 'haha',
+  age: 123,
+  gender: 'man'
+}
+
+function makeFriend(friend: Person) {
+  console.log(friend);
+}
+
+let person1 = {
+  name: 'haha',
+  age: 123,
+  gender: 'man'
+}
+
+makeFriend(person1);
+```
+
+代码片段2：
+
+类型断言绕过检查
+
+```ts
+interface SquareConfig {
+    color?: string;
+    width?: number;
+}
+
+function createSquare (config: SquareConfig): { color: string; area: number } {
+  let newSquare = {color: 'white', area: 100}
+  if (config.color) {
+    newSquare.color = config.color
+  }
+  if (config.width) {
+    newSquare.area = config.width * config.width
+  }
+  return newSquare
+}
+
+let mySquare = createSquare({ width: 100, opacity: 0.5 } as SquareConfig) // 加了类型断言之后就可以过编译了
+```
 
 ## 简介
 
@@ -172,6 +224,10 @@ interface Person {
 }
 ```
 
+使用索引签名来描述那些能够“通过索引得到”的类型，可以是字符串索引，也可以是数字索引。
+
+可以同时使用两种类型的索引，但是数字索引的返回值必须是字符串索引返回值类型的子类型。
+
 使用 `[propName: string]` 定义了任意属性取 `string` 类型的值。需要注意的是，一旦定义了任意属性，那么确定属性和可选属性的类型都必须是它的类型的子集。
 
 只读的约束存在于第一次给对象赋值的时候。
@@ -218,6 +274,8 @@ function sum(x: number, y: number): number {
   return x + y;
 }
 ```
+
+函数类型包含两部分：参数类型和返回值类型。
 
 函数表达式，在 TS 中，`=>` 用来表示函数定义，左边是输入类型，需要用括号括起来，右边是输出类型。
 
@@ -333,7 +391,7 @@ function getLength(something: string | number): number {
 // 报错
 ```
 
-某些情况我们需要在不确定类型的时候访问其中一个类型的属性或方法。
+某些情况下我们比 TS 编译器更了解某个值的类型，通过类型断言这种方式可以告诉编译器，“相信我，我知道自己在干什么”，TypeScript 会以为开发者已经进行了必须的检查。
 
 有两种语法：
 
@@ -480,6 +538,28 @@ var Days;
 - 抽象类（Abstract Class）：抽象类提供其他类继承的基类，抽象类不允许被实例化，抽象类中的抽象方法必须在子类中被实现
 - 接口（Interfaces）：不同类之间共有的属性或方法，可以抽象成一个接口。接口可以被类实现（implements），一个类只能继承自另一个类，但可以实现多个接口
 
+看一个例子
+
+```ts
+class Greeter {
+  greeting: string
+  constructor(message: string) {
+    this.greeting = message
+  }
+  greet() {
+    return 'Hello, ' + this.greeting
+  }
+}
+
+let greeter = new Greeter('world')
+```
+
+这个类有三个成员：
+
+- 属性
+- 构造函数
+- 方法
+
 #### 静态方法
 
 使用 `static` 修饰符修饰的方法称为静态方法，不需要实例化，直接通过类来调用。
@@ -553,6 +633,8 @@ let point3d: Point3d = { x: 1, y: 2, z: 3 };
 
 泛型（Generics）是指在定义函数、接口或类的时候，不预先指定具体的类型，而在使用的时候再指定类型的一种特性。
 
+`T` 是类型变量，可以捕获传入的类型。
+
 ```ts
 function createArray<T>(length: number, value: T): Array<T> {
   let result: T[] = [];
@@ -589,3 +671,42 @@ function loggingIdentity<T extends Lengthwise>(arg: T): T {
 #### 联合类型(Union Types)
 
 `number | string | boolean` 表示一个值可以是 `number`、`string` 或 `boolean`。
+
+如果一个值是联合类型，我们只能访问此联合类型的所有类型里共有的成员。
+
+#### 类型保护
+
+使用 if 判断语句对变量的类型进行检查，可以使用 `typeof`、`instanceof`、`in`、字面量类型、还有用户自定义的类型保护。
+
+```ts
+// 仅仅是一个 interface
+interface Foo {
+  foo: number;
+  common: string;
+}
+
+interface Bar {
+  bar: number;
+  common: string;
+}
+
+// 用户自己定义的类型保护！
+function isFoo(arg: Foo | Bar): arg is Foo {
+  return (arg as Foo).foo !== undefined;
+}
+
+// 用户自己定义的类型保护使用用例：
+function doStuff(arg: Foo | Bar) {
+  // 如果通过了isFoo类型检查，后续的条件分支中arg就会被推断为Foo类型，获得编辑器提示等等
+  if (isFoo(arg)) {
+    console.log(arg.foo); // ok
+    console.log(arg.bar); // Error
+  } else {
+    console.log(arg.foo); // Error
+    console.log(arg.bar); // ok
+  }
+}
+
+doStuff({ foo: 123, common: '123' });
+doStuff({ bar: 123, common: '123' });
+```

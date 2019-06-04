@@ -82,6 +82,7 @@ alert(typeof 95); //"number"
 ```
 
 ```javascript
+typeof NaN; // "number"
 typeof null; // "object"
 ```
 

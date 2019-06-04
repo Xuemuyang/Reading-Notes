@@ -1566,12 +1566,6 @@ Object.prototype.toString.call(a); //"[object String]"
 所有`typeof`返回值为`"object"`的对象(如数组)都包含一个内部属性`[[Class]]`(我们可以把它看作一个内部的分类，而非传统的面向对象意义上的类)。这个属性无法直接访问，一般通过`Object.prototype.toString(..)`来查看。
 
 ```js
-Object.prototype.toString.call([1, 2, 3]);
-// "[object Array]"
-
-Object.prototype.toString.call(/regex-literal/i);
-// "[object RegExp]"
-
 Object.prototype.toString.call(null);
 // "[object Null]"
 
@@ -1586,6 +1580,18 @@ Object.prototype.toString.call(42);
 
 Object.prototype.toString.call(true);
 // "[object Boolean]"
+
+Object.prototype.toString.call({name: "hehe"});
+// "[object Object]"
+
+Object.prototype.toString.call([1, 2, 3]);
+// "[object Array]"
+
+Object.prototype.toString.call(/regex-literal/i);
+// "[object RegExp]"
+
+Object.prototype.toString.call(function() {});
+// "[object Function]"
 ```
 
 ### 封装对象包装

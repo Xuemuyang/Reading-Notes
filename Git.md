@@ -14,26 +14,27 @@
 ## 常用命令
 
 ```bash
-$git reset HEAD . // 撤销git add .操作
-$git reset HEAD~[n] // 回退到n个提交之前
-$git reset [version] // 回退到某个版本
-$git fetch origin xxx // 拉取远程xxx分支
-$git checkout -b xxx origin/xxx // 切换并创建xxx分支，可以从后面的基础上切出
-$git branch -a // 查看所有分支
-$git branch -d dev // 删除dev分支
-$git rm --cached // 删除文件的git追踪，但是本地还会有
-$git log --stat/-p // 查看文件修改记录
-$git reflog // 查看操作记录
-$git stash // 工作区暂存
-$git stash list // 工作区暂存列表
-$git stash apply // 恢复工作区
-$git stash drop // 删除工作区
-$git reset --hard 版本号 // 强制回退某个版本
-$cd ~/.ssh //查看ssh秘钥
-$git config --global user.name "John Doe"
-$git config --global user.email johndoe@example.com
-$git config --local user.name "John Doe"
-$git config --local user.email johndoe@example.com // 只修改项目配置name
+git reset HEAD . // 撤销git add .操作
+git reset HEAD~[n] // 回退到n个提交之前
+git reset [version] // 回退到某个版本
+git fetch origin xxx // 拉取远程xxx分支
+git checkout -b xxx origin/xxx // 切换并创建xxx分支，可以从后面的基础上切出
+git branch -a // 查看所有分支
+git branch -d dev // 删除dev分支
+git rm --cached // 删除文件的git追踪，但是本地还会有
+git log --stat/-p // 查看文件修改记录
+git reflog // 查看操作记录
+git stash // 工作区暂存
+git stash list // 工作区暂存列表
+git stash apply // 恢复工作区
+git stash drop // 删除工作区
+git reset --hard 版本号 // 强制回退某个版本
+cd ~/.ssh //查看ssh秘钥
+git config --global user.name "John Doe"
+git config --global user.email johndoe@example.com
+git config --local user.name "John Doe"
+git config --local user.email johndoe@example.com // 只修改项目配置name
+git remote add origin git@github.com:Xuemuyang/ts-axios.git // 与远程仓库关联
 ```
 
 oh-my-zsh中对git命令进行了简化
