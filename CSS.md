@@ -117,6 +117,10 @@ html 的`contenteditable`允许编辑段落。
 
 11.默认`content-box`
 
+![](http://ww3.sinaimg.cn/large/006tNc79ly1g3x3yp8bscj30tg0axmy9.jpg)
+
+![](http://ww4.sinaimg.cn/large/006tNc79ly1g3x3z96wwpj30ts0bldgy.jpg)
+
 ## background
 
 可以有如下属性:
