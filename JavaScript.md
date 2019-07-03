@@ -3510,7 +3510,7 @@ setTimeout(function() {
 
 在同一个对象上（一个 window 或者 worker）,`setTimeout()`或者`setInterval()`返回的定时器编号不会重复。但是不同的对象使用独立的编号池。
 
-## `location`对象
+### `location`对象
 
 | 属性名   | 例子                  |
 | -------- | --------------------- |
@@ -3523,7 +3523,7 @@ setTimeout(function() {
 | protocol | "http:"               |
 | search   | "?q=javascript"       |
 
-### 位置操作
+#### 位置操作
 
 ```js
 location.assign("http://www.wrox.com");
@@ -3567,7 +3567,7 @@ location.reload(); //重新加载（有可能从缓存中加载）
 location.reload(true); //重新加载（从服务器重新加载）
 ```
 
-## `history`对象
+### `history`对象
 
 `history`对象用来保存浏览历史。
 
@@ -3599,11 +3599,11 @@ if (!!(window.history && history.pushState)) {
 
 `history.state`属性用来获取`state`对象的值。
 
-### `popstate`事件
+#### `popstate`事件
 
 `popstate`事件能监听除`history.pushState()`和`history.replaceState()`外 url 的变化。
 
-## `navigator`对象
+### `navigator`对象
 
 > 识别客户端浏览器的事实标准
 
@@ -3823,9 +3823,9 @@ document.body.appendChild(img);
 
 "DOM2 级事件"规定的事件流包括三个阶段：事件捕获阶段、处于目标阶段和事件冒泡阶段。
 
-## 事件处理程序
+### 事件处理程序
 
-### HTML 事件处理程序
+#### HTML 事件处理程序
 
 ```html
 <input type="button" value="Click me" onclick="alert('Clicked')">
@@ -3839,7 +3839,7 @@ document.body.appendChild(img);
 1. 作用域链在不同浏览器中不同
 1. HTML 与 JavaScript 紧密耦合
 
-### DOM0 级事件处理程序
+#### DOM0 级事件处理程序
 
 ```javascript
 var btn = document.getElementById("myBtn");
@@ -3854,7 +3854,7 @@ btn.onclick = function() {
 
 `btn.onclick = null; //删除事件处理程序`
 
-### DOM2 级事件处理程序
+#### DOM2 级事件处理程序
 
 定义了两个方法
 
@@ -3913,7 +3913,7 @@ btn.addEventListener("click", handler, false);
 btn.removeEventListener("click", handler, false); //有效!
 ```
 
-### IE 事件处理程序
+#### IE 事件处理程序
 
 IE 实现了类似于 DOM 的两个方法
 
@@ -3935,7 +3935,7 @@ btn.attachEvent("onclick", function() {
 
 > 支持 IE 事件处理程序的浏览器有 IE 和 Oprea
 
-### 跨浏览器的事件处理程序
+#### 跨浏览器的事件处理程序
 
 ```javascript
 var EventUtil = {
@@ -3960,11 +3960,11 @@ var EventUtil = {
 };
 ```
 
-## 事件对象
+### 事件对象
 
 > 在触发 DOM 上的某个事件时,会产生一个事件对象 event,这个对象中包含着所有与事件相关的信息。
 
-### DOM 中的事件对象
+#### DOM 中的事件对象
 
 无论指定事件处理程序用什么方法,都会传入`event`对象,即使没有显式传入`event`参数。
 
@@ -4021,7 +4021,7 @@ btn.onmouseover = handler;
 btn.onmouseout = handler;
 ```
 
-### 键盘与文本事件
+#### 键盘与文本事件
 
 有三个键盘事件
 
@@ -4031,11 +4031,11 @@ btn.onmouseout = handler;
 
 根据`keyCode`判断用户按的是哪个键
 
-### HTML5 事件
+#### HTML5 事件
 
 1. hashchange 事件
 
-### 触摸与手势事件
+#### 触摸与手势事件
 
 触摸事件
 
@@ -4324,7 +4324,7 @@ function reverseSort(values) {
 
 JavaScript 对象表示法
 
-## 语法
+### 语法
 
 JSON 语法可以表示以下三种类型的值。
 
@@ -4332,7 +4332,7 @@ JSON 语法可以表示以下三种类型的值。
 - 对象 无序键值对 复杂数据类型
 - 数组 有序值得列表 复杂数据类型
 
-### 简单值
+#### 简单值
 
 ```js
 5; //JSON中表示数值5的方式
@@ -4342,7 +4342,7 @@ JSON 语法可以表示以下三种类型的值。
 
 `JavaScript`与`JSON`字符串最大区别在于,JSON 字符串必须使用双引号(单引号导致语法错误)。
 
-### 对象
+#### 对象
 
 ```js
 var object = {
@@ -4358,7 +4358,7 @@ var object = {
 
 > 与 JS 对象字面量相比,JSON 对象没有变量声明,没有末尾分号,对象的属性必须加双引号,属性的值可以使简单值,也可以是复杂类型的值。
 
-### 数组
+#### 数组
 
 采用 JS 中数组字面量形式
 
@@ -4377,9 +4377,9 @@ var object = {
 ];
 ```
 
-## 解析和序列化
+### 解析和序列化
 
-### JSON 对象
+#### JSON 对象
 
 - `stringify()` JS 对象-->JSON 字符串
 - `parse()` JSON 字符串-->JS 值
@@ -4955,10 +4955,12 @@ var curriedAdd = curry(add, 5);
 alert(curriedAdd(3)); //8
 ```
 
+curry 一个的用途可以理解为：参数复用。降低通用性，提高适用性。
+
 ### 函数式编程
 
-Declarative 声明式 What to do
-Imperative 指令式 How to do
+- Declarative 声明式 What to do
+- Imperative 指令式 How to do
 
 看一个相加的例子
 

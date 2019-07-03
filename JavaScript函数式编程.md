@@ -1,5 +1,13 @@
 # JavaScript函数式编程
 
+## 概念整理
+
+- 纯函数
+- 偏函数
+- 柯里化
+
+## JS 函数式编程指南
+
 函数是不同数值之间的特殊关系：每一个输入值返回且只返回一个输出值。
 
 在函数式编程中，函数就是一个管道，从头进去一个值，另一头出来一个新的值，没有其他作用。
@@ -95,4 +103,8 @@ const snakeCase = compose(replace(/\s+/ig, '_'), toLowerCase);
 ```
 
 pointfree模式可以减少不必要的命名，让代码保持简洁和通用。
+
+## Functional-Light-JS
+
+arguments 实参、parameters 形参。
 
