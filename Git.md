@@ -35,6 +35,7 @@ git config --global user.email johndoe@example.com
 git config --local user.name "John Doe"
 git config --local user.email johndoe@example.com // 只修改项目配置name
 git remote add origin git@github.com:Xuemuyang/ts-axios.git // 与远程仓库关联
+git branch --merged | egrep -v "(^\*|master|dev)" | xargs git branch -d // 删除已经合并的分支
 ```
 
 oh-my-zsh中对git命令进行了简化
