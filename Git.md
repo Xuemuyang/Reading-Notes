@@ -111,7 +111,7 @@ $git init
 $git add readme.md
 ```
 
-将文件提交到仓库，`-m`后面是提交备注
+将文件提交到仓库，`-m` 后面是提交备注
 
 ```sh
 $git commit -m 'wrote a readme file'
