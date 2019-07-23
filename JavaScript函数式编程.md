@@ -2,9 +2,59 @@
 
 ## 概念整理
 
+- 柯里化
 - 纯函数
 - 偏函数
-- 柯里化
+
+### 柯里化
+
+[冴羽的博客-柯里化](https://github.com/mqyqingfeng/Blog/issues/42)
+
+> 在数学和计算机科学中，柯里化是一种将使用多个参数的一个函数转换成一系列使用一个参数的函数的技术。
+
+将一个多参数函数转换成多个单参数函数，也就是将一个 n 元函数转换成 n 个一元函数。
+
+```js
+const curry = fn =>
+  judge = (...args) =>
+    args.length === fn.length
+      ? fn(...args)
+      : (arg) => judge(...args, arg)
+```
+
+### 偏函数
+
+[冴羽的博客-柯里化](https://github.com/mqyqingfeng/Blog/issues/43)
+
+固定一个函数的一个或者多个参数，也就是将一个 n 元函数转换成一个 n - x 元函数。
+
+```js
+function partial(fn) {
+  var args = [].slice.call(arguments, 1);
+  return function() {
+    var newArgs = args.concat([].slice.call(arguments));
+    return fn.apply(this, newArgs);
+  };
+};
+```
+
+### 惰性函数
+
+[冴羽的博客-惰性函数](https://github.com/mqyqingfeng/Blog/issues/44)
+
+```js
+var foo = function() {
+  var t = new Date();
+  foo = function() {
+      return t;
+  };
+  return foo();
+};
+```
+
+### 函数组合
+
+[冴羽的博客-函数组合](https://github.com/mqyqingfeng/Blog/issues/45)
 
 ## JS 函数式编程指南
 
@@ -108,3 +158,4 @@ pointfree模式可以减少不必要的命名，让代码保持简洁和通用�
 
 arguments 实参、parameters 形参。
 
+declarative 声明式、imperative 指令式
