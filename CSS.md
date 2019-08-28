@@ -819,3 +819,22 @@ absolute
 - 相对于最近的非 static 祖先的 padding box 定位
 - 不会对流内元素布局造成影响
 - 可以有 margin，但不会折叠
+
+## CSS 动画
+
+### 参考文章
+
+- [2019年了，你还不会CSS动画？](https://juejin.im/post/5cdd178ee51d456e811d279b)
+- [理解CSS3 Animation中的steps()](http://ghmagical.com/article/page/id/0gU2Wefas7hn)
+
+### 核心概念
+
+- transition 过渡
+
+### 抛出问题
+
+- 通过哪些方式可以触发动画
+
+### transition
+
+不是所有样式都是可以过渡，只有具有中间值的属性才具备过渡效果。

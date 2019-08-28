@@ -24,7 +24,7 @@ const curry = fn =>
 
 ### 偏函数
 
-[冴羽的博客-柯里化](https://github.com/mqyqingfeng/Blog/issues/43)
+[冴羽的博客-偏函数](https://github.com/mqyqingfeng/Blog/issues/43)
 
 固定一个函数的一个或者多个参数，也就是将一个 n 元函数转换成一个 n - x 元函数。
 
