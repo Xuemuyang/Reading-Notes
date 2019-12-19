@@ -2548,108 +2548,16 @@ Foo.bar() // hello
 
 ## Module
 
+ES6 模块的设计思想是静态化，编译时就能确定模块的依赖关系。
+
+模块功能主要由两个命令构成：`export` 和 `import`。
+
 使用`export default`命令，为模块指定默认输出，这样就不需要知道所要加载模块的变量名，通过`export`方式导出，在导入时要加`{ }`，`export default`则不需要。
 
 + CommonJS 模块输出的是一个值的拷贝，ES6 模块输出的是值的引用。
 + CommonJS 模块是运行时加载，ES6 模块是编译时输出接口。
 
-### 一个简单的作用域测试
-
-export Module
-
-```js
-const a = 'export'
-
-export const geta = () => {
-  console.log(a)
-}
-```
-
-import Module
-
-```js
-const a = 'import'
-
-import geta from './export.js'
-
-geta()
-```
-
-1. 当两个模块都定义`a`结果是`export`
-2. export模块没有`a`，import模块有`a`则报错
-3. export模块有`a`，import没有结果是`export`
-
-### 另一个简单的作用域测试
-
-export Module1
-
-```js
-let hehe = '1'
-
-export const asyncTest = (callback = res => console.log(hehe)) => {
-  FlameBridge.callAPI('getMacAddress', {}, callback)
-}
-```
-
-import Module1
-
-```js
-asyncTest() // 正常打印1
-```
-
-export Module2
-
-```js
-let hehe = '1'
-
-export const asyncTest = (callback = res => console.log(hehe)) => {
-  FlameBridge.callAPI('getMacAddress', {}, callback)
-}
-```
-
-import Module2
-
-```js
-let hehe = '2'
-console.log('hehe' + hehe)
-asyncTest() // 打印hehe2 1
-```
-
-export Module3
-
-```js
-let hehe = '1'
-
-export const asyncTest = (callback = res => console.log(hehe)) => {
-  FlameBridge.callAPI('getMacAddress', {}, callback)
-}
-```
-
-import Module3
-
-```js
-let hehe = '2'
-console.log('hehe' + hehe)
-asyncTest(() => {
-  console.log('hehe' + hehe)
-}) // 打印hehe2 hehe2
-```
-
-export Module4
-
-```js
-export const asyncTest = (callback = res => console.log(hehe)) => {
-  FlameBridge.callAPI('getMacAddress', {}, callback)
-}
-```
-
-import Module4
-
-```js
-let hehe = '2'
-console.log('hehe' + hehe)
-asyncTest() // 打印hehe2 报错hehe is not defined
-```
+ESModule 的 `import` 是动态引用，不会缓存值，模块里面的变量绑定其所在的模块。
 
 ### 严格模式
 
@@ -2721,6 +2629,8 @@ var n = 1;
 export {n as m};
 ```
 
+`export` 语句输出的接口，与其对应的值是动态绑定关系，即通过该接口，可以取到模块内部实时的值。
+
 ### import命令
 
 ```js
@@ -2744,10 +2654,15 @@ import { lastName as surname } from './profile.js';
 
 ### export default命令
 
-加载`export default`命令的模块，`import`命令为其制定任意名字。
+使用import命令的时候，用户需要知道所要加载的变量名或函数名，否则无法加载。
+
+`export default` 命令指定模块的默认输出。一个模块只能有一个默认输出。
 
 ### 浏览器加载
 
 浏览器加载 ES6 模块，也使用`<script>`标签，但是要加入`type="module"`属性。
 
 浏览器对于带有`type="module"`的`<script>`，都是异步加载，不会造成堵塞浏览器，即等到整个页面渲染完，再执行模块脚本，等同于打开了`<script>`标签的`defer`属性。
+
+### 循环加载
+
