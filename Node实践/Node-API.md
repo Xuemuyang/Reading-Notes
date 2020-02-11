@@ -1,5 +1,9 @@
 # Node.js API
 
+## 记录一些常用模块
+
+- fs-extra 文件处理
+
 ## fs
 
 使用 [`fs-extra`](https://github.com/jprichardson/node-fs-extra/blob/master/README.md#methods) 来代替 fs 模块。

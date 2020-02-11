@@ -164,3 +164,43 @@ let store = createStore(reducer)
 
 - 操作开始时，送出一个Action，触发State更新为“正在操作”状态，View重新渲染
 - 操作结束后，再送出一个Action，触发State更新为“操作结束状态”，View再一次重新渲染
+
+## 官方文档阅读
+
+The whole state of your app is stored in an object tree inside a single store. The only way to change the state tree is to emit an action, an object describing what happened. To specify how the actions transform the state tree, you write pure reducers.
+
+- 应用的 state 储存在 object 中
+- 改变 state 的唯一方式就是 emit 一个 action
+- object 监听 action
+- 通过纯函数 reducer 来控制 action 来改变 state 中的数据
+
+reducer 的定义：it’s just a function that takes state and action as arguments, and returns the next state of the app.
+
+接受 state 和 action 作为参数，返回下一个 state。
+
+三大原则：
+
+- The state of your whole application is stored in an object tree within a single store.
+- The only way to change the state is to emit an action, an object describing what happened.（改变状态只能通过派发 action，通过一个对象去描述）
+- To specify how the state tree is transformed by actions, you write pure reducers.（reducer 是纯函数）
+
+### 与 React 相互配合使用
+
+- Redux
+  - combineReducers 将 reducer 合并
+  - createStore 创建一个 Redux store 来以存放应用中所有的 state，将根 reducer 传入
+  - Store
+    - getState()
+    - dispatch(action)
+    - subscribe(listener)
+    - replaceReducer(nextReducer)
+- react-redux
+  - Provider 是什么东西
+  - connect 可以理解为将 state 和 dispatch 映射到 props 组件中
+    - mapStateToProps?: (state, ownProps?) => Object
+    - mapDispatchToProps?: Object | (dispatch, ownProps?) => Object
+    - 其中 connect 可以用装饰器的方式来书写，简化流程
+- redux-thunk 是一个 redux 中间件，用来处理异步，Redux 默认只处理同步任务
+- reselect
+
+容器组件(Container Components)和展示组件(Presentational Components)
