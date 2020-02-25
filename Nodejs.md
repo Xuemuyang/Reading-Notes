@@ -1489,3 +1489,24 @@ app.on("error", function(err) {
 
 - `ctx.cookies`实现读写 Cookie
 - `koa-body`模块可以用来提取请求的 key-value，以及文件上传等功能
+
+## EventEmitter
+
+```js
+class WithTime extends EventEmitter {
+  async execute(asyncFunc, ...args) {
+    this.emit('begin');
+    try {
+      console.time('execute');
+      const data = await asyncFunc(...args);
+      this.emit('data', data);
+      console.timeEnd('execute');
+      this.emit('end');
+    } catch(err) {
+      this.emit('error', err);
+    }
+  }
+}
+```
+
+## Stream
