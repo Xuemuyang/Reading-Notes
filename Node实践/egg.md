@@ -164,6 +164,9 @@ exports.task = async ctx => {
   - Helper 是一个类，有和 Controller 基类一样的属性，也会在每次请求时进行实例化
 - 获取方式
   - `ctx.helper`
+- 自带方法
+  - [API文档-helper](https://eggjs.org/api/Helper.html#main)
+  - egg 本身集成插件，插件中的 helper 可以使用
 - 自定义 helper 方法 🌰
 
 ```js
