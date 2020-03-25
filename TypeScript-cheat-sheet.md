@@ -1,5 +1,7 @@
 # TypeScript Cheat Sheet
 
+- 类型定义文件如何指定
+
 ## 基础类型
 
 ```ts

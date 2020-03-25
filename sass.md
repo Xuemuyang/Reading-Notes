@@ -1,5 +1,17 @@
 # Sass快速入门
 
+## 疑问
+
+- 如何在 mixin 中传入属性?
+
+```scss
+// 底部的安全内边距
+@mixin safe-area-bottom($attr: padding-bottom) {
+  #{$attr}: constant(safe-area-inset-bottom);
+  #{$attr}: env(safe-area-inset-bottom);
+}
+```
+
 ## 使用变量
 
 `sass`为`css`引入变量，可以把反复使用的`css`属性值定义成变量，通过变量名来引用它们。

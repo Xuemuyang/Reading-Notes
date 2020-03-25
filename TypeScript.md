@@ -771,5 +771,3 @@ function doStuff(arg: Foo | Bar) {
 doStuff({ foo: 123, common: '123' });
 doStuff({ bar: 123, common: '123' });
 ```
-
-###
