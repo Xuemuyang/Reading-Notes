@@ -39,6 +39,14 @@ let mySum: (x: number, y: number) => number = function(
 };
 ```
 
+箭头函数
+
+```ts
+const sum = (x: number, y: number): number => {
+  return x + y;
+}
+```
+
 接口定义函数
 
 ```ts
