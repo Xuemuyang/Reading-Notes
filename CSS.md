@@ -310,6 +310,17 @@ body:hover {
 }
 ```
 
+写在 style 中，class 里也可以拿到变量
+
+```html
+<div class="item"
+     style="--color: blue"></div>
+
+.item {
+  background: var(--color);
+}
+```
+
 ## 行级格式化上下文
 
 [img 排版出错的问题](https://segmentfault.com/q/1010000004809008)
@@ -838,3 +849,6 @@ absolute
 ### transition
 
 不是所有样式都是可以过渡，只有具有中间值的属性才具备过渡效果。
+
+## radial-gradient
+

@@ -54,3 +54,5 @@ interface SearchFunc {
   (source: string, subString: string): boolean;
 }
 ```
+
+## 参考
