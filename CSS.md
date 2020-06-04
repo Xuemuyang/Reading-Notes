@@ -852,3 +852,9 @@ absolute
 
 ## radial-gradient
 
+## z-index
+
+- `z-index` 属性值并不是在任何元素上都有效果。它仅在定位元素（定义了 `position` 属性，且属性值为非 `static` 值的元素）上有效果
+- 判断元素在Z轴上的堆叠顺序，不仅仅是直接比较两个元素的 `z-index` 值的大小，这个堆叠顺序实际由元素的层叠上下文、层叠等级共同决定
+
+参考 [彻底搞懂CSS层叠上下文、层叠等级、层叠顺序、z-index](https://juejin.im/post/5b876f86518825431079ddd6)
