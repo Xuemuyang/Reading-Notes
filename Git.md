@@ -2,14 +2,14 @@
 
 ## 编号含义
 
-+ A：add，新增
-+ C：conflict，冲突
-+ D：delete，删除
-+ M：modify，本地已经修改
-+ G：modify and merGed，本地文件修改并且和服务器的进行合并
-+ U：update，从服务器更新
-+ R：replace，从服务器替换
-+ I：ignored，忽略
+- A：add，新增
+- C：conflict，冲突
+- D：delete，删除
+- M：modify，本地已经修改
+- G：modify and merGed，本地文件修改并且和服务器的进行合并
+- U：update，从服务器更新
+- R：replace，从服务器替换
+- I：ignored，忽略
 
 ## 常用命令
 
@@ -40,7 +40,7 @@ git checkout . // 清空改动
 git clean -df // 清空新建的文件夹和文件
 ```
 
-oh-my-zsh中对git命令进行了简化
+oh-my-zsh 中对 git 命令进行了简化
 
 ```zsh
 glg = git log
@@ -58,28 +58,28 @@ ggpull = git pull origin $(git_current_branch)
 ggpush = git push origin $(git_current_branch)
 ```
 
-option|description
----|---
--p|按补丁格式显示每个更新之间差异
---stat|显示每次更新的文件修改统计信息
---name-status|显示新增，修改，删除的文件清单
+| option        | description                    |
+| ------------- | ------------------------------ |
+| -p            | 按补丁格式显示每个更新之间差异 |
+| --stat        | 显示每次更新的文件修改统计信息 |
+| --name-status | 显示新增，修改，删除的文件清单 |
 
 ## 分支功能
 
-type|desc
----|---
-feat|A new feature
-fix|A bug fix
-docs|Documentation only changes
-style|Changes that do not affect the meaning of the code(white-space)
-refactor|A code change that neither fixes a bug nor adds a feature
-perf|A code change that improves performance
-test|Adding missing tests or correcting existing tests
-build|Changes that affec the build system or external dependencies
-ci|
-chore|Other changes that don't modify src or test files
+| type     | desc                                                            |
+| -------- | --------------------------------------------------------------- |
+| feat     | A new feature                                                   |
+| fix      | A bug fix                                                       |
+| docs     | Documentation only changes                                      |
+| style    | Changes that do not affect the meaning of the code(white-space) |
+| refactor | A code change that neither fixes a bug nor adds a feature       |
+| perf     | A code change that improves performance                         |
+| test     | Adding missing tests or correcting existing tests               |
+| build    | Changes that affec the build system or external dependencies    |
+| ci       |
+| chore    | Other changes that don't modify src or test files               |
 
-## ssh相关
+## ssh 相关
 
 ```sh
 ssh-keygen
@@ -101,7 +101,7 @@ global-ignores = *.o *.lo *.la *.al .libs *.so *.so.[0-9]* *.a *.pyc *.pyo node_
 
 ## 创建版本库
 
-把目录变成Git可管理的仓库
+把目录变成 Git 可管理的仓库
 
 ```sh
 $git init
@@ -143,7 +143,7 @@ $git diff
 $git log
 ```
 
-在Git中，用`HEAD`表示当前版本，上一个版本就是`HEAD^`。
+在 Git 中，用`HEAD`表示当前版本，上一个版本就是`HEAD^`。
 
 `git reset`回滚
 
@@ -151,7 +151,7 @@ $git log
 $git reset --hard HEAD^
 ```
 
-`git reflog`查看命令历史，这里可以查到版本id
+`git reflog`查看命令历史，这里可以查到版本 id
 
 ```sh
 $git reflog
@@ -181,7 +181,7 @@ $git rm readme.md
 $git remote add origin xxx
 ```
 
-`origin`是Git默认的远程仓库的叫法。
+`origin`是 Git 默认的远程仓库的叫法。
 
 第一次推送`master`分支需要加入`-u`参数，以后的推送或者拉取就可以简化命令。
 
@@ -238,7 +238,7 @@ $git merge dev
 $git branch -d dev
 ```
 
-通常情况下Git会用`Fast forward`模式，删除分支会丢掉分支信息，可以强制禁用`Fast forward`模式。原理是在`merge`的时候`commit`一次，这样分支历史上就可以看出分支信息。
+通常情况下 Git 会用`Fast forward`模式，删除分支会丢掉分支信息，可以强制禁用`Fast forward`模式。原理是在`merge`的时候`commit`一次，这样分支历史上就可以看出分支信息。
 
 ```sh
 $git merge --no-ff -m "xxx" dev
@@ -256,7 +256,7 @@ $git stash
 $git stash list
 ```
 
-使用`git stash apply`恢复，之后stash内容并不删除，需要`git stash drop`来删除，另一种方式是`git stash pop`，恢复的同时把stash内容也删了。
+使用`git stash apply`恢复，之后 stash 内容并不删除，需要`git stash drop`来删除，另一种方式是`git stash pop`，恢复的同时把 stash 内容也删了。
 
 使用`git branch -D xxx`来删除一个还没有被合并的分支。
 
@@ -279,13 +279,13 @@ $git remote
 
 ### 分支
 
-Git的分支，其实本质上仅仅是指向提交对象的可变指针。
+Git 的分支，其实本质上仅仅是指向提交对象的可变指针。
 
-Git的 “master” 分支并不是一个特殊分支。它就跟其它分支完全没有区别。之所以几乎每一个仓库都有`master`分支，是因为`git init`命令默认创建它，并且大多数人都懒得去改动它。
+Git 的 “master” 分支并不是一个特殊分支。它就跟其它分支完全没有区别。之所以几乎每一个仓库都有`master`分支，是因为`git init`命令默认创建它，并且大多数人都懒得去改动它。
 
-HEAD是一个指针，指向当前所在的本地分支。
+HEAD 是一个指针，指向当前所在的本地分支。
 
-合并两个分支时，如果顺着一个分支走下去能够到达另一个分支，那么Git在合并两者的时候，只会简单的将指针向前推进（指针右移），因为这种情况下的合并操作没有需要解决的分歧——这就叫做 “快进（fast-forward）”，图解见下。
+合并两个分支时，如果顺着一个分支走下去能够到达另一个分支，那么 Git 在合并两者的时候，只会简单的将指针向前推进（指针右移），因为这种情况下的合并操作没有需要解决的分歧——这就叫做 “快进（fast-forward）”，图解见下。
 
 ![fast-forword](./images/git/fast-forword1.png)
 
@@ -295,9 +295,9 @@ HEAD是一个指针，指向当前所在的本地分支。
 
 ![merge](./images/git/merge2.png)
 
-任何因包含合并冲突而有待解决的文件，都会以未合并状态标识出来。Git会在有冲突的文件中加入标准的冲突解决标记。
+任何因包含合并冲突而有待解决的文件，都会以未合并状态标识出来。Git 会在有冲突的文件中加入标准的冲突解决标记。
 
-### 2.4撤消操作
+### 2.4 撤消操作
 
 ```sh
 $git commit --amend
@@ -315,9 +315,9 @@ $git commit --amend
 
 ## 选择修订版本
 
-在引用的末尾加上`^`，Git会将其解析为该引用的上一个提交。
+ 在引用的末尾加上`^`，Git 会将其解析为该引用的上一个提交。
 
-可以使用`HEAD^`来查看上一个提交，也就是 “HEAD的父提交”。
+可以使用`HEAD^`来查看上一个提交，也就是 “HEAD 的父提交”。
 
 另一种方式是`~`，在`~`后面加数字。
 
@@ -327,13 +327,13 @@ $git commit --amend
 
 三棵树
 
-+ HEAD 是当前分支引用的指针，它总是指向该分支上的最后一次提交。
-+ Index 是预计的下一次提交，即“暂存区”
-+ Working Directory
+- HEAD 是当前分支引用的指针，它总是指向该分支上的最后一次提交。
+- Index 是预计的下一次提交，即“暂存区”
+- Working Directory
 
 ![git-reset](./images/git/reset-tree.png)
 
-soft是默认选项
+soft 是默认选项
 
 ![git-reset--soft](./images/git/reset-soft.png)
 
