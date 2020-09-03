@@ -1,6 +1,6 @@
 # IntersectionObserver
 
-intersecton n. 交叉
+intersection n. 交叉
 
 这个 API 自动观察元素与某个区域间的交叉，在交叉不同程度(比率)时候触发 callback。
 

@@ -1,8 +1,14 @@
 # CSS
 
----
+## CSS 资源记录
 
-这里用来记录一些有趣的小例子
+- [CSS Grid 网格布局教程](https://www.ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html)
+- [Flex 布局教程：语法篇](http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html)
+- [只要一行代码，实现五种 CSS 经典布局](http://www.ruanyifeng.com/blog/2020/08/five-css-layouts-in-one-line.html)
+- [CSS conic-gradient()锥形渐变简介](https://www.zhangxinxu.com/wordpress/2020/04/css-conic-gradient/)
+- [clip-path](https://www.zhangxinxu.com/wordpress/2014/12/css3-svg-clip-path/)
+
+## 这里用来记录一些有趣的小例子
 
 1.边框可以透明
 
@@ -858,3 +864,36 @@ absolute
 - 判断元素在Z轴上的堆叠顺序，不仅仅是直接比较两个元素的 `z-index` 值的大小，这个堆叠顺序实际由元素的层叠上下文、层叠等级共同决定
 
 参考 [彻底搞懂CSS层叠上下文、层叠等级、层叠顺序、z-index](https://juejin.im/post/5b876f86518825431079ddd6)
+
+## Grid 网格布局
+
+参考：
+
+- [CSS Grid 网格布局教程](http://www.ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html)
+
+### 基本概念
+
+- 容器(container)
+  - 采用网格布局的区域
+- 项目(item)
+  - 容器的顶层子元素
+- 行(row)
+  - 容器里水平区域
+- 列(col)
+  - 容器里垂直区域
+- 单元格(cell)
+  - 行和列的交叉区域
+- 网格线(grid line)
+  - 划分网格的线
+
+#### 容器属性
+
+- display
+  - grid
+  - inline-grid
+- grid-template-columns
+- grid-template-rows
+  - repeat()
+  - auto-fill()
+  - fr fraction 的缩写，这里可以理解为剩余空间按比例分配
+  - minmax() 计算一个长度范围，表明在这个之间

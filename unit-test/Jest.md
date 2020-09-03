@@ -2,9 +2,15 @@
 
 ## 疑问
 
-1.测试文件的后缀 `*.text.js` 和 `*.spec.js` 有什么区别？
-
-[方应杭博客](https://github.com/FrankFang/gulu/issues/2)
+- 测试文件的后缀 `*.text.js` 和 `*.spec.js` 有什么区别？
+  - [方应杭博客](https://github.com/FrankFang/gulu/issues/2)
+- 如何单独对一个文件进行测试
+- 测试如何 debug
+  - 在开发过程中想及时的进行调试
+- 与编辑器插件配合
+- mock 功能的探索
+- watch 功能如何使用
+- 提供简单的代码片段进行参考
 
 ## 参考
 
@@ -13,7 +19,7 @@
 ## 使用
 
 - `describe` 方法用来定义一组测试，支持测试
-- `test` 函数用来定义单个测试用例，是最小的测试单元
+- `test` 函数用来定义单个测试用例，是最小的测试单元，别名 `it`
 - `expect` 是断言函数
 
 ## 类型相关
