@@ -19,6 +19,8 @@ src/myProject$ npm link myModule
 src/myProject$ npm unlink myModule
 ```
 
+yarn 也提供了类似的 link/unlink 命令，实际体验下来更好用
+
 ## 指定 npm 模块包含的文件
 
 很多开发文件并不需要一并打入发布的模块中，可以使用这些方式指定包含/忽略的文件：
