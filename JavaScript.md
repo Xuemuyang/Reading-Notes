@@ -4103,11 +4103,11 @@ div.dispatchEvent(event);
 
 ECMAScript3 致力于解决错误处理与调试的问题,引入`try-catch`和`throw`语句以及一些错误类型,几年之后,Web 浏览器中也出现了一些 JavaScript 调试程序和工具。
 
-### 17.2 错误处理
+如果 try 块中有代码发生错误，代码会立即退出执行，跳到 catch 块中，catch 块中的错误对象会包含 message 和 name 两个属性
 
 任何有影响力的 Web 应用程序都需要一套完善的错误处理机制
 
-#### 17.2.1 `try-catch`语句
+### `try-catch`语句
 
 ```js
 try {
@@ -4203,6 +4203,87 @@ ECMA-262 定义了下列 7 种错误类型：
 1. URIError
 
 `Error`是基类型,其他错误类型继承自该类型。
+
+每种错误类型的构造函数都只接收一个参数，就是错误消息。
+
+```js
+function testError() {
+  try {
+    throw new Error('错误消息')
+  } catch (error) {
+    console.log(`error.name-${error.name}`)
+    console.log(`error.message-${error.message}`)
+    console.log(error)
+  }
+}
+
+console.log(testError())
+```
+
+使用 node 运行这段脚本，控制台的输出如下
+
+```txt
+error.name-Error
+error.message-错误消息
+Error: 错误消息
+    at testError (/Users/mac/Desktop/GIT/test/error.js:3:11)
+    at Object.<anonymous> (/Users/mac/Desktop/GIT/test/error.js:11:13)
+    at Module._compile (<node_internals>/internal/modules/cjs/loader.js:1063:30)
+    at Object.Module._extensions..js (<node_internals>/internal/modules/cjs/loader.js:1092:10)
+    at Module.load (<node_internals>/internal/modules/cjs/loader.js:928:32)
+    at Function.Module._load (<node_internals>/internal/modules/cjs/loader.js:769:14)
+    at Function.executeUserEntryPoint [as runMain] (<node_internals>/internal/modules/run_main.js:72:12)
+    at internal/main/run_main_module.js:17:47 {stack: 'Error: 错误消息
+    at testError (/Users/mac/Desk…    at internal/main/run_main_module.js:17:47', message: '错误消息'}
+```
+
+如果在手动创建 Error 对象的时候传入一个对象
+
+```js
+function testError() {
+  try {
+    throw new Error({message: '这是错误消息', code: 500})
+  } catch (error) {
+    console.log(`error.name-${error.name}`)
+    console.log(`error.message-${error.message}`)
+    console.log(error)
+  }
+}
+
+console.log(testError())
+```
+
+控制台打印输出如下
+
+```txt
+error.name-Error
+error.message-[object Object]
+Error: [object Object]
+    at testError (/Users/mac/Desktop/GIT/test/error.js:3:11)
+    at Object.<anonymous> (/Users/mac/Desktop/GIT/test/error.js:11:13)
+    at Module._compile (<node_internals>/internal/modules/cjs/loader.js:1063:30)
+    at Object.Module._extensions..js (<node_internals>/internal/modules/cjs/loader.js:1092:10)
+    at Module.load (<node_internals>/internal/modules/cjs/loader.js:928:32)
+    at Function.Module._load (<node_internals>/internal/modules/cjs/loader.js:769:14)
+    at Function.executeUserEntryPoint [as runMain] (<node_internals>/internal/modules/run_main.js:72:12)
+    at internal/main/run_main_module.js:17:47 {stack: 'Error: [object Object]
+    at testError (/Use…    at internal/main/run_main_module.js:17:47', message: '[object Object]'}
+```
+
+如果想让 catch 捕获到手动抛出的对象，直接 throw 对象即可
+
+```js
+function testError() {
+  try {
+    throw {message: '这是错误消息', code: 500}
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+console.log(testError())
+// {message: '这是错误消息', code: 500}
+```
 
 `RangeError`类型的错误会在数值超出相应范围时触发。
 
