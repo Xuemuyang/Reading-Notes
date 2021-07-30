@@ -143,7 +143,7 @@ $git diff
 $git log
 ```
 
-在 Git 中，用`HEAD`表示当前版本，上一个版本就是`HEAD^`。
+在 Git 中，用 `HEAD` 表示当前版本(当前分支的指针)，上一个版本就是 `HEAD^`。
 
 `git reset`回滚
 
@@ -315,13 +315,13 @@ $git commit --amend
 
 ## 选择修订版本
 
- 在引用的末尾加上`^`，Git 会将其解析为该引用的上一个提交。
+ 在引用的末尾加上 `^`，Git 会将其解析为该引用的上一个提交。
 
-可以使用`HEAD^`来查看上一个提交，也就是 “HEAD 的父提交”。
+可以使用 `HEAD^` 来查看上一个提交，也就是 “HEAD 的父提交”。
 
-另一种方式是`~`，在`~`后面加数字。
+另一种方式是 `~`，在 `~` 后面加数字。
 
-`HEAD~`和`HEAD^`是等价的。
+`HEAD~` 和 `HEAD^` 是等价的。
 
 ## git reset
 
@@ -340,3 +340,10 @@ soft 是默认选项
 ![git-reset--mixed](./images/git/reset-mixed.png)
 
 ![git-reset--hard](./images/git/reset-hard.png)
+
+## 知识点整理
+
+### git push
+
+`git push origin master` // 将本地的master分支推送到origin主机的master分支。如果master不存在，则会被新建。
+`git push origin HEAD:<name-of-remote-branch>` // push 到远程的指定分支上

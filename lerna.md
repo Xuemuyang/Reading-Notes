@@ -27,6 +27,8 @@
 
 在每一个 package 中运行对应的 npm scripts
 
+`lerna link` 命令可以自动 link 模块依赖
+
 ## 参考
 
 - [lerna-Github](https://github.com/lerna/lerna)

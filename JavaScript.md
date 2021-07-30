@@ -2455,10 +2455,10 @@ alert(Object.getPrototypeOf(person1).name); //'Nicholas'
 ```javascript
 function Person() {}
 
-Person.protytype.name = "Nicholas";
-Person.protytype.age = 29;
-Person.protytype.job = "Software Engineer";
-Person.protytype.sayName = function() {
+Person.prototype.name = "Nicholas";
+Person.prototype.age = 29;
+Person.prototype.job = "Software Engineer";
+Person.prototype.sayName = function() {
   alert(this.name);
 };
 
@@ -2493,10 +2493,10 @@ function hasPrototypeProperty(object, name) {
 ```javascript
 function Person() {}
 
-Person.protytype.name = "Nicholas";
-Person.protytype.age = 29;
-Person.protytype.job = "Software Engineer";
-Person.protytype.sayName = function() {
+Person.prototype.name = "Nicholas";
+Person.prototype.age = 29;
+Person.prototype.job = "Software Engineer";
+Person.prototype.sayName = function() {
   alert(this.name);
 };
 
@@ -5399,7 +5399,7 @@ f1.trigger("done");
 
 一个`Promise`就是一个代表了异步操作最终完成或者失败的对象。
 
-本质上,一个`Promise`是某个函数返回的对象,可以把回调函数绑定在这个对象上,而不是把回调函数当参数传进函数。
+本质上，一个`Promise`是某个函数返回的对象，可以把回调函数绑定在这个对象上，而不是把回调函数当参数传进函数。
 
 将 callback 包装成 promise 返回的形式
 
@@ -5817,24 +5817,32 @@ undefined
 #### 错误处理流程图
 
 ```js
-asyncThing1().then(function() {
+asyncThing1()
+.then(function() {
   return asyncThing2();
-}).then(function() {
+})
+.then(function() {
   return asyncThing3();
-}).catch(function(err) {
+})
+.catch(function(err) {
   return asyncRecovery1();
-}).then(function() {
+})
+.then(function() {
   return asyncThing4();
 }, function(err) {
   return asyncRecovery2();
-}).catch(function(err) {
+})
+.catch(function(err) {
   console.log("Don't worry about it");
-}).then(function() {
+})
+.then(function() {
   console.log("All done!");
 })
 ```
 
 ![错误处理流程图](./images/javascript/2.png)
+
+这里一个分支就是 `.then()` 方法中给了第二个参数，只需要记住 `.then` 方法是当 promise resolved 状态执行第一个方法，reject 执行第二个方法即可。
 
 ### Node 中的异步
 

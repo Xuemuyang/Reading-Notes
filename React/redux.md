@@ -26,7 +26,7 @@ Flux 最大的特点是数据单向流动
 ```js
 AppDispatcher.dispatch({
   actionType: "ADD_NEW_ITEM",
-  text: text
+  text: text,
 });
 ```
 
@@ -38,13 +38,13 @@ Dispatcher 的作用是将 Action 派发到 Store，可以将其看做是一个�
 
 ## 废话
 
-Redux使用场景
+Redux 使用场景
 
 - 用户的使用方式复杂
 - 不同身份的用户有不同的使用方式（比如普通用户和管理员）
 - 多个用户之间可以协作
-- 与服务器大量交互，或者使用了WebSocket
-- View要从多个来源获取数据
+- 与服务器大量交互，或者使用了 WebSocket
+- View 要从多个来源获取数据
 
 从组件角度的使用场景
 
@@ -55,115 +55,115 @@ Redux使用场景
 
 设计思想
 
-1. Web应用是一个状态机，视图与状态是一一对应的。
+1. Web 应用是一个状态机，视图与状态是一一对应的。
 2. 所有的状态，保存在一个对象里面。
 
 ## 基础
 
 ### Store
 
-Store是保存数据的地方，Redux应用只有一个单一的store。
+Store 是保存数据的地方，Redux 应用只有一个单一的 store。
 
 ```js
-import { createStore } from 'redux'
-import todoApp from './reducers'
-let store = createStore(todoApp)
+import { createStore } from "redux";
+import todoApp from "./reducers";
+let store = createStore(todoApp);
 ```
 
-Store提供了三个方法
+Store 提供了三个方法
 
 - `store.getState()`
 - `store.dispatch()`
 - `store.subscribe()`
 
-Store允许`store.subscribe`设置监听函数，一旦State发生变化，就自动执行函数。将View的更新函数放入其中就会实现View的自动渲染。
+Store 允许`store.subscribe`设置监听函数，一旦 State 发生变化，就自动执行函数。将 View 的更新函数放入其中就会实现 View 的自动渲染。
 
 应用状态默认值可以在`createStore`的第二个参数中传入，也可以在`Reducer`的默认初始值给出，看场景选用。
 
 ### State
 
-`Store`对象的快照叫做State。
+`Store`对象的快照叫做 State。
 
-当前时刻的State可以用`store.getState()`拿到。
+当前时刻的 State 可以用`store.getState()`拿到。
 
 ```js
-import { createStore } from 'redux'
-import todoApp from './reducers'
-let store = createStore(todoApp)
+import { createStore } from "redux";
+import todoApp from "./reducers";
+let store = createStore(todoApp);
 
-const state = store.getState()
+const state = store.getState();
 ```
 
-Redux规定一个State对应一个View。
+Redux 规定一个 State 对应一个 View。
 
 ### Action
 
 Action 是把数据从应用传到 Store 的有效荷载，是 Store 数据的唯一来源。
 
-约定action内必须使用一个字符串类型的`type`字段来表示将要执行的动作，多数情况下，`type`会被定义成字符串常量。建议使用调度的模块或文件来存放actionTypes。
+约定 action 内必须使用一个字符串类型的`type`字段来表示将要执行的动作，多数情况下，`type`会被定义成字符串常量。建议使用调度的模块或文件来存放 actionTypes。
 
 ```js
-import { ADD_TODO, REMOVE_TODO } from '../actionTypes'
+import { ADD_TODO, REMOVE_TODO } from "../actionTypes";
 ```
 
-Action创建函数(Action Creator)
+Action 创建函数(Action Creator)
 
 ```js
 function addTodo(text) {
   return {
     type: ADD_TODO,
-    text
-  }
+    text,
+  };
 }
 
-const action = addTodo('Learn Redux')
+const action = addTodo("Learn Redux");
 ```
 
-通过调用`store.dispatch()`将Action发出去。
+通过调用`store.dispatch()`将 Action 发出去。
 
 ### Reducer
 
-Store收到Action之后，必须给出一个新的State，这样View才会发生变化。这种State的计算过程就叫做Reducer。
+Store 收到 Action 之后，必须给出一个新的 State，这样 View 才会发生变化。这种 State 的计算过程就叫做 Reducer。
 
-Reducer是一个纯函数，接收旧的state和action，返回新的state。
+Reducer 是一个纯函数，接收旧的 state 和 action，返回新的 state。
 
-纯函数可以保证同样的State，必定得到同样的View。
-
-```js
-(previousState, action) => newState
-```
-
-Reducer不需要手动调用，`store.dispatch`方法触发Reducer自动执行。
+纯函数可以保证同样的 State，必定得到同样的 View。
 
 ```js
-import { createStore } from 'redux'
-let store = createStore(reducer)
+(previousState, action) => newState;
 ```
 
-每当`store.dispatch`发送过来一个新的Action，就会自动调用Reducer，得到新的State。
+Reducer 不需要手动调用，`store.dispatch`方法触发 Reducer 自动执行。
 
-#### Reducer的拆分
+```js
+import { createStore } from "redux";
+let store = createStore(reducer);
+```
 
-使用Redux提供的`combineReducers`方法，将子Reducer函数合成一个大的Reducer。
+每当`store.dispatch`发送过来一个新的 Action，就会自动调用 Reducer，得到新的 State。
+
+#### Reducer 的拆分
+
+使用 Redux 提供的`combineReducers`方法，将子 Reducer 函数合成一个大的 Reducer。
 
 ### 数据流
 
-严格的单向数据流是Redux架构的设计核心
+严格的单向数据流是 Redux 架构的设计核心
 
 ![redux-flow](./images/Redux/redux-flow.jpg)
 
-1. 调用`store.dispatch(action)`，发出Action
-1. Redux store自动调用Reducer，并传入当前的State和收到的Action，Reducer返回新的State
-1. State一旦有变化，Store就会调用监听函数
-1. 根Reducer应该把多个子Reducer输出合并成一个单一的State树
-1. Redux store保存了根Reducer返回的完整State树
+1. 调用`store.dispatch(action)`，发出 Action
+1. Redux store 自动调用 Reducer，并传入当前的 State 和收到的 Action，Reducer 返回新的 State
+1. State 一旦有变化，Store 就会调用监听函数
+1. 根 Reducer 应该把多个子 Reducer 输出合并成一个单一的 State 树
+1. Redux store 保存了根 Reducer 返回的完整 State 树
 
 ## 中间件和异步操作
 
 异步操作思路
 
-- 操作开始时，送出一个Action，触发State更新为“正在操作”状态，View重新渲染
-- 操作结束后，再送出一个Action，触发State更新为“操作结束状态”，View再一次重新渲染
+- 操作开始时，送出一个 Action，触发 State 更新为“正在操作”状态，View 重新渲染
+- 操作结束后，再送出一个 Action，触发 State 更新为“操作结束状态”，View 再一次重新渲染
 
 ## 官方文档阅读
 
@@ -204,3 +204,87 @@ reducer 的定义：it’s just a function that takes state and action as argume
 - reselect
 
 容器组件(Container Components)和展示组件(Presentational Components)
+
+### 函数签名记录
+
+```js
+// 关键调用
+const store = createStore(reducer, applyMiddleware(thunkMiddleware));
+```
+
+```js
+// createStore
+function createStore(reducer, preloadedState, enhancer) {
+  // 这里处理的是没有设定初始状态的情况，也就是第一个参数和第二个参数都传 function 的情况
+  if (typeof preloadedState === "function" && typeof enhancer === "undefined") {
+    // 此时第二个参数会被认为是 enhancer（中间件）
+    enhancer = preloadedState;
+    preloadedState = undefined;
+  }
+  // 当 enhancer 不为空时，便会将原来的 createStore 作为参数传入到 enhancer 中
+  if (typeof enhancer !== "undefined") {
+    return enhancer(createStore)(reducer, preloadedState);
+  }
+}
+```
+
+```js
+// thunkMiddleware 就是 redux-thunk 导出的函数
+({ dispatch, getState }) => (next) => (action) => {
+  if (typeof action === "function") {
+    return action(dispatch, getState, extraArgument);
+  }
+
+  return next(action);
+};
+```
+
+```js
+// middlewares 数组中的函数
+[({ dispatch, getState }) =>(next) => (action) => {
+  if (typeof action === "function") {
+    return action(dispatch, getState, extraArgument);
+  }
+
+  return next(action);
+}]
+```
+
+```js
+// applyMiddlerware 会使用“...”运算符将入参收敛为一个数组
+export default function applyMiddleware(...middlewares) {
+  // 它返回的是一个接收 createStore 为入参的函数
+  return (createStore) => (...args) => {
+    // 首先调用 createStore，创建一个 store
+    const store = createStore(...args);
+    let dispatch = () => {
+      throw new Error(
+        `Dispatching while constructing your middleware is not allowed. ` +
+          `Other middleware would not be applied to this dispatch.`
+      );
+    };
+
+    // middlewareAPI 是中间件的入参
+    const middlewareAPI = {
+      getState: store.getState,
+      dispatch: (...args) => dispatch(...args),
+    };
+    // 遍历中间件数组，调用每个中间件，并且传入 middlewareAPI 作为入参，得到目标函数数组 chain
+    const chain = middlewares.map((middleware) => middleware(middlewareAPI));
+    // 改写原有的 dispatch：将 chain 中的函数按照顺序“组合”起来，调用最终组合出来的函数，传入 dispatch 作为入参
+    dispatch = compose(...chain)(store.dispatch);
+
+    // 返回一个新的 store 对象，这个 store 对象的 dispatch 已经被改写过了
+    return {
+      ...store,
+      dispatch,
+    };
+  };
+}
+```
+
+按照代码执行顺序一点点看 `applyMiddleware(thunkMiddleware)`
+
+返回一个高阶函数，高阶函数返回一个高阶函数
+
+现在来看
