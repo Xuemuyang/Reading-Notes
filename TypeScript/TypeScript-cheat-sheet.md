@@ -20,8 +20,28 @@ let n: null = null;
 - 数组泛型
 
 ```ts
-let list: number[] = [1, 2, 3]
-let list: Array<number> = [1, 2, 3]
+let list: number[] = [1, 2, 3];
+let list: Array<number> = [1, 2, 3];
+```
+
+## 联合/交叉类型
+
+- 联合(Union Types) `|` 满足任意一个即可
+- 交叉(Intersection Types) `&` 必须同时满足多个
+
+```ts
+interface IA {
+  a: string;
+  b: number;
+}
+
+type TB = {
+  b: number;
+  c: number[];
+};
+
+type TC = IA | TB; // TC类型的变量的键只需包含ab或bc即可，当然也可以abc
+type TD = IA & TB; // TD类型的变量的键必需包含abc
 ```
 
 ### 元组
@@ -29,8 +49,8 @@ let list: Array<number> = [1, 2, 3]
 一个已知数量和类型的数组，各元素类型不必相同
 
 ```ts
-let x: [string, number]
-x = ['hello', 10]
+let x: [string, number];
+x = ["hello", 10];
 ```
 
 ### 枚举
@@ -75,12 +95,18 @@ interface SearchFunc {
 
 ```ts
 // 尖括号语法
-let someValue: any = 'this is a string'
-let strLength: number = (<string>someValue).length
+let someValue: any = "this is a string";
+let strLength: number = (<string>someValue).length;
 
 // as 语法
-let someValue: any = 'this is a string'
-let strLength: number = (someValue as string).length
+let someValue: any = "this is a string";
+let strLength: number = (someValue as string).length;
+```
+
+非空断言(Non-null assertion operator)，断言不为 `undefined` 或 `null`
+
+```ts
+X.getY()!.a()
 ```
 
 ## 函数
@@ -102,7 +128,7 @@ function sum(x: number, y: number): number {
 函数表达式
 
 ```ts
-let mySum: (x: number, y: number) => number = function(
+let mySum: (x: number, y: number) => number = function (
   x: number,
   y: number
 ): number {
@@ -115,7 +141,7 @@ let mySum: (x: number, y: number) => number = function(
 ```ts
 const sum = (x: number, y: number): number => {
   return x + y;
-}
+};
 ```
 
 接口定义函数
@@ -126,5 +152,28 @@ interface SearchFunc {
 }
 ```
 
-## 参考
+## 工具类
 
+`Partial` 为所有属性添加 `?`，`Required` 则是将所有属性都设置为必填。
+
+```ts
+interface Person {
+  name: string;
+  age: number;
+}
+
+type NewPerson = Partial<Person>;
+const P: NewPerson = {
+  name: "joy",
+};
+// name和age都被设置成了可选属性
+```
+
+`Record` 给定 key:value 形式
+
+```ts
+type r = Record<"a" | "b" | "c", Person>;
+// 最终实现{a:Person;b:Person;c:Person}
+```
+
+## 参考

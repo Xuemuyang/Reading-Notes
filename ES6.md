@@ -1552,6 +1552,9 @@ for (let i of s) {
 
 `Map`数据结构类似于对象，也是键值对的集合，但是“键”的范围不限于字符串，各种类型的值（包括对象）都可以当做键。
 
+- Object 结构提供了 [字符串 - 值] 这样的结构
+- Map 则是 [值 - 值] 这样的结构
+
 ### `WeakMap`
 
 两点区别
@@ -1572,6 +1575,21 @@ Proxy 的用法就上面这个形式，不同的是 handler 参数的写法
 Proxy 支持的方法都是拦截操作
 
 get 方法可以在所有的 get 访问之前拦截一下
+
+## 13. `Reflect`
+
+摘抄一些用途
+
+- 将定义在 `Object` 上的一些方法同样部署在 `Reflect` 上，未来的新方法只部署在 `Reflect` 上
+- 修改某些 `Object` 方法的返回结果，比如 `defineProperty` 在无法定义属性的时候会抛错，`Reflect` 就返回 `false`
+- 将操作符改写为函数形式，比如 `in` 和 `delete`，`Reflect.has` 和 `Reflect.deleteProperty`
+- 配合 `Proxy` 使用，在 `Proxy` 的内部通过 `Reflect` 调用默认行为
+
+有一篇参考：[Proxy是代理，Reflect是干嘛用的？](https://www.zhangxinxu.com/wordpress/2021/07/js-proxy-reflect/)，里面提到了为什么 `Reflect` 和 `Proxy` 一起使用。
+
+1. `Reflect` 其中的静态方法和 Proxy handle 参数是一模一样的
+2. `set` 和 `get` 可以使用 `Reflect` 操作的返回值(布尔值，表示是否成功)
+3. `receiver` 参数具有不可替代性，更加明确方法的调用主体
 
 ## 14. `Promise`对象
 

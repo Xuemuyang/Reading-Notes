@@ -64,6 +64,10 @@ function createSquare (config: SquareConfig): { color: string; area: number } {
 let mySquare = createSquare({ width: 100, opacity: 0.5 } as SquareConfig) // 加了类型断言之后就可以过编译了
 ```
 
+- 属性名后面的 `!`
+
+非空断言，TS 判断可能为空，开发者使用 `!` 告诉 TS 不为空
+
 ## 简介
 
 ```sh
@@ -672,6 +676,8 @@ let point3d: Point3d = { x: 1, y: 2, z: 3 };
 ### 泛型（Generics）
 
 泛型（Generics）是指在定义函数、接口或类的时候，不预先指定具体的类型，而在使用的时候再指定类型的一种特性。
+
+> 类型实际上可以进行一定的运算，要想写出的类型适用范围更广，不妨让它像函数一样可以接受参数。TS 的泛型便是起到这样的作用，你可以把它当作类型的参数。它和函数参数一样，可以有默认值。 ---[《TypeScript 中高级应用与最佳实践》](http://www.alloyteam.com/2019/07/13796/)
 
 `T` 是类型变量，可以捕获传入的类型。
 

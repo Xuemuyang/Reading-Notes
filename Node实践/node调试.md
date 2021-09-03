@@ -20,3 +20,7 @@
   ]
 }
 ```
+
+突然某一天就出现了找不到路径的错误
+
+终端使用 `which node` 命令找到 Node 的路径，之后添加到 "runtimeExecutable": "/Users/mac/.nvm/versions/node/v14.17.3/bin/node" 到 configurations 中。
