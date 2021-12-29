@@ -176,4 +176,39 @@ type r = Record<"a" | "b" | "c", Person>;
 // 最终实现{a:Person;b:Person;c:Person}
 ```
 
+## 工具
+
+配置 VSCode 单 .ts 文件调试环境
+
+```json
+// .vscode/launch.json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Current TS File",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/node_modules/ts-node/dist/bin.js",
+      "args": ["${relativeFile}"],
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector"
+    }
+  ]
+}
+```
+
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "strict": true,
+    "allowJs": true,
+    "esModuleInterop": true
+  }
+}
+```
+
 ## 参考

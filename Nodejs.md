@@ -1510,3 +1510,6 @@ class WithTime extends EventEmitter {
 ```
 
 ## Stream
+
+## Buffer
+

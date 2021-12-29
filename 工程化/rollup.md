@@ -21,3 +21,4 @@
 - [rollup 官网](https://rollupjs.org/guide/en/)
 - [[译] TypeScript 牵手 Babel：一场美丽的婚姻](https://juejin.im/post/6844903792865984520)
 - [Rollup配置(Babel7)](https://xiaogliu.github.io/2019/07/24/rollup-config/)
+- [JavaScript模块打包工具Rollup——完全入门指南](https://sosout.github.io/2018/08/04/rollup-tutorial.html)

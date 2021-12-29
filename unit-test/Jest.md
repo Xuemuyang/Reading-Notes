@@ -277,7 +277,7 @@ describe('Scoped / Nested block', () => {
 
 使用 `jest.fn` 创建 mock 函数，这个情况多用于函数当参数传入的情况，可以通过 `.mock` 属性来获取函数的参数，调用信息，也可以使用 `mockReturnValueOnce`、`mockReturnValue` 等 API 来指定每一次调用的返回值
 
-使用 `jest.mock` API 来 mock 函数内部引用的模块，比如看这个例子
+使用 [`jest.mock`](https://jestjs.io/docs/jest-object#jestmockmodulename-factory-options) API 来 mock 函数内部引用的模块，比如看这个例子
 
 ```js
 // users.js
@@ -331,9 +331,12 @@ foo();
 
 与 `jest.fn` 类似，mock 函数的执行过程也有很多 mock 方法，可以设置第一次怎么执行，第二次怎么执行
 
+并且还可以 mock 不存在的模块，传入 `{virtual: true}` 参数即可，官方文档称为 `virtual mocks`
+
 ## 参考
 
 - [jest 官方文档](https://jestjs.io/)
+- [政采云-如何做前端单元测试](https://juejin.cn/post/7039108357554176037)
 - [顶级测试框架Jest指南：跑通一个完美的程序，就是教出一群像样的学生](https://segmentfault.com/a/1190000016399447)
 - [[Jest]单元测试初学者指南 - Part1 - 函数测试](https://www.w3ctech.com/topic/2172)
   - 这是一个英文的系列

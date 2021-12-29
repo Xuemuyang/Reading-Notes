@@ -20,6 +20,10 @@
 service ssh status
 ```
 
+```js
+const hehe = '123'
+```
+
 ## 参考
 
-- [开启、关闭、查看SSH服务](https://blog.csdn.net/baidu_34884208/article/details/89376795)
+- [开启、关闭、查看 SSH 服务](https://blog.csdn.net/baidu_34884208/article/details/89376795)

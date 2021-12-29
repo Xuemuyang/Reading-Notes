@@ -133,6 +133,20 @@ something = "seven";
 something = 7;
 ```
 
+### unknown
+
+`unknown` 和 `any` 比较相似，比 `any` 更加安全，但不能对 `unknown` 类型进行操作。
+
+```ts
+function f1(a: any) {
+  a.b(); // OK
+}
+function f2(a: unknown) {
+  a.b();
+// Object is of type 'unknown'.
+}
+```
+
 ### 类型推论（Type Inference）
 
 如果没有明确的指定类型，那么 TypeScript 会依照类型推论（Type Inference）的规则推断出一个类型。
