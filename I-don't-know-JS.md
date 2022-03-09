@@ -612,7 +612,8 @@ myObject.a; // 2
 所有方法创建的都是浅不变性，他们只会影响目标对象和它的直接属性，如果目标引用了其他对象，其他对象的内容不受影响，仍然可变。
 
 1.对象常量
-结合`writeble:false`和`configurable:false`就可以创建一个真正的常量属性（不可修改、重定义或者删除）：
+
+结合`writable:false`和`configurable:false`就可以创建一个真正的常量属性（不可修改、重定义或者删除）：
 
 ```js
 var myObject = {};
