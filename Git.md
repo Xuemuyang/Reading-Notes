@@ -38,6 +38,7 @@ git remote add origin git@github.com:Xuemuyang/ts-axios.git // 与远程仓库�
 git branch --merged | egrep -v "(^\*|master|dev)" | xargs git branch -d // 删除已经合并的分支
 git checkout . // 清空改动
 git clean -df // 清空新建的文件夹和文件
+git cherry-pick A^..B // 给当前分支加上 A -> B 之间的所有提交，每次操作完成之后 gaa，后续使用 git cherry-pick --continue
 ```
 
 oh-my-zsh 中对 git 命令进行了简化
