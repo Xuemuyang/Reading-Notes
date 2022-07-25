@@ -620,7 +620,7 @@ var myObject = {};
 
 Object.defineProperty(myObject, "FAVORITE_NUMBER", {
   value: 42,
-  writeble: false,
+  writable: false,
   configurable: false
 });
 ```
@@ -642,7 +642,7 @@ myObject.b; // undefined
 
 3.密封
 
-`Object.seal(..)`会创建一个“密封”的对象，这个方法实际上会在一个现有的对象上调用`Object.precentExtensions(..)`并把所有现有属性标记为`configurable:false`。
+`Object.seal(..)`会创建一个“密封”的对象，这个方法实际上会在一个现有的对象上调用`Object.preventExtensions(..)`并把所有现有属性标记为`configurable:false`。
 
 密封之后不仅不能添加新属性，也不能重新配置或者删除任何现有属性（虽然可以修改属性的值）。
 

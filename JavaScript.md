@@ -2212,10 +2212,10 @@ ECMAScript 中有两种属性：数据属性和访问器属性。
 
 1.数据属性
 
-- Configurable 可否通过 delete 删除,能否修改其他数据属性
-- Enumerable 这个属性是否可以通过 for-in 循环出来
-- Writable 能否修改属性的值
-- Value 这个属性的值
+- configurable 可否通过 delete 删除,能否修改其他数据属性
+- enumerable 这个属性是否可以通过 for-in 循环出来
+- writable 能否修改属性的值
+- value 这个属性的值
 
 ```javascript
 var person = {};

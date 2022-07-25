@@ -211,4 +211,30 @@ type r = Record<"a" | "b" | "c", Person>;
 }
 ```
 
+## 内置类型
+
+- PropertyKey
+  - 适用于对象 key 名的场景
+
+## 关键字
+
+### [keyof](https://www.typescriptlang.org/docs/handbook/2/keyof-types.html)
+
+返回联合类型
+
+```ts
+type Point = { x: number; y: number };
+type P = keyof Point;
+
+// 等价于
+type P = 'x' | 'y'
+```
+
+### extends
+
+- 表示接口和类的继承关系
+- 泛型约束，使用 extends 对泛型进行类型约束
+
+### in
+
 ## 参考

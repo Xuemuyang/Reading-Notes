@@ -1,5 +1,9 @@
 # Jest
 
+## 参考
+
+- [Jest 实践指南](https://github.yanhaixiang.com/jest-tutorial/)
+
 ## 疑问
 
 - [x]测试文件的后缀 `*.text.js` 和 `*.spec.js` 有什么区别？
@@ -332,6 +336,12 @@ foo();
 与 `jest.fn` 类似，mock 函数的执行过程也有很多 mock 方法，可以设置第一次怎么执行，第二次怎么执行
 
 并且还可以 mock 不存在的模块，传入 `{virtual: true}` 参数即可，官方文档称为 `virtual mocks`
+
+## 通过文件来做 setup
+
+关于这个问题，文档上的用法写的不是特别详细，在 GitHub 上通过代码搜索找到了一系列用法
+
+看起来 jest.config.js 并不像 eslint 等一样会根据目录覆盖配置，统一配置在一个目录中，需要在统一的地方去做配置，可以通过 projects 字段配置不同的路径使用不同的 setup
 
 ## 参考
 

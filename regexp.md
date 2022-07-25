@@ -1,22 +1,22 @@
-# JS正则表达式
+# JS 正则表达式
 
 ## 参考链接
 
-- [JS正则表达式完整教程---老姚](https://juejin.im/post/5965943ff265da6c30653879#heading-37)
+- [JS 正则表达式完整教程---老姚](https://juejin.im/post/5965943ff265da6c30653879#heading-37)
 
 ## 速查
 
 元字符 `( [ { \ ^ $ | ) ? * + . ] }`
 
-code|detail|简介
----|---|---
-`\d`|`[0-9]`|digit
-`\D`|`[^0-9]`|除数字外的任意字符
-`\w`|`[0-9a-zA-Z_]`|word，单词字符
-`\W`|`[^0-9a-zA-Z_]`|非word
-`\s`|`[ \t\v\n\r\f]`|space
-`\S`|`[^ \t\v\n\r\f]`|非space
-`.`|`[^\n\r\u2028\u2029]`|通配符
+| code | detail                | 简介               |
+| ---- | --------------------- | ------------------ |
+| `\d` | `[0-9]`               | digit              |
+| `\D` | `[^0-9]`              | 除数字外的任意字符 |
+| `\w` | `[0-9a-zA-Z_]`        | word，单词字符     |
+| `\W` | `[^0-9a-zA-Z_]`       | 非 word            |
+| `\s` | `[ \t\v\n\r\f]`       | space              |
+| `\S` | `[^ \t\v\n\r\f]`      | 非 space           |
+| `.`  | `[^\n\r\u2028\u2029]` | 通配符             |
 
 量词|detail|简介
 `{m,}`|-|至少出现 m 次
@@ -37,16 +37,22 @@ code|detail|简介
 
 `|` 管道符表示任何之一 `(p1|p2|p3)`
 
-位置|简介
----|---
-`^`|行开头
-`$`|行结尾
-`\b`|单词边界，`\w` 和 `\W`、`\w` 和 `^`、`\w` 和 `$` 之间的位置
-`\B`|非单词边界
-`(?=p)`|`p` 是一个模式，这个位置之后内容需要匹配 `p` 这个模式，positive lookahead
-`(?!=p)`|取反 negative lookahead
-`(?<=p)`|positive lookbehind
-`(?<!p)`|negative lookbehind
+| 位置     | 简介                                                                      |
+| -------- | ------------------------------------------------------------------------- |
+| `^`      | 行开头                                                                    |
+| `$`      | 行结尾                                                                    |
+| `\b`     | 单词边界，`\w` 和 `\W`、`\w` 和 `^`、`\w` 和 `$` 之间的位置               |
+| `\B`     | 非单词边界                                                                |
+| `(?=p)`  | `p` 是一个模式，这个位置之后内容需要匹配 `p` 这个模式，positive lookahead |
+| `(?!=p)` | 取反 negative lookahead                                                   |
+| `(?<=p)` | positive lookbehind                                                       |
+| `(?<!p)` | negative lookbehind                                                       |
+
+| 标识符 |
+| ------ | --------------------- |
+| `i`    | ignoreCase 忽略大小写 |
+| `g`    | global 全局           |
+| `m`    | multiline 多行        |
 
 ## 概述
 
@@ -86,9 +92,9 @@ code|detail|简介
 分支结构与 `||` 操作符类似，短路
 
 ```js
-var regex = /goodbye|good/g;
-var string = "goodbye";
-console.log( string.match(regex) );
+var regex = /goodbye|good/g
+var string = 'goodbye'
+console.log(string.match(regex))
 // => ["goodbye"]
 ```
 
@@ -99,47 +105,47 @@ console.log( string.match(regex) );
 ![](https://ws1.sinaimg.cn/large/006tNc79ly1g2s1bgkkkqj30g504dmx9.jpg)
 
 ```js
-var result = "[JS] Lesson_01.mp4".replace(/\b/g, '#');
-console.log(result);
+var result = '[JS] Lesson_01.mp4'.replace(/\b/g, '#')
+console.log(result)
 // => "[#JS#] #Lesson_01#.#mp4#"
 ```
 
 ```js
-var result = "[JS] Lesson_01.mp4".replace(/\B/g, '#');
-console.log(result);
+var result = '[JS] Lesson_01.mp4'.replace(/\B/g, '#')
+console.log(result)
 // => "#[J#S]# L#e#s#s#o#n#_#0#1.m#p#4"
 ```
 
 `(?=p)` positive lookahead
 
 ```js
-var result = "hello".replace(/(?=l)/g, '#');
-console.log(result);
+var result = 'hello'.replace(/(?=l)/g, '#')
+console.log(result)
 // => "he#l#lo"
 ```
 
 `(?!p)` negative lookahead
 
 ```js
-var result = "hello".replace(/(?!l)/g, '#');
+var result = 'hello'.replace(/(?!l)/g, '#')
 
-console.log(result);
+console.log(result)
 // => "#h#ell#o#"
 ```
 
 ES6 中支持 `(?<=p)` positive lookbehind
 
 ```js
-var result = "hello".replace(/(?<=l)/g, '#');
-console.log(result);
+var result = 'hello'.replace(/(?<=l)/g, '#')
+console.log(result)
 // => "hel#l#o"
 ```
 
 `(?<!p)` negative lookbehind
 
 ```js
-var result = "hello".replace(/(?<!l)/g, '#');
-console.log(result);
+var result = 'hello'.replace(/(?<!l)/g, '#')
+console.log(result)
 // => "#h#e#llo#"
 ```
 
@@ -166,27 +172,27 @@ console.log(result);
 反向引用，这里的 `\1` 表示引用第一个分组匹配到的内容
 
 ```js
-var regex = /\d{4}(-|\/|\.)\d{2}\1\d{2}/;
-var string1 = "2017-06-12";
-var string2 = "2017/06/12";
-var string3 = "2017.06.12";
-var string4 = "2016-06/12";
-console.log( regex.test(string1) ); // true
-console.log( regex.test(string2) ); // true
-console.log( regex.test(string3) ); // true
-console.log( regex.test(string4) ); // false
+var regex = /\d{4}(-|\/|\.)\d{2}\1\d{2}/
+var string1 = '2017-06-12'
+var string2 = '2017/06/12'
+var string3 = '2017.06.12'
+var string4 = '2016-06/12'
+console.log(regex.test(string1)) // true
+console.log(regex.test(string2)) // true
+console.log(regex.test(string3)) // true
+console.log(regex.test(string4)) // false
 ```
 
 括号嵌套以左括号为准
 
 ```js
-var regex = /^((\d)(\d(\d)))\1\2\3\4$/;
-var string = "1231231233";
-console.log( regex.test(string) ); // true
-console.log( RegExp.$1 ); // 123
-console.log( RegExp.$2 ); // 1
-console.log( RegExp.$3 ); // 23
-console.log( RegExp.$4 ); // 3
+var regex = /^((\d)(\d(\d)))\1\2\3\4$/
+var string = '1231231233'
+console.log(regex.test(string)) // true
+console.log(RegExp.$1) // 123
+console.log(RegExp.$2) // 1
+console.log(RegExp.$3) // 23
+console.log(RegExp.$4) // 3
 ```
 
 ## JavaScript 中的正则表达式操作
@@ -212,10 +218,10 @@ API
 验证最常用的是 `test`，注意 `g` 也会对 `test` 有影响，当正则全局匹配的时候，每一次匹配完都会去修改 `lastIndex` 属性，而字符串方法则不存在这个特性。
 
 ```js
-var regex = /a/g;
-console.log( regex.test("a"), regex.lastIndex );
-console.log( regex.test("aba"), regex.lastIndex );
-console.log( regex.test("ababc"), regex.lastIndex );
+var regex = /a/g
+console.log(regex.test('a'), regex.lastIndex)
+console.log(regex.test('aba'), regex.lastIndex)
+console.log(regex.test('ababc'), regex.lastIndex)
 // => true 1
 // => true 3
 // => false 0
@@ -230,11 +236,11 @@ console.log( regex.test("ababc"), regex.lastIndex );
 `match` 返回结果的格式与正则是否有 `g` 相关
 
 ```js
-var string = "2017.06.27";
-var regex1 = /\b(\d+)\b/;
-var regex2 = /\b(\d+)\b/g;
-console.log( string.match(regex1) );
-console.log( string.match(regex2) );
+var string = '2017.06.27'
+var regex1 = /\b(\d+)\b/
+var regex2 = /\b(\d+)\b/g
+console.log(string.match(regex1))
+console.log(string.match(regex2))
 // => ["2017", "2017", index: 0, input: "2017.06.27"]
 // => ["2017", "06", "27"]
 ```
@@ -259,16 +265,16 @@ console.log( string.match(regex2) );
 否则是结果数组，数组的第一个元素是整体匹配的内容，接下来是分组捕获的内容，除了数组元素外还有两个对象属性 `input` 和 `index`。
 
 ```js
-var string = "2017.06.27";
-var regex2 = /\b(\d+)\b/g;
-console.log( regex2.exec(string) );
-console.log( regex2.lastIndex);
-console.log( regex2.exec(string) );
-console.log( regex2.lastIndex);
-console.log( regex2.exec(string) );
-console.log( regex2.lastIndex);
-console.log( regex2.exec(string) );
-console.log( regex2.lastIndex);
+var string = '2017.06.27'
+var regex2 = /\b(\d+)\b/g
+console.log(regex2.exec(string))
+console.log(regex2.lastIndex)
+console.log(regex2.exec(string))
+console.log(regex2.lastIndex)
+console.log(regex2.exec(string))
+console.log(regex2.lastIndex)
+console.log(regex2.exec(string))
+console.log(regex2.lastIndex)
 // => ["2017", "2017", index: 0, input: "2017.06.27"]
 // => 4
 // => ["06", "06", index: 5, input: "2017.06.27"]
@@ -282,11 +288,11 @@ console.log( regex2.lastIndex);
 通常配合 `while` 循环使用：
 
 ```js
-var string = "2017.06.27";
-var regex2 = /\b(\d+)\b/g;
-var result;
-while ( result = regex2.exec(string) ) {
-  console.log( result, regex2.lastIndex );
+var string = '2017.06.27'
+var regex2 = /\b(\d+)\b/g
+var result
+while ((result = regex2.exec(string))) {
+  console.log(result, regex2.lastIndex)
 }
 // => ["2017", "2017", index: 0, input: "2017.06.27"] 4
 // => ["06", "06", index: 5, input: "2017.06.27"] 7

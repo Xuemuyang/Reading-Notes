@@ -1,5 +1,10 @@
 # Git
 
+## 参考
+
+- [基于文件夹的个性化 git 配置方法](https://ayase.moe/2021/03/09/customized-git-config/#more)
+  - 可以解决不同情况下使用的用户名不同的问题
+
 ## 编号含义
 
 - A：add，新增
