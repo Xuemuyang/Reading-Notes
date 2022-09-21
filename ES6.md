@@ -1603,7 +1603,7 @@ const obj = new Proxy(
 - 将操作符改写为函数形式，比如 `in` 和 `delete`，`Reflect.has` 和 `Reflect.deleteProperty`
 - 配合 `Proxy` 使用，在 `Proxy` 的内部通过 `Reflect` 调用默认行为
 
-有一篇参考：[Proxy 是代理，Reflect 是干嘛用的？](https://www.zhangxinxu.com/wordpress/2021/07/js-proxy-reflect/)，里面提到了为什么 `Reflect` 和 `Proxy` 一起使用。再结合阮老师的 API 说明就看会了 [Reflect.set](https://es6.ruanyifeng.com/#docs/reflect#Reflect-settarget-name-value-receiver)
+有一篇参考：[Proxy 是代理，Reflect 是干嘛用的？](https://www.zhangxinxu.com/wordpress/2021/07/js-proxy-reflect/)，里面提到了为什么 `Reflect` 和 `Proxy` 一起使用。再结合阮老师的 API 说明就看会了 [Reflect.set](https://es6.ruanyifeng.com/#docs/reflect#Reflect-settarget-name-value-receiver)，再补充一篇参考 [为什么Proxy一定要配合Reflect使用？](https://juejin.cn/post/7080916820353351688)
 
 1. `Reflect` 其中的静态方法和 Proxy handle 参数是一模一样的
 2. `set` 和 `get` 可以使用 `Reflect` 操作的返回值(布尔值，表示是否成功)
