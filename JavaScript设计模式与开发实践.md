@@ -16,6 +16,10 @@
 
 内聚指的是模块内部代码的关联程度，耦合则是模块间的关联程度。
 
+不同语言的设计模式有区别，作者打了一个非常形象的比方，Dota 中牛头人的目标就是出跳刀，而敌法师天生就有闪烁技能，不同的编程语言也许就像不同的英雄，在合适的场合下，选用最合适的语言。
+
+很多模式可能都比较相似，本质是分辨模式出现的场景，可以解决什么问题。
+
 ## 第一部分 基础知识
 
 ### 第 1 章 面向对象的 JavaScript
@@ -962,7 +966,15 @@ Proxy pattern（代理模式）：Provide a surrogate (代理) or placeholder fo
 
 代理模式的关键是，当客户不方便直接访问一个对象或者不满足需要的时候，提供一个替身对象来控制这个对象的访问，客户实际上访问的是替身对象。替身对象对请求做出一些处理之后，再把请求转交给本体对象。
 
-保护代理用于控制不同权限的对象对目标对象的访问。
+提到了多种代理的形式
+
+- 保护代理
+  - 用于控制不同权限的对象对目标对象的访问，类似过滤的意思
+- 虚拟代理
+  - 对用户来说透明，暴露一样的接口，但是会在本体的功能上进行扩展
+- 缓存代理
+  - 用于缓存计算结果
+- 以及非常多的形式
 
 #### 虚拟代理实现图片预加载
 
@@ -1017,9 +1029,9 @@ const MyImage = (function () {
 MyImage.setSrc('hehe.jpg')
 ```
 
-单一职责原则，如果一个对象的职责过多，等于将  很多职责耦合到一起，导致低内聚的设计。所以这里使用代理将预加载和请求图片职责分离。
+单一职责原则，如果一个对象的职责过多，等于将很多职责耦合到一起，导致低内聚的设计。所以这里使用代理将预加载和请求图片职责分离。
 
-需要注意的是，代理和本体接口需要体现一致性，对用户来说是透明的， 并不知道代理和本体的区别。
+需要注意的是，代理和本体接口需要体现一致性，对用户来说是透明的，并不知道代理和本体的区别。
 
 #### 虚拟代理合并 HTTP 请求
 
@@ -1362,6 +1374,8 @@ cancelBtn.onclick = function () {
 
 #### 宏命令
 
+宏命令是一组命令的集合，通过执行宏命令的方式，可以一次执行一批命令。
+
 ```js
 const MacroCommand = function () {
   return {
@@ -1497,8 +1511,8 @@ folder.scan()
 
 #### 何时使用组合模式
 
-- 表示对象的部分，整体层次结构，只需要通过请求树的最顶层对象，便能对整棵树做统一的操作。
-- 客户希望统一对待树中的所有对象，不用关心当前正在处理的对象是组合对象还是叶对象。组合对象和叶对象会各自做自己正确的事情，这是组合模式最重要的能力。
+- 表示对象的部分，整体层次结构，只需要通过请求树的最顶层对象，便能对整棵树做统一的操作
+- 不用关心当前正在处理的对象是组合对象还是叶对象，都可以用一致的方式来处理。组合对象和叶对象会各自做自己正确的事情，这是组合模式最重要的能力
 
 ### 第 11 章 模板方法模式(Template Method Pattern)
 
@@ -1886,6 +1900,44 @@ var order = function (orderType, pay, stock) {
 order(1, true, 500) // 输出: 500 元定金预购, 得到 100 优惠券
 ```
 
+用职责链模式重构
+
+```js
+// Chain.prototype.setNextSuccessor 指定在链中的下一个节点
+// Chain.prototype.passRequest 传递请求给某个节点
+var Chain = function (fn) {
+  this.fn = fn;
+  this.successor = null;
+};
+Chain.prototype.setNextSuccessor = function (successor) {
+  return (this.successor = successor);
+};
+Chain.prototype.passRequest = function () {
+  var ret = this.fn.apply(this, arguments);
+  if (ret === "nextSuccessor") {
+    return (
+      this.successor &&
+      this.successor.passRequest.apply(this.successor, arguments)
+    );
+  }
+  return ret;
+};
+
+var chainOrder500 = new Chain(order500);
+var chainOrder200 = new Chain(order200);
+var chainOrderNormal = new Chain(orderNormal);
+
+chainOrder500.setNextSuccessor(chainOrder200);
+chainOrder200.setNextSuccessor(chainOrderNormal);
+
+chainOrder500.passRequest(1, true, 500);
+chainOrder500.passRequest(2, true, 500);
+chainOrder500.passRequest(3, true, 500);
+chainOrder500.passRequest(1, false, 0);
+```
+
+职责链模式最大优点就是解耦请求发送者和接受者之间的关系，只需要把请求给第一个节点即可。
+
 ### 第 14 章 中介者模式(Mediator Pattern)
 
 > Define an object that encapsulates how a set of objects interact.Mediator promotes loose couping by keeping objects from referring to each other explicitly,and it lets you vary their interaction independently.（用一个中介对象封装一系列的对象交互，中介者使各对象不需要显示的相互作用，从而使其耦合松散，而且可以独立的改变它们之间的交互。）
@@ -1894,7 +1946,7 @@ order(1, true, 500) // 输出: 500 元定金预购, 得到 100 优惠券
 
 #### 现实中的中介者
 
-如果没有机场指挥塔的存在，每一架飞机要和方圆 100km 里的所有飞机通信，才能确定航线以及飞行状况。指挥塔作为调停者， 知道每一架飞机的飞行状况，可以安排所有飞机的起降时间，及时作出航线调整。
+如果没有机场指挥塔的存在，每一架飞机要和方圆 100km 里的所有飞机通信，才能确定航线以及飞行状况。指挥塔作为调停者， 知道每一架飞机的飞行状况，可以安排所有飞机的起降时间，及时作出航线调整。
 
 #### 拿泡泡堂举个例子
 
@@ -2129,6 +2181,8 @@ Function.prototype.after = function (afterfn) {
   }
 }
 ```
+
+代理模式和装饰者模式有很多手段类似，区别在于意图和设计目的。装饰者模式侧重为对象动态加入行为，而代理强调对象之间的关系。
 
 ### 第 16 章 状态模式
 
