@@ -176,6 +176,25 @@ type r = Record<"a" | "b" | "c", Person>;
 // 最终实现{a:Person;b:Person;c:Person}
 ```
 
+`Omit` 省略
+
+```ts
+interface Todo {
+  title: string;
+  description: string;
+  completed: boolean;
+  createdAt: number;
+}
+
+type TodoInfo = Omit<Todo, "completed" | "createdAt">;
+
+// 等价于
+interface TodoInfo {
+  title: string;
+  description: string;
+}
+```
+
 ## 工具
 
 配置 VSCode 单 .ts 文件调试环境

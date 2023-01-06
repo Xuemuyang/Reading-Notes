@@ -1809,11 +1809,17 @@ var stringValue = "hello world";
 alert(stringValue.charCodeAt(1)); //"101"
 ```
 
-`String`构造函数本身还有一个静态方法：fromCharCode()。这个方法的任务是接收一个或字符编码,然后将它们转换为一个字符串。
+`String.prototype.charCodeAt` 返回指定位置字符的 Unicode 编码十进制数字类型
+
+`String` 构造函数本身还有一个静态方法：`fromCharCode()`。这个方法的任务是接收一个或多个字符编码（Unicode 编码的十进制数字类型）,然后将它们转换为一个字符串。
 
 ```javascript
 alert(String.fromCharCode(104, 101, 108, 108, 111)); //"hello"
 ```
+
+ES6 对 `charCodeAt` 和 `fromCharCode` 方法进行了改进，`codePointAt` 和 `fromCodePoint`
+
+为什么会引入这两个新方法参考 [你还在用charCodeAt那你就out了 - 十年踪迹](https://juejin.cn/post/6901868546322923534)
 
 ##### 字符串操作方法
 
