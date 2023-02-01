@@ -1,5 +1,13 @@
 # Node.js
 
+## 问题
+
+### 如何找到全局 node_modules 目录
+
+```sh
+npm ls -g
+```
+
 ## 总结
 
 ### 关于模块
