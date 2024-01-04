@@ -109,6 +109,8 @@ let strLength: number = (someValue as string).length;
 X.getY()!.a()
 ```
 
+已定义断言（Definite Assignment Assertions），声明变量的时候断言为变量已定义
+
 ## 函数
 
 - 函数声明
